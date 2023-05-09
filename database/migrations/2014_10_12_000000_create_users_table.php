@@ -14,11 +14,21 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('phone')->unique();
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->integer('auth_code')->nullable();
             $table->string('password');
+            $table->boolean('active')->default(false);
+
+            $table->string('telegram_chat_id')->nullable();
+            $table->string('address')->default('');
+
+            $table->boolean('is_trusted')->default(false);
+            $table->integer('trusted_count')->default(0);
+            $table->integer('trusted_limit')->default(1000);
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
