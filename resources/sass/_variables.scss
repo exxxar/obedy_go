@@ -1,0 +1,42 @@
+// Body
+$body-bg: #f8fafc;
+
+// Typography
+$font-family-sans-serif: 'Nunito', sans-serif;
+$font-size-base: 0.9rem;
+$line-height-base: 1.6;
+$body-font: 'Open Sans', sans-serif;
+$heading-font: 'Alegreya', serif;
+
+//===== Line Height =====//
+
+$body-line-height: 24px;
+
+//==== Font size =====//
+$body-font-size: 14px;
+
+// Colors
+$blue: #3490dc;
+$indigo: #6574cd;
+$purple: #9561e2;
+$pink: #f66d9b;
+$red: #e3342f;
+$orange: #f6993f;
+$yellow: #ffed4a;
+$green: #38c172;
+$teal: #4dc0b5;
+$cyan: #6cb2eb;
+$theme-color: #d50c0d;
+$body-color: #959595;
+$heading-color: #444444;
+
+// Layouts
+$sp-layout : 'only screen and (min-width: 1920px)';
+$xx-layout : 'only screen and (min-width: 1600px) and (max-width: 1919px)';
+$xlg-layout : 'only screen and (min-width: 1200px) and (max-width: 1599px)';
+$lg-layout : 'only screen and (min-width: 992px) and (max-width: 1199px)';
+$md-layout:'only screen and (min-width: 768px) and (max-width: 991px)';
+$sm-layout:'only screen and (max-width: 767px)';
+$tb-layout: 'only screen and (min-width: 480px) and (max-width: 767px)';
+
+$xs-layout: 'only screen and (max-width: 575px)';
