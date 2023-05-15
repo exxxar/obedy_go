@@ -24,6 +24,8 @@ class ProductResource extends JsonResource
             'price'=>$this->price,
             'weight'=>$this->weight,
             'is_week'=>$this->is_week,
+            'day_index'=>$this->day_index,
+            'addition'=>$this->addition
         ];
 
     }

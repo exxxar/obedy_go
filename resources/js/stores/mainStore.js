@@ -35,6 +35,10 @@ function selectPart() {
         return
     }
     let slug = this.foodParts.find(foodPart => foodPart.partId ===  this.part).slug ?? ''
+    if(slug === 'self'){
+        router.get(route('self'))
+        return
+    }
     router.get(route('products', slug))
 }
 

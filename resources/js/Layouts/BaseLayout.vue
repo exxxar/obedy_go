@@ -1,63 +1,65 @@
 <script setup>
-import {computed, onMounted, onUnmounted, reactive, ref, watch} from 'vue';
-import Modal from '@/Components/Modal.vue';
-import AudioCallback from "@/Components/AudioCallback.vue";
+import {onMounted, onUnmounted, provide, ref, watch} from 'vue'
+import Modal from '@/Components/Modal.vue'
+import TopMenu from "@/Components/TopMenu.vue"
+import AudioCallback from "@/Components/AudioCallback.vue"
+import CartModal from "@/Components/CartModal.vue"
 import {useMainStore} from '@/stores/mainStore.js'
-import {storeToRefs} from "pinia";
-import TopMenu from "@/Components/TopMenu.vue";
+import {useCartStore} from '@/stores/cartStore.js'
+import {storeToRefs} from "pinia"
+import Carousel from "@/Components/Carousel.vue"
+
 //get store
 const main = useMainStore()
 const {foodParts, part} = storeToRefs(main)
+const {getTotalCount} = storeToRefs(useCartStore())
 
 //data
-const lottery_id = ref(null);
-const bottom_menu_show = ref(false);
-const is_cart_open = ref(false);
-const ready_to_order = ref(false);
-const settings = reactive({
-    suppressScrollX: true
-});
+const lottery_id = ref(null)
+const bottom_menu_show = ref(false)
+const is_cart_open = ref(false)
+const ready_to_order = ref(false)
 
-// computed
-//return this.$store.getters.goCartTotalCount
-const countInCart = computed(() => {
-    return 1
-})
+provide('ready_to_order', ready_to_order)
+provide('is_cart_open', is_cart_open)
 
 // watch
 watch(part, () => {
     main.selectPart()
-});
+})
 
 onMounted(() => {
-    if (route().current('products') && part.value === 0) {
-        switch (route().params.foodPart) {
-            case "standard":
-                part.value = 1
-                break;
-            case "express":
-                part.value = 2
-                break;
-            case "premium":
-                part.value = 3
-                break;
-            case "self":
-                part.value = 4
-                break;
-        }
-    }
-    /*EventBus.$on('open-cart', () => {
-         this.is_cart_open = true
-         this.ready_to_order = true
-     });*/
-    window.addEventListener("keyup", switchKeyUp);
-});
+    switchFoodPart()
+    $(document).ready(function () {
+        $('[data-toggle="popover"]').popover()
+    })
+    window.addEventListener("keyup", switchKeyUp)
+})
 
 onUnmounted(() => {
     window.removeEventListener('keyup', switchKeyUp)
 })
 
-function switchKeyUp(event) {
+const switchFoodPart = () => {
+    if (route().current('products') && part.value === 0) {
+        switch (route().params.foodPart) {
+            case "standard":
+                part.value = 1
+                break
+            case "express":
+                part.value = 2
+                break
+            case "premium":
+                part.value = 3
+                break
+            case "self":
+                part.value = 4
+                break
+        }
+    }
+}
+
+const switchKeyUp = event => {
     switch (event.keyCode) {
         case 27:
             part.value = 0
@@ -71,14 +73,14 @@ function switchKeyUp(event) {
     }
 }
 
-function swipeHandler(direction) {
+const swipeHandler = direction => {
     if (direction === 0)
         main.changePosition(false)
     else
         main.changePosition()
 }
 
-function selectLottery(id) {
+const selectLottery = id => {
     console.log("select=>" + id)
     lottery_id.value = id
 }
@@ -86,6 +88,8 @@ function selectLottery(id) {
 
 <template>
     <div class="wrapper">
+        <notifications position="top left" group="info"/>
+
         <div class="container-fluid d-flex align-items-center flex-wrap w-100 m-0 obedygo"
              style="min-height: 100vh;padding:50px 10px 10px 10px;">
 
@@ -117,11 +121,11 @@ function selectLottery(id) {
 
             <div class="mb-5 w-100"></div>
 
-            <!-- <obedy-cart-template v-if="is_cart_open" v-on:close="is_cart_open = false" :ready="ready_to_order"/> -->
+            <CartModal v-if="is_cart_open"/>
 
             <div class="cart-container d-sm-block d-none" v-if="!is_cart_open">
                 <div class="cart-icon cart" @click="is_cart_open = true">Корзина <span
-                    v-if="countInCart>0">{{ countInCart }}</span>
+                    v-if="getTotalCount>0">{{ getTotalCount }}</span>
                 </div>
                 <div class="cart-icon about" data-toggle="modal" data-target="#about">О нас</div>
                 <div class="cart-icon callback" data-toggle="modal" data-target="#callback">Напиши нам</div>
@@ -134,7 +138,7 @@ function selectLottery(id) {
             <ul class="footer-container d-sm-none d-flex justify-content-center flex-wrap"
                 @mouseleave="bottom_menu_show=false">
                 <li class="w-100 p-2 text-center" v-if="!bottom_menu_show" @click="bottom_menu_show=true">Показать меню
-                    <span class="badge badge-danger" v-if="countInCart>0">{{ countInCart }}</span></li>
+                    <span class="badge badge-danger" v-if="getTotalCount>0">{{ getTotalCount }}</span></li>
                 <li class="w-100 p-2 text-center" v-if="bottom_menu_show" @click="bottom_menu_show=false">Скрыть меню
                 </li>
                 <ul class="w-100 bottom_menu" v-if="bottom_menu_show">
@@ -194,23 +198,13 @@ function selectLottery(id) {
 
             <Modal id="menu" class_size="modal-lg" :header="false">
                 <template #body>
-                    <!-- <b-carousel
-                         id="carousel-fade"
-                         style=""
-                         :controls="true"
-                         fade
-                         indicators
-                         img-width="1024"
-                         img-height="480"
-                     >
-                         <b-carousel-slide
-                             img-src="/images/full_1.jpg"
-                         ></b-carousel-slide>
-                         <b-carousel-slide
-                             img-src="/images/full_2.jpg"
-                         ></b-carousel-slide>
-
-                     </b-carousel> -->
+                    <Carousel
+                        id="carousel-fade"
+                        :items="[
+                          '/images/full_1.jpg',
+                          '/images/full_2.jpg',
+                        ]">
+                    </Carousel>
                 </template>
             </Modal>
 

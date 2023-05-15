@@ -4,10 +4,10 @@ import {inject, ref} from "vue";
 const is_search_opened = ref(false)
 const filteredText = inject('filteredText')
 
-function closeFilter() {
+const closeFilter = () => {
     if (filteredText.value == null || filteredText.value.length === 0)
         is_search_opened.value = false;
-}
+};
 
 </script>
 
@@ -17,7 +17,7 @@ function closeFilter() {
             <img v-lazy="'/images/search.png'" alt="Поиск">
         </div>
         <input type="search" class="search-input" v-if="is_search_opened" v-model="filteredText"
-               @mouseleave="closeFilter()"
+               @mouseleave="closeFilter"
                placeholder="Быстрый поиск по продуктам...">
     </div>
 </template>

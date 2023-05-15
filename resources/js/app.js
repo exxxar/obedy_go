@@ -9,10 +9,21 @@ import { createPinia } from 'pinia'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 import VueLazyload from '@jambonn/vue-lazyload'
+import Notifications, {useNotification} from '@kyvg/vue3-notification'
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
 window.$ = $;
+
+const notification = useNotification()
+export const sendNotify = (message, type = 'success') => {
+    notification.notify({
+        group: 'info',
+        type: type,
+        title: 'Оповещение ОбедыGO',
+        text: message
+    });
+}
 
 createInertiaApp({
     title: () => `${appName}`,
@@ -30,6 +41,7 @@ createInertiaApp({
                     attempt: 1
                 }
             )
+            .use(Notifications)
             .mount(el);
     },
     progress: {

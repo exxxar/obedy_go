@@ -35,7 +35,6 @@ class Product extends Model
         'price'=>'double',
         'weight'=>'double',
         'is_week'=>'boolean',
-        'addition'=>'boolean',
     ];
 
     public function category(): BelongsTo

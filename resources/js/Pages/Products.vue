@@ -18,14 +18,8 @@ const props = defineProps({
 const filteredText = ref(null)
 const current_category_id = ref(1)
 const current_day = ref(2)
-const settings = reactive({
-        suppressScrollX: true,
-        suppressScrollY: false,
-})
-
 
 provide('filteredText', filteredText)
-
 
 const filteredProducts = computed(() => {
     return filteredText.value == null ? props.products :
@@ -55,7 +49,7 @@ const productByCategory = computed(() => {
                     <Search></Search>
                     <div class="row">
                         <div class="col-sm-6 col-md-6 col-lg-4 col-12" v-for="product in filteredProducts">
-                            <ProductCard :product="product"></ProductCard>
+                            <ProductCard :product="product" :week="product.is_week"></ProductCard>
                         </div>
                     </div>
                     <h3 class="mt-4 mb-2 text-uppercase text-white">А также можно добавить к заказу....</h3>
