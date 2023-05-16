@@ -17,6 +17,8 @@
 
 @import "pages/main";
 @import "pages/products";
-@import "pages/productCard";
-@import "pages/productControls";
-@import "pages/cartModal";
+@import "components/productCard";
+@import "components/productControls";
+@import "components/cartModal";
+@import "components/lotteries";
+@import "components/lotteryGame";

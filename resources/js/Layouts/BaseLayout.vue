@@ -8,14 +8,17 @@ import {useMainStore} from '@/stores/mainStore.js'
 import {useCartStore} from '@/stores/cartStore.js'
 import {storeToRefs} from "pinia"
 import Carousel from "@/Components/Carousel.vue"
+import Lotteries from "@/Components/Lotteries/Lotteries.vue";
+import {useLotteryStore} from "@/stores/lotteryStore.js";
+import LotteryGame from "@/Components/Lotteries/LotteryGame.vue";
 
 //get store
 const main = useMainStore()
 const {foodParts, part} = storeToRefs(main)
 const {getTotalCount} = storeToRefs(useCartStore())
+const {lottery_id, lotteries} = storeToRefs(useLotteryStore())
 
 //data
-const lottery_id = ref(null)
 const bottom_menu_show = ref(false)
 const is_cart_open = ref(false)
 const ready_to_order = ref(false)
@@ -79,11 +82,6 @@ const swipeHandler = direction => {
     else
         main.changePosition()
 }
-
-const selectLottery = id => {
-    console.log("select=>" + id)
-    lottery_id.value = id
-}
 </script>
 
 <template>
@@ -131,8 +129,7 @@ const selectLottery = id => {
                 <div class="cart-icon callback" data-toggle="modal" data-target="#callback">Напиши нам</div>
                 <div class="cart-icon delivery" data-toggle="modal" data-target="#delivery">Доставка</div>
                 <div class="cart-icon lottery" data-toggle="modal" data-target="#lottery"
-                     @click="lottery_id.value = null">Акции
-                </div>
+                     @click="lottery_id = null" v-if="lotteries.length > 0">Акции</div>
             </div>
 
             <ul class="footer-container d-sm-none d-flex justify-content-center flex-wrap"
@@ -149,7 +146,8 @@ const selectLottery = id => {
                     <li data-toggle="modal" data-target="#about">О нас</li>
                     <li data-toggle="modal" data-target="#callback">Напиши нам</li>
                     <li data-toggle="modal" data-target="#delivery">Доставка</li>
-                    <li data-toggle="modal" data-target="#lottery" @click="lottery_id.value = null">Акции</li>
+                    <li data-toggle="modal" data-target="#lottery"
+                        @click="lottery_id = null" v-if="lotteries.length > 0">Акции</li>
                 </ul>
             </ul>
 
@@ -191,8 +189,8 @@ const selectLottery = id => {
 
             <Modal id="lottery" class_size="modal-lg" title="Розыгрыши и призы">
                 <template #body>
-                    <!-- <lottery-slider v-on:enter="selectLottery" v-if="!lottery_id"/>
-                    <lottery-game :lottery_id="lottery_id" v-if="lottery_id"/> -->
+                    <Lotteries v-if="!lottery_id"/>
+                    <LotteryGame v-else/>
                 </template>
             </Modal>
 

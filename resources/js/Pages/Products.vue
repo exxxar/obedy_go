@@ -2,7 +2,7 @@
 import BaseLayout from "@/Layouts/BaseLayout.vue"
 import Search from "@/Components/Search.vue";
 import ProductCard from "@/Components/ProductCard.vue";
-import {computed, provide, reactive, ref} from "vue";
+import {computed, provide, ref} from "vue";
 
 const props = defineProps({
     products: {

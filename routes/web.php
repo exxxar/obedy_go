@@ -2,6 +2,7 @@
 
 use App\Enums\FoodPartEnum;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\LotteryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -31,6 +32,11 @@ Route::get('/{foodPart}', [ProductController::class, 'getProducts'])
     ->whereIn('foodPart', FoodPartEnum::getConstants())
     ->name('products');
 
+Route::group(['prefix' => 'lottery'], function () {
+    Route::get('/all', [LotteryController::class, 'getLotteryList'])->name('lotteries');
+    Route::get('/get/{id}', [LotteryController::class, 'getLottery'])->name('lottery');
+    Route::post('/pick', [LotteryController::class, 'pickPlace'])->name('lottery.pick');
+});
 
 /*Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

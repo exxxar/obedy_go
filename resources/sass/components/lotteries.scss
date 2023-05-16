@@ -1,0 +1,25 @@
+.lottery-slide {
+    width: 100%;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: red;
+    background: url('/images/bg_go.jpg') no-repeat center center;
+    background-size: cover;
+    box-shadow: 1px 1px 2px 0px #000000;
+
+    img {
+        width: 100%;
+    }
+
+    p.inf {
+        font-family: fantasy;
+        color: #c31200;
+        text-align: center;
+        /* width: 100%; */
+        display: block;
+    }
+
+    .progress {
+        box-shadow: 1px 1px 2px 0px #000000 inset;
+    }
+}

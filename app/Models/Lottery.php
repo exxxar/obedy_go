@@ -32,8 +32,6 @@ class Lottery extends Model
         'place_count' => 'integer',
         'free_place_count' => 'integer',
         'win_promo_id' => 'integer',
-        'is_active' => 'boolean',
-        'is_complete' => 'boolean',
         'date_end' => 'date',
     ];
 
