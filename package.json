@@ -15,17 +15,23 @@
         "pusher-js": "^8.0.2",
         "sass": "^1.62.1",
         "vite": "^4.3.4",
+        "vite-plugin-run": "^0.4.1",
         "vue": "^3.2.47"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-svg-core": "^6.4.0",
+        "@fortawesome/free-brands-svg-icons": "^6.4.0",
+        "@fortawesome/free-regular-svg-icons": "^6.4.0",
+        "@fortawesome/free-solid-svg-icons": "^6.4.0",
+        "@fortawesome/vue-fontawesome": "^3.0.3",
+        "@inertiajs/progress": "^0.2.7",
         "@jambonn/vue-lazyload": "^1.0.9",
         "@kyvg/vue3-notification": "^2.9.0",
         "@popperjs/core": "^2.11.7",
-        "bootstrap": "^4.6.2",
-        "bootstrap-vue": "^2.23.1",
+        "bootstrap": "^5.3.0-alpha3",
         "jquery": "^3.6.4",
         "maska": "^2.1.9",
         "pinia": "^2.0.36",
-        "vue-custom-scrollbar": "^1.4.4"
+        "vue3-perfect-scrollbar": "^1.6.1"
     }
 }

@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import VueRecordAudio from "@/Components/vue-record/VueRecordAudio.vue";
+import VueRecordAudio from "@/Components/vue-record/VueRecordAudio.vue"
 
 export default {
     components: {VueRecordAudio},
@@ -46,7 +46,7 @@ export default {
     methods: {
         send() {
 
-            let formData = new FormData();
+            let formData = new FormData()
 
             formData.append("phone", this.phone)
             formData.append("name", this.name)
@@ -54,7 +54,7 @@ export default {
             for (var i = 0; i < this.recordings.length; i++) {
                 let file = this.recordings[i].data;
                 console.log(file);
-                formData.append('files[' + i + ']', file);
+                formData.append('files[' + i + ']', file)
             }
 
             axios.post('../api/v2/obedy/voice', formData, {
@@ -67,17 +67,17 @@ export default {
                 this.recordings = []
             })
                 .catch(function () {
-                });
+                })
             this.recordings = []
         },
         removeRecord(index) {
             this.recordings.splice(index, 1)
         },
         onStream(stream) {
-            console.log('Got a stream object:', stream);
+            console.log('Got a stream object:', stream)
         },
         onVideoStream(stream) {
-            console.log('Got a video stream object:', stream);
+            console.log('Got a video stream object:', stream)
         },
         onVideoResult(data) {
             this.$refs.Video.srcObject = null

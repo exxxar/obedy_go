@@ -40,7 +40,7 @@
 
 .cart-modal {
     position: fixed;
-    z-index: 100;
+    z-index: 1054;
     right: 0;
     top: 0;
     height: 100vh;
@@ -78,8 +78,16 @@
             font-weight: 800;
             font-size: 12px;
 
+            --bs-btn-hover-color: #c31200;
+            --bs-btn-active-color: #c31200;
+            text-decoration: none;
+
             &:focus {
                 outline: none;
+            }
+
+            &:hover {
+                text-decoration: underline;
             }
 
         }
@@ -348,4 +356,9 @@
     box-shadow: 1px 1px 2px 0px #c31200;
     border-color: #c31200;
 
+}
+
+.btn-outline-danger {
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-color: #fff;
 }

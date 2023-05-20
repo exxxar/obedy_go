@@ -19,26 +19,24 @@ const props = defineProps({
     footer: {
         type: Boolean,
         default: false
-    },
-});
+    }
+})
 </script>
 
 <template>
-    <div class="modal fade" :id="id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" :id="id" tabindex="-1" :aria-labelledby="id+'Label'" aria-hidden="true">
         <div class="modal-dialog" :class="class_size">
             <div class="modal-content">
                 <div v-if="header" class="modal-header">
-                    <slot name="title"><h5 class="modal-title" id="exampleModalLabel">{{title}}</h5></slot>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <slot name="title"><h5 class="modal-title" :id="id+'Label'">{{title}}</h5></slot>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <slot name="body"></slot>
                 </div>
                 <div v-if="footer" class="modal-footer">
-                    <button type="button" class="btn btn-secondary" :data-dismiss="id">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-danger" :data-bs-dismiss="id">Отменить</button>
+                    <button type="button" class="btn btn-success">Подтвердить</button>
                 </div>
             </div>
         </div>

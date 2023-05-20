@@ -120,10 +120,7 @@
         transform: rotate(45deg);
     }
 }
-.btn:hover {
-    color: #212529;
-    text-decoration: none
-}
+
 .btn-coutner {
     width: 40px;
     height: 40px;
@@ -136,4 +133,16 @@
     color: white;
     font-weight: 900;
     font-size: 24px;
+}
+
+.btn-coutner:hover {
+    color: #212529;
+    text-decoration: none
+}
+
+.btn-success, .btn-danger {
+    --bs-btn-color: #fff;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-color: #fff;
+    --bs-btn-disabled-color: #fff;
 }

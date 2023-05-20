@@ -1,9 +1,8 @@
 <script setup>
 import {inject, provide, reactive} from "vue"
-import {useCartStore} from '@/stores/cartStore.js'
 import {storeToRefs} from "pinia"
-import ProductCard from "@/Components/ProductCard.vue";
-import VueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
+import {useCartStore} from '@/stores/cartStore.js'
+import ProductCard from "@/Components/ProductCard.vue"
 
 const cart = useCartStore()
 const {items} = storeToRefs(cart)
@@ -22,7 +21,6 @@ const hasMainProductInCart = () => {
     let tmp = items.value.filter(item => item.product.addition === 0)
     return tmp.length > 0
 }
-
 </script>
 
 <template>
@@ -31,23 +29,23 @@ const hasMainProductInCart = () => {
             <div class="custom-modal-header">
                 <button class="btn btn-link" @click="is_cart_open = false">Закрыть</button>
             </div>
-            <VueCustomScrollbar class="scroll-area scroll-area-bottom" :settings="settings" :tagname="'ul'">
-                <li v-for="item in items" class="day-item-wrapper" v-if="cart.getTotalCount>0">
+            <perfect-scrollbar class="scroll-area scroll-area-bottom ms-0 ps-0" :options="settings" tag="ul">
+                <li v-for="item in items" class="day-item-wrapper list-group-numbered" v-if="cart.getTotalCount>0">
                     <ProductCard :product="item.product"></ProductCard>
                 </li>
                 <li v-if="cart.getTotalCount===0">
                     <img src="/images/logo_obed_go.jpg" class="img-fluid" alt="">
                     <h3 class="text-uppercase text-center">В корзине пусто...</h3>
                 </li>
-            </VueCustomScrollbar>
+            </perfect-scrollbar>
 
             <div class="custom-modal-footer" v-if="cart.getTotalCount>0">
-                <button class="btn btn-danger w-100 p-3 text-uppercase font-weight-bold" v-if="!ready_to_order"
+                <button class="btn btn-danger w-100 p-3 text-uppercase fw-bold" v-if="!ready_to_order"
                         :disabled="!hasMainProductInCart()"
                         @click="ready_to_order = true">Оформить
                     <strong>{{cart.getTotalPrice}} руб</strong>
                 </button>
-                <button class="btn btn-outline-danger mt-2 w-100 p-3 text-uppercase font-weight-bold"
+                <button class="btn btn-outline-danger mt-2 w-100 p-3 text-uppercase fw-bold"
                         v-if="!ready_to_order"
                         @click="cart.clearCart">Очистить
                 </button>

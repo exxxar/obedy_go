@@ -1,7 +1,8 @@
 <script setup>
+import {nextTick} from "vue"
+import {popover} from "@/app"
 import ProductControls from "@/Components/ProductControls.vue"
 import ProductModal from "@/Components/ProductModal.vue"
-import {provide} from "vue"
 
 const props = defineProps({
     product: {
@@ -14,15 +15,19 @@ const props = defineProps({
     }
 })
 
-provide('product', props.product)
+const setPopover = async (id) => {
+    [...document.getElementsByName('btn-popover-'+id)].forEach(element => popover.getOrCreateInstance(element).dispose());
+    await nextTick();
+    [...document.getElementsByName('btn-popover-'+id)].forEach(element => popover.getOrCreateInstance(element))
+}
 </script>
 
 <template>
     <div class="day-item" :class="week ? 'week-product' : ''">
         <h3>{{ product.title }}</h3>
-        <img v-lazy="product.image" :alt="product.title" class="w-100" data-toggle="modal" :data-target="'#modal-'+product.id">
-        <ProductControls></ProductControls>
+        <img v-lazy="product.image" :alt="product.title" class="w-100" data-bs-toggle="modal" :data-bs-target="'#modal-'+product.id" @click="setPopover(product.id)">
+        <ProductControls :product="product"></ProductControls>
         <div class="week-label" v-if="product.is_week">Бесплатная доставка</div>
     </div>
-    <ProductModal></ProductModal>
+    <ProductModal :product="product"></ProductModal>
 </template>

@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, onUnmounted, provide, ref, watch} from 'vue'
+import {nextTick, onMounted, onUnmounted, provide, ref, watch} from 'vue'
 import Modal from '@/Components/Modal.vue'
 import TopMenu from "@/Components/TopMenu.vue"
 import AudioCallback from "@/Components/AudioCallback.vue"
@@ -8,14 +8,15 @@ import {useMainStore} from '@/stores/mainStore.js'
 import {useCartStore} from '@/stores/cartStore.js'
 import {storeToRefs} from "pinia"
 import Carousel from "@/Components/Carousel.vue"
-import Lotteries from "@/Components/Lotteries/Lotteries.vue";
-import {useLotteryStore} from "@/stores/lotteryStore.js";
-import LotteryGame from "@/Components/Lotteries/LotteryGame.vue";
+import Lotteries from "@/Components/Lotteries/Lotteries.vue"
+import {useLotteryStore} from "@/stores/lotteryStore.js"
+import LotteryGame from "@/Components/Lotteries/LotteryGame.vue"
+import {popover} from "@/app"
 
 //get store
 const main = useMainStore()
 const {foodParts, part} = storeToRefs(main)
-const {getTotalCount} = storeToRefs(useCartStore())
+const {items, getTotalCount} = storeToRefs(useCartStore())
 const {lottery_id, lotteries} = storeToRefs(useLotteryStore())
 
 //data
@@ -23,19 +24,16 @@ const bottom_menu_show = ref(false)
 const is_cart_open = ref(false)
 const ready_to_order = ref(false)
 
+//provide
 provide('ready_to_order', ready_to_order)
 provide('is_cart_open', is_cart_open)
 
 // watch
-watch(part, () => {
-    main.selectPart()
-})
+watch(part, () => { main.selectPart() })
 
 onMounted(() => {
+    [...document.querySelectorAll('[data-bs-toggle="popover"]')].forEach(el => popover.getOrCreateInstance(el))
     switchFoodPart()
-    $(document).ready(function () {
-        $('[data-toggle="popover"]').popover()
-    })
     window.addEventListener("keyup", switchKeyUp)
 })
 
@@ -82,31 +80,41 @@ const swipeHandler = direction => {
     else
         main.changePosition()
 }
+
+const setPopover = async () => {
+    for (const el of items.value) {
+        [...document.getElementsByName('btn-popover-'+el.product.id)].forEach(element => popover.getOrCreateInstance(element).dispose())
+        await nextTick();
+        [...document.getElementsByName('btn-popover-'+el.product.id)].forEach(element => popover.getOrCreateInstance(element))
+    }
+}
 </script>
 
 <template>
-    <div class="wrapper">
+    <div class="wrapper obedygo">
         <notifications position="top left" group="info"/>
 
-        <div class="container-fluid d-flex align-items-center flex-wrap w-100 m-0 obedygo"
-             style="min-height: 100vh;padding:50px 10px 10px 10px;">
-
+        <div class="container-fluid d-flex align-items-center flex-wrap" style="min-height: 100vh;padding:70px 10px 70px 10px;">
             <slot name="content" v-if="part === 0"></slot>
             <TopMenu v-else></TopMenu>
 
-            <div class="row w-100 d-flex justify-content-center mt-5 mb-0 ml-0">
-                <h6 class="text-uppercase text-white text-center col-8 col-sm-8">Полное меню на неделю можно глянуть <a
-                    href="#" class="text-danger font-weight-bold" data-toggle="modal" data-target="#menu">ТУТ</a>
+            <div class="w-100 d-flex flex-column align-items-center text-uppercase text-white text-center mt-4"
+                :class="part === 0 ? 'mb-5 mt-5' : ''">
+                <h6 class="col-8 px-3">Полное меню на неделю можно глянуть <a
+                    href="#" class="text-danger font-weight-bold" data-bs-toggle="modal" data-bs-target="#menu">ТУТ</a>
                 </h6>
                 <template v-for="foodPart in foodParts">
-                    <h1 class="text-uppercase w-100 text-white text-center mt-2 ml-0 mr-0"
-                        v-if="part === foodPart.partId">{{ foodPart.title }}</h1>
+                    <h1 class="mt-2" v-if="part === foodPart.partId">{{ foodPart.title }}</h1>
                 </template>
             </div>
 
+            <div class="w-100" v-if="part === 0"></div>
+            <div class="w-100" v-if="part === 0"></div>
+
             <slot name="content" v-if="part>0&&part<4"></slot>
 
-            <div class="row w-100 m-0 d-flex justify-content-center " v-if="part===4">
+            <div class="w-100 row m-0 d-flex flex-wrap justify-content-center mb-5" v-if="part===4">
+                <!-- проверить когда будет сделана форма -->
                 <div class="col-lg-6 col-md-6 col-sm-8 col-12">
                     <h4 class="text-white">
                         <em>В данный момент этот раздел не доступен, но это не должно Вас огорчать - теперь вы можете
@@ -117,41 +125,40 @@ const swipeHandler = direction => {
                 </div>
             </div>
 
-            <div class="mb-5 w-100"></div>
+            <div class="w-100" v-if="part === 4"></div>
 
             <CartModal v-if="is_cart_open"/>
 
             <div class="cart-container d-sm-block d-none" v-if="!is_cart_open">
-                <div class="cart-icon cart" @click="is_cart_open = true">Корзина <span
+                <div class="cart-icon cart" @click="is_cart_open = true; setPopover();">Корзина <span
                     v-if="getTotalCount>0">{{ getTotalCount }}</span>
                 </div>
-                <div class="cart-icon about" data-toggle="modal" data-target="#about">О нас</div>
-                <div class="cart-icon callback" data-toggle="modal" data-target="#callback">Напиши нам</div>
-                <div class="cart-icon delivery" data-toggle="modal" data-target="#delivery">Доставка</div>
-                <div class="cart-icon lottery" data-toggle="modal" data-target="#lottery"
+                <div class="cart-icon about" data-bs-toggle="modal" data-bs-target="#about">О нас</div>
+                <div class="cart-icon callback" data-bs-toggle="modal" data-bs-target="#callback">Напиши нам</div>
+                <div class="cart-icon delivery" data-bs-toggle="modal" data-bs-target="#delivery">Доставка</div>
+                <div class="cart-icon lottery" data-bs-toggle="modal" data-bs-target="#lottery"
                      @click="lottery_id = null" v-if="lotteries.length > 0">Акции</div>
             </div>
 
-            <ul class="footer-container d-sm-none d-flex justify-content-center flex-wrap"
-                @mouseleave="bottom_menu_show=false">
-                <li class="w-100 p-2 text-center" v-if="!bottom_menu_show" @click="bottom_menu_show=true">Показать меню
-                    <span class="badge badge-danger" v-if="getTotalCount>0">{{ getTotalCount }}</span></li>
-                <li class="w-100 p-2 text-center" v-if="bottom_menu_show" @click="bottom_menu_show=false">Скрыть меню
-                </li>
-                <ul class="w-100 bottom_menu" v-if="bottom_menu_show">
-                    <li v-for="foodPart in foodParts" @click="part = foodPart.partId">{{ foodPart.title }}</li>
-                    <li class="hr"></li>
-                    <li @click="is_cart_open = true">Корзина <span class="badge badge-danger"
-                                                                   v-if="countInCart>0">{{ countInCart }}</span></li>
-                    <li data-toggle="modal" data-target="#about">О нас</li>
-                    <li data-toggle="modal" data-target="#callback">Напиши нам</li>
-                    <li data-toggle="modal" data-target="#delivery">Доставка</li>
-                    <li data-toggle="modal" data-target="#lottery"
-                        @click="lottery_id = null" v-if="lotteries.length > 0">Акции</li>
-                </ul>
+            <ul class="footer-container d-sm-none" @mouseleave="bottom_menu_show = false">
+                <li class="p-2 text-center" v-if="!bottom_menu_show" @click="bottom_menu_show = true">Показать меню
+                    <span class="badge badge-danger" v-if="getTotalCount > 0">{{ getTotalCount }}</span></li>
+                <template v-else>
+                    <li class="p-2 text-center" @click="bottom_menu_show = false">Скрыть меню</li>
+                    <ul class="bottom_menu">
+                        <li v-for="foodPart in foodParts" @click="part = foodPart.partId">{{ foodPart.title }}</li>
+                        <li class="hr"></li>
+                        <li @click="is_cart_open = true">
+                            Корзина <span class="badge badge-danger" v-if="countInCart>0">{{ countInCart }}</span>
+                        </li>
+                        <li data-bs-toggle="modal" data-bs-target="#about">О нас</li>
+                        <li data-bs-toggle="modal" data-bs-target="#callback">Напиши нам</li>
+                        <li data-bs-toggle="modal" data-bs-target="#delivery">Доставка</li>
+                        <li data-bs-toggle="modal" data-bs-target="#lottery"
+                            @click="lottery_id = null" v-if="lotteries.length > 0">Акции</li>
+                    </ul>
+                </template>
             </ul>
-
-            <div v-if="part===0" class="mb-5 w-100"></div>
 
             <Modal id="about" title="О Нас">
                 <template #body>
@@ -199,9 +206,9 @@ const swipeHandler = direction => {
                     <Carousel
                         id="carousel-fade"
                         :items="[
-                          '/images/full_1.jpg',
-                          '/images/full_2.jpg',
-                        ]">
+                      '/images/full_1.jpg',
+                      '/images/full_2.jpg',
+                    ]">
                     </Carousel>
                 </template>
             </Modal>

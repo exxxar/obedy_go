@@ -40,3 +40,19 @@ $sm-layout:'only screen and (max-width: 767px)';
 $tb-layout: 'only screen and (min-width: 480px) and (max-width: 767px)';
 
 $xs-layout: 'only screen and (max-width: 575px)';
+
+$grid-breakpoints: (
+    xs: 0,
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px
+);
+$container-max-widths: (
+    sm: 540px,
+    md: 720px,
+    lg: 960px,
+    xl: 1140px
+);
+
+$btn-color: #fff;

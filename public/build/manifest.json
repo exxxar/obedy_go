@@ -1,0 +1,64 @@
+{
+  "BaseLayout.css": {
+    "file": "assets/BaseLayout-c79c1460.css",
+    "src": "BaseLayout.css"
+  },
+  "_BaseLayout-84aefaf6.js": {
+    "css": [
+      "assets/BaseLayout-c79c1460.css"
+    ],
+    "dynamicImports": [
+      "resources/js/Pages/Main.vue",
+      "resources/js/Pages/Products.vue",
+      "resources/js/Pages/Self.vue"
+    ],
+    "file": "assets/BaseLayout-84aefaf6.js",
+    "imports": [
+      "resources/js/app.js"
+    ]
+  },
+  "resources/js/Pages/Main.vue": {
+    "file": "assets/Main-ec104173.js",
+    "imports": [
+      "_BaseLayout-84aefaf6.js",
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/Main.vue"
+  },
+  "resources/js/Pages/Products.vue": {
+    "file": "assets/Products-21c475ca.js",
+    "imports": [
+      "_BaseLayout-84aefaf6.js",
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/Products.vue"
+  },
+  "resources/js/Pages/Self.vue": {
+    "file": "assets/Self-6f1bbe18.js",
+    "imports": [
+      "_BaseLayout-84aefaf6.js",
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/Self.vue"
+  },
+  "resources/js/app.css": {
+    "file": "assets/app-e76ed957.css",
+    "src": "resources/js/app.css"
+  },
+  "resources/js/app.js": {
+    "css": [
+      "assets/app-e76ed957.css"
+    ],
+    "dynamicImports": [
+      "resources/js/Pages/Main.vue",
+      "resources/js/Pages/Products.vue",
+      "resources/js/Pages/Self.vue"
+    ],
+    "file": "assets/app-c86f6e1a.js",
+    "isEntry": true,
+    "src": "resources/js/app.js"
+  }
+}

@@ -1,0 +1,1 @@
+import{_ as t}from"./BaseLayout-84aefaf6.js";import{c as e,w as o,o as _}from"./app-c86f6e1a.js";const m={__name:"Self",setup(a){return(c,r)=>(_(),e(t,null,{content:o(()=>[]),_:1}))}};export{m as default};

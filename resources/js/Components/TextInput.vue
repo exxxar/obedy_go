@@ -1,5 +1,6 @@
 <script setup>
 import {vMaska} from "maska"
+
 defineProps({
     modelValue: {
         type: String,
@@ -21,17 +22,16 @@ defineProps({
         type: Array,
         default: [],
     },
-});
-defineEmits(['update:modelValue']);
+})
+
+defineEmits(['update:modelValue'])
 </script>
 <template>
-    <input :type="type" class="form-control w-100 mb-2 p-4" :placeholder="placeholder"
+    <input :type="type" class="form-control w-100 mb-2 px-4 py-3" :placeholder="placeholder"
            :value="modelValue"
            :class="errors.length > 0 ? 'is-invalid' : ''"
            v-maska :data-maska="mask"
            @input="$emit('update:modelValue', $event.target.value)"
            required>
-    <div v-if="errors.length > 0" class="invalid-feedback" v-for="error in errors">
-        {{ error }}
-    </div>
+    <div v-if="errors.length > 0" class="invalid-feedback" v-for="error in errors">{{ error }}</div>
 </template>

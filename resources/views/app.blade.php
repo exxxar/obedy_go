@@ -11,8 +11,8 @@
     <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Favicons -->
-    <link rel="shortcut icon" href="">
-    <link rel="apple-touch-icon" href="">
+    <link rel="shortcut icon" href="/images/logo_obed_go.jpg">
+    <link rel="apple-touch-icon" href="/images/logo_obed_go.jpg">
     <!-- Stylesheets -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap" rel="stylesheet">
@@ -24,6 +24,5 @@
 </head>
 <body>
 @inertia
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" async></script>
 </body>
 </html>
