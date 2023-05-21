@@ -46,16 +46,6 @@ const openAuthModal = (index) => {
 }
 
 const pick = () => {
-    //?
-    if (isOccupied(form.selected_place)) {
-        sendNotify('Данный слот уже кем-то занят! Попробуйте занять другой!', 'error')
-        return
-    }
-    if (form.selected_place === null) {
-        sendNotify('Слот не выбран!', 'error')
-        return
-    }
-    //?
     axios.post(route('lottery.pick'), form).then(resp => {
         current_slot_count.value = resp.data.current_slot_count === 0 ? null : resp.data.current_slot_count;
         sendNotify('Спасибо! Слот успешно занят вами!')

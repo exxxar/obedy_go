@@ -27,7 +27,7 @@ class User extends Authenticatable
         'phone',
         'auth_code',
         'telegram_chat_id',
-        'address',
+        'addresses',
         'active',
         'password',
         'trusted_count',
@@ -52,6 +52,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'addresses'=>'array'
     ];
 
     public function carts(): HasMany

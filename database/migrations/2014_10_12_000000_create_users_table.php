@@ -21,7 +21,7 @@ return new class extends Migration
             $table->boolean('active')->default(false);
 
             $table->string('telegram_chat_id')->nullable();
-            $table->string('address')->default('');
+            $table->json('addresses')->nullable();
 
             $table->boolean('is_trusted')->default(false);
             $table->integer('trusted_count')->default(0);
