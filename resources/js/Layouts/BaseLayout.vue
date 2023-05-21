@@ -1,13 +1,13 @@
 <script setup>
 import {nextTick, onMounted, onUnmounted, provide, ref, watch} from 'vue'
-import Modal from '@/Components/Modal.vue'
-import TopMenu from "@/Components/TopMenu.vue"
-import AudioCallback from "@/Components/AudioCallback.vue"
-import CartModal from "@/Components/CartModal.vue"
+import Modal from '@/Components/Basic/Modal.vue'
+import TopMenu from "@/Components/Layout/TopMenu.vue"
+import AudioCallback from "@/Components/Basic/AudioCallback.vue"
+import CartModal from "@/Components/Cart/CartModal.vue"
 import {useMainStore} from '@/stores/mainStore.js'
 import {useCartStore} from '@/stores/cartStore.js'
 import {storeToRefs} from "pinia"
-import Carousel from "@/Components/Carousel.vue"
+import Carousel from "@/Components/Basic/Carousel.vue"
 import Lotteries from "@/Components/Lotteries/Lotteries.vue"
 import {useLotteryStore} from "@/stores/lotteryStore.js"
 import LotteryGame from "@/Components/Lotteries/LotteryGame.vue"

@@ -1,8 +1,8 @@
 <script setup>
 import {nextTick} from "vue"
 import {popover} from "@/app"
-import ProductControls from "@/Components/ProductControls.vue"
-import ProductModal from "@/Components/ProductModal.vue"
+import ProductControls from "@/Components/Products/ProductControls.vue"
+import ProductModal from "@/Components/Products/ProductModal.vue"
 
 const props = defineProps({
     product: {

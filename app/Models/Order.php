@@ -6,6 +6,7 @@ use App\Enums\OrderStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Order extends Model
 {
@@ -24,16 +25,14 @@ class Order extends Model
         'delivery_price',
         'changed_summary_price',
         'changed_delivery_price',
-        'delivery_range',
-        'products',
+        'delivery_range'
     ];
 
     protected $casts = [
         'delivery_price'=>'integer',
-        'changed_summary_price'=>'integer',
+        'summary_price'=>'integer',
         'changed_delivery_price'=>'integer',
-        'delivery_range'=>'integer',
-        'products'=>'array',
+        'delivery_range'=>'float'
     ];
 
     /**
@@ -50,4 +49,10 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function products(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'order_product')->withPivot('quantity');
+    }
+
 }

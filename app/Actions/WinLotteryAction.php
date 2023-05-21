@@ -18,7 +18,7 @@ class WinLotteryAction implements WinLotteryContract
 
         event(new SendSmsEvent($promocode->phone, $message));
 
-        Mail::to($promocode->email)->send(new LotteryMail($message));
+       // Mail::to($promocode->email)->send(new LotteryMail($message));
 
         if ($lottery->free_place_count == 0) {
             $place = LotteryPromocode::where("lottery_id", $lottery->id)
@@ -36,7 +36,7 @@ class WinLotteryAction implements WinLotteryContract
 
             event(new SendSmsEvent($promocode->phone, $message));
 
-            Mail::to($promocode->email)->send(new LotteryMail($message));
+           // Mail::to($promocode->email)->send(new LotteryMail($message));
         }
 
     }

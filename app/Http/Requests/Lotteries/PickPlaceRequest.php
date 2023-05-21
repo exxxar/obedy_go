@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Lotteries;
 
 use App\Rules\Lotteries\CheckLotteryPlaceRule;
 use App\Rules\Lotteries\CheckLotteryRule;

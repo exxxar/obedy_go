@@ -1,7 +1,7 @@
 <script setup>
 import {inject, provide} from "vue"
-import Modal from '@/Components/Modal.vue'
-import ProductControls from "@/Components/ProductControls.vue"
+import Modal from '@/Components/Basic/Modal.vue'
+import ProductControls from "@/Components/Products/ProductControls.vue"
 
 const props = defineProps({
     product: {

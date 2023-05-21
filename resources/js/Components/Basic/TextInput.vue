@@ -22,6 +22,9 @@ defineProps({
         type: Array,
         default: [],
     },
+    blur: {
+        default: null
+    }
 })
 
 defineEmits(['update:modelValue'])
@@ -32,6 +35,7 @@ defineEmits(['update:modelValue'])
            :class="errors.length > 0 ? 'is-invalid' : ''"
            v-maska :data-maska="mask"
            @input="$emit('update:modelValue', $event.target.value)"
+           @blur="blur"
            required>
     <div v-if="errors.length > 0" class="invalid-feedback" v-for="error in errors">{{ error }}</div>
 </template>

@@ -35,8 +35,8 @@ const props = defineProps({
                     <slot name="body"></slot>
                 </div>
                 <div v-if="footer" class="modal-footer">
-                    <button type="button" class="btn btn-danger" :data-bs-dismiss="id">Отменить</button>
-                    <button type="button" class="btn btn-success">Подтвердить</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Отменить</button>
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Подтвердить</button>
                 </div>
             </div>
         </div>

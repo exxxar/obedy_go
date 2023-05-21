@@ -1,0 +1,46 @@
+.vue-audio-recorder, .vue-video-recorder {
+    margin-right: 0px;
+}
+
+.record-settings {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.recorded-audio {
+    margin: 0 auto;
+    height: 200px;
+    overflow: auto;
+    border: thin solid #eee;
+    background-color: #fffcfc;
+    padding: 10px 5px;
+    border-radius: 5px;
+    box-shadow: 1px 1px 1px 0px inset;
+
+    .recorded-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+        padding: 0px 22px;
+    }
+
+    .audio-container {
+        display: flex;
+        height: 54px;
+        margin-right: 16px;
+
+        width: 100%;
+        padding: 0px;
+        box-sizing: border-box;
+        align-items: center;
+    }
+}
+
+.recorded-video {
+    video {
+        width: 100%;
+        max-height: 400px;
+    }
+}

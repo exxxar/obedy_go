@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Contracts\WinLotteryContract;
 use App\Events\ChangeLotteryEvent;
-use App\Http\Requests\PickPlaceRequest;
+use App\Http\Requests\Lotteries\PickPlaceRequest;
 use App\Http\Resources\LotteryResource;
 use App\Models\Lottery;
 use App\Models\LotteryPromocode;

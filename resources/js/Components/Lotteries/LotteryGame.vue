@@ -3,8 +3,8 @@ import {onMounted, reactive, ref} from "vue"
 import {sendNotify, modals} from "@/app"
 import {storeToRefs} from "pinia"
 import {useLotteryStore} from "@/stores/lotteryStore"
-import Modal from "@/Components/Modal.vue"
-import TextInput from "@/Components/TextInput.vue"
+import Modal from "@/Components/Basic/Modal.vue"
+import TextInput from "@/Components/Basic/TextInput.vue"
 
 const lottery = useLotteryStore()
 const {lotteryItem, lottery_id} = storeToRefs(lottery)
@@ -42,14 +42,11 @@ const openAuthModal = (index) => {
         return
     }
     form.selected_place = index
-    /*if (current_slot_count.value !== null) {
-        modals.getOrCreateInstance(document.getElementById('accept-lottery')).show()
-        return;
-    }*/
     modals.getOrCreateInstance(document.getElementById('personal-info')).show()
 }
 
 const pick = () => {
+    //?
     if (isOccupied(form.selected_place)) {
         sendNotify('Данный слот уже кем-то занят! Попробуйте занять другой!', 'error')
         return
@@ -58,11 +55,13 @@ const pick = () => {
         sendNotify('Слот не выбран!', 'error')
         return
     }
+    //?
     axios.post(route('lottery.pick'), form).then(resp => {
         current_slot_count.value = resp.data.current_slot_count === 0 ? null : resp.data.current_slot_count;
         sendNotify('Спасибо! Слот успешно занят вами!')
-        modals.getOrCreateInstance(document.getElementById('accept-lottery')).hide()
         modals.getOrCreateInstance(document.getElementById('personal-info')).hide()
+        if(current_slot_count.value !== null)
+            modals.getOrCreateInstance(document.getElementById('accept-lottery')).show()
     }).catch((resp) => {
         if(resp.response.data.errors && resp.response.data.errors.lottery_id){
             sendNotify(resp.response.data.errors.lottery_id[0], 'error')
@@ -143,7 +142,7 @@ const pick = () => {
     <Modal id="accept-lottery" :header="false" :footer="true">
         <template #body>
             <div class="row justify-content-center">
-                <p v-if="current_slot_count">Доступное число активаций <strong>{{ current_slot_count }}</strong></p>
+                <p>Доступное число активаций <strong>{{ current_slot_count }}</strong></p>
             </div>
         </template>
     </Modal>

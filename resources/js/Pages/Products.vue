@@ -1,8 +1,8 @@
 <script setup>
 import {computed, provide, ref} from "vue"
 import BaseLayout from "@/Layouts/BaseLayout.vue"
-import Search from "@/Components/Search.vue"
-import ProductCard from "@/Components/ProductCard.vue"
+import Search from "@/Components/Basic/Search.vue"
+import ProductCard from "@/Components/Products/ProductCard.vue"
 
 const props = defineProps({
     products: {

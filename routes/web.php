@@ -3,6 +3,7 @@
 use App\Enums\FoodPartEnum;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\LotteryController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -37,6 +38,12 @@ Route::group(['prefix' => 'lottery'], function () {
     Route::get('/get/{id}', [LotteryController::class, 'getLottery'])->name('lottery');
     Route::post('/pick', [LotteryController::class, 'pickPlace'])->name('lottery.pick');
 });
+
+Route::group(['prefix' => 'order'], function () {
+    Route::post('/delivery', [OrderController::class, 'getDeliveryRange'])->name('delivery.range');
+    Route::post('/', [OrderController::class, 'order'])->name('order');
+});
+
 
 /*Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
