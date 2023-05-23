@@ -5,21 +5,27 @@ import {storeToRefs} from "pinia"
 import {useLotteryStore} from "@/stores/lotteryStore"
 import Modal from "@/Components/Basic/Modal.vue"
 import TextInput from "@/Components/Basic/TextInput.vue"
+import {useUserStore} from "@/stores/userStore";
 
 const lottery = useLotteryStore()
 const {lotteryItem, lottery_id} = storeToRefs(lottery)
+const userStore = useUserStore()
+const {user} = storeToRefs(userStore)
+
 
 const current_slot_count = ref(null)
 const errors = ref([])
 
-const form = reactive({
+const defaultForm = {
     name: '',
     email: '',
     phone: '',
     code: '',
     lottery_id: lottery_id.value,
     selected_place: null
-})
+}
+
+const form = reactive({...defaultForm})
 
 onMounted(() => {
     lottery.loadLottery()
@@ -27,7 +33,17 @@ onMounted(() => {
         .listen('ChangeLotteryEvent', () => {
             lottery.loadLottery()
         })
+    changeFormPhoneName()
 })
+
+const changeFormPhoneName = () => {
+    Object.assign(form, defaultForm)
+    Object.assign(form, {
+        phone: user.value.phone,
+        name: user.value.name
+    })
+    errors.value = []
+}
 
 const isOccupied = (index) => {
     let tmp = lotteryItem.value.occupied_places
@@ -50,6 +66,7 @@ const pick = () => {
         current_slot_count.value = resp.data.current_slot_count === 0 ? null : resp.data.current_slot_count;
         sendNotify('Спасибо! Слот успешно занят вами!')
         modals.getOrCreateInstance(document.getElementById('personal-info')).hide()
+        changeFormPhoneName()
         if(current_slot_count.value !== null)
             modals.getOrCreateInstance(document.getElementById('accept-lottery')).show()
     }).catch((resp) => {
@@ -99,7 +116,7 @@ const pick = () => {
         </div>
     </div>
 
-    <Modal id="personal-info" title="Участие в розыгрыше">
+    <Modal id="personal-info" title="Участие в розыгрыше" :clear-function="changeFormPhoneName">
         <template #body class="row d-flex justify-content-center">
             <form class="row d-flex justify-content-center">
                 <div class="col-12">
@@ -123,7 +140,7 @@ const pick = () => {
                                v-model="form.email" type="email"></TextInput>
                 </div>
                 <div class="col-12 col-sm-6">
-                    <button type="button" class="btn btn-outline-success w-100" @click="pick()">Занять место</button>
+                    <button type="button" class="btn btn-outline-success w-100 mt-3" @click="pick()">Занять место</button>
                 </div>
             </form>
         </template>

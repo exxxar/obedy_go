@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions;
+namespace App\Actions\Order;
 
 use App\Contracts\PrepareChequeContract;
 use App\Events\SendSmsEvent;

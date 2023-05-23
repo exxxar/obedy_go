@@ -1,11 +1,11 @@
 <?php
 
 use App\Enums\FoodPartEnum;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\LotteryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -44,17 +44,13 @@ Route::group(['prefix' => 'order'], function () {
     Route::post('/', [OrderController::class, 'order'])->name('order');
 });
 
-
-/*Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});*/
-
 Route::resource('cart', CartController::class);
 
-require __DIR__ . '/auth.php';
+Route::group(['prefix' => 'auth', 'middleware'=>'guest'], function(){
+    Route::post('register', [AuthController::class, 'register'])->name('register');
+    Route::post('login', [AuthController::class, 'login'])->name('login');
+});
+
+Route::middleware('auth')
+    ->post('logout', [AuthController::class, 'logout'])
+    ->name('logout');

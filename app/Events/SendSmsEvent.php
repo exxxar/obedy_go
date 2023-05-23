@@ -12,7 +12,6 @@ use Illuminate\Queue\SerializesModels;
 
 class SendSmsEvent
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $phone;
     public $text;

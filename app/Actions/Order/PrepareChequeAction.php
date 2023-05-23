@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Actions;
+namespace App\Actions\Order;
 
 use App\Contracts\PrepareChequeContract;
 use App\Models\LotteryPromocode;
 use App\Models\Order;
-use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;

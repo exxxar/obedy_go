@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
-use App\Actions\CalculateDeliveryDistanceAction;
-use App\Actions\PrepareChequeAction;
-use App\Actions\WinLotteryAction;
+use App\Actions\Lottery\WinLotteryAction;
+use App\Actions\Order\CalculateDeliveryDistanceAction;
+use App\Actions\Order\PrepareChequeAction;
 use App\Contracts\CalculateDeliveryDistanceContract;
 use App\Contracts\PrepareChequeContract;
 use App\Contracts\WinLotteryContract;

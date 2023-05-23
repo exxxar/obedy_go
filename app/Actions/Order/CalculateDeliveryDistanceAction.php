@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Actions;
+namespace App\Actions\Order;
 
 use App\Contracts\CalculateDeliveryDistanceContract;
-use App\Services\YandexService;
 
 class CalculateDeliveryDistanceAction implements CalculateDeliveryDistanceContract
 {

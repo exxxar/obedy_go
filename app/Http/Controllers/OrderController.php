@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\OrderChequeGroupAction;
+use App\Actions\Order\OrderChequeGroupAction;
 use App\Contracts\CalculateDeliveryDistanceContract;
 use App\Http\Requests\Order\DeliveryRangeRequest;
 use App\Http\Requests\Order\OrderRequest;

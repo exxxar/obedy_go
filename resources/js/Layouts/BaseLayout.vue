@@ -1,5 +1,5 @@
 <script setup>
-import {nextTick, onMounted, onUnmounted, provide, ref, watch} from 'vue'
+import {nextTick, onMounted, onUnmounted, provide, reactive, ref, watch} from 'vue'
 import Modal from '@/Components/Basic/Modal.vue'
 import TopMenu from "@/Components/Layout/TopMenu.vue"
 import AudioCallback from "@/Components/Basic/AudioCallback.vue"
@@ -11,7 +11,9 @@ import Carousel from "@/Components/Basic/Carousel.vue"
 import Lotteries from "@/Components/Lotteries/Lotteries.vue"
 import {useLotteryStore} from "@/stores/lotteryStore.js"
 import LotteryGame from "@/Components/Lotteries/LotteryGame.vue"
-import {popover} from "@/app"
+import {modals, popover} from "@/app"
+import {useUserStore} from "@/stores/userStore"
+import TextInput from "@/Components/Basic/TextInput.vue"
 
 //get store
 const main = useMainStore()
@@ -19,10 +21,21 @@ const {foodParts, part} = storeToRefs(main)
 const {items, getTotalCount} = storeToRefs(useCartStore())
 const {lottery_id, lotteries} = storeToRefs(useLotteryStore())
 
+const userStore = useUserStore()
+const {user} = storeToRefs(userStore)
+
 //data
 const bottom_menu_show = ref(false)
 const is_cart_open = ref(false)
 const ready_to_order = ref(false)
+
+const defaultUser = {
+    phone: '',
+    password: ''
+}
+
+const form = reactive({...defaultUser})
+const errors = ref([])
 
 //provide
 provide('ready_to_order', ready_to_order)
@@ -88,6 +101,24 @@ const setPopover = async () => {
         [...document.getElementsByName('btn-popover-'+el.product.id)].forEach(element => popover.getOrCreateInstance(element))
     }
 }
+
+const clearForm = () => {
+    Object.assign(form, defaultUser)
+    errors.value = []
+}
+
+const btnLogin = () => {
+    userStore.login(form).then(
+        (response) => {
+            modals.getOrCreateInstance(document.getElementById('login')).hide()
+            clearForm()
+        },
+        (error) => {
+            errors.value = error.response.data.errors
+        }
+    )
+}
+
 </script>
 
 <template>
@@ -130,6 +161,8 @@ const setPopover = async () => {
             <CartModal v-if="is_cart_open"/>
 
             <div class="cart-container d-sm-block d-none" v-if="!is_cart_open">
+                <div class="cart-icon login" data-bs-toggle="modal" data-bs-target="#login" v-if="!user.isAuthorized">Войти</div>
+                <div class="cart-icon login" @click="userStore.logout()" v-else>Выйти</div>
                 <div class="cart-icon cart" @click="is_cart_open = true; setPopover();">Корзина <span
                     v-if="getTotalCount>0">{{ getTotalCount }}</span>
                 </div>
@@ -194,7 +227,7 @@ const setPopover = async () => {
                 </template>
             </Modal>
 
-            <Modal id="lottery" class_size="modal-lg" title="Розыгрыши и призы">
+            <Modal id="lottery" class_size="modal-lg" title="Розыгрыши и призы" :clear-function="clearForm">
                 <template #body>
                     <Lotteries v-if="!lottery_id"/>
                     <LotteryGame v-else/>
@@ -210,6 +243,23 @@ const setPopover = async () => {
                       '/images/full_2.jpg',
                     ]">
                     </Carousel>
+                </template>
+            </Modal>
+
+            <Modal id="login" title="Войти в аккаунт" :footer="false" :clear-function="clearForm">
+                <template #body>
+                    <div class="row justify-content-center">
+                        <TextInput :errors="errors.hasOwnProperty('phone') ? errors.phone : []" placeholder="Ваш номер телефона"
+                                   v-model="form.phone" mask="+7 (###) ###-##-##"></TextInput>
+                        <TextInput :errors="errors.hasOwnProperty('password') ? errors.password : []" placeholder="Ваш пароль"
+                                   v-model="form.password" type="password"></TextInput>
+                    </div>
+                </template>
+                <template #footer>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Отмена</button>
+                        <button type="button" class="btn btn-success" @click="btnLogin">Да</button>
+                    </div>
                 </template>
             </Modal>
 

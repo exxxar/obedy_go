@@ -16,6 +16,8 @@ import VueLazyload from '@jambonn/vue-lazyload'
 import Notifications, {useNotification} from '@kyvg/vue3-notification'
 import PerfectScrollbar from 'vue3-perfect-scrollbar'
 import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css'
+import vSelect from "vue-select";
+import 'vue-select/dist/vue-select.css';
 
 // font-awesome 6
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -75,6 +77,7 @@ createInertiaApp({
             .use(VueLazyload, VueLazyLoadOptions)
             .use(Notifications)
             .use(PerfectScrollbar)
+            .component("v-select", vSelect)
             .mount(el);
     }
 }).then(() => {

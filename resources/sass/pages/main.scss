@@ -190,9 +190,17 @@
         transition: 0.3s;
         flex-wrap: wrap;
 
+        &.login {
+            top: 15px;
+            z-index: 101;
+            border-left: 5px #ff4000 solid;
+        }
+
         &.cart {
             padding-top: 15px;
             padding-bottom: 15px;
+            z-index: 100;
+            top: 0;
 
             span {
                 width: 50px;
