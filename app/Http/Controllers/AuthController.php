@@ -7,7 +7,6 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -46,6 +45,11 @@ class AuthController extends Controller
 
     }
 
+    public function getUser()
+    {
+        return response()->json(new UserResource(Auth::user()));
+    }
+
     public function logout(Request $request)
     {
         Auth::guard('web')->logout();
@@ -54,6 +58,8 @@ class AuthController extends Controller
 
         $request->session()->regenerateToken();
 
-        return response()->json(['status'=>'ok']);
+        return response()->json([
+            "token"=>csrf_token()],
+            200);
     }
 }

@@ -2,6 +2,7 @@ import {defineStore} from "pinia"
 import {reactive, watch} from "vue"
 import axios from "axios";
 import {modals, sendNotify} from "@/app";
+import {useCartStore} from "@/stores/cartStore";
 
 
 export const useUserStore = defineStore('userStore', () => {
@@ -9,6 +10,8 @@ export const useUserStore = defineStore('userStore', () => {
     const user = window.localStorage.getItem('user') === null ?
         reactive({name: '', phone: '', addresses: [], isAuthorized: false}) :
         reactive(JSON.parse(window.localStorage.getItem('user')))
+
+    const cartStore = useCartStore()
 
     watch(user, (val) => {
         localStorage.setItem('user', JSON.stringify(user))
@@ -25,10 +28,8 @@ export const useUserStore = defineStore('userStore', () => {
 
     async function login(credentials){
         await axios.post(route('login', credentials)).then(resp => {
-            user.name = resp.data.name
-            user.phone = resp.data.phone
-            user.addresses = resp.data.addresses
-            user.isAuthorized = true
+            saveUser(resp.data)
+            window.axios.defaults.headers.common['X-CSRF-TOKEN'] = resp.data.token
             sendNotify('Вы успешно вошли в аккаунт!')
             return Promise.resolve(resp);
         }).catch(errors => {
@@ -39,11 +40,32 @@ export const useUserStore = defineStore('userStore', () => {
     async function logout(){
         await axios.post(route('logout')).then(resp => {
             user.isAuthorized = false
+            window.axios.defaults.headers.common['X-CSRF-TOKEN'] = resp.data.token
             sendNotify('Вы успешно вышли из аккаунта!')
         }).catch(errors => {
-            sendNotify('Произошла ошибка выходе из аккаунта', 'error')
+            user.isAuthorized = false
         })
     }
 
-    return {user, register, login, logout}
+    async function getUser(){
+
+        await axios.get(route('user')).then(resp => {
+            if(resp.data.user === null)
+                user.isAuthorized = false
+            else{
+                saveUser(resp.data)
+            }
+        })
+
+    }
+
+    function saveUser(data){
+        user.name = data.user.name
+        user.phone = data.user.phone
+        user.addresses = data.user.addresses
+        user.isAuthorized = true
+        cartStore.addToCartFromBD(data.cart)
+    }
+
+    return {user, register, login, logout, getUser, saveUser}
 })

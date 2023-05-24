@@ -50,7 +50,7 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (!Auth::attempt($this->only('phone', 'password'), $this->boolean('remember'))) {
+        if (!Auth::attempt($this->only('phone', 'password'), true)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -100,7 +100,8 @@ class LoginRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->merge([
-            'phone' => preg_replace('/\D/', '', $this->phone)
+            'phone' => preg_replace('/\D/', '', $this->phone),
+            'password' => preg_replace('/\D/', '', $this->password)
         ]);
     }
 }

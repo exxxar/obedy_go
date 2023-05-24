@@ -41,6 +41,7 @@ Route::group(['prefix' => 'lottery'], function () {
 
 Route::group(['prefix' => 'order'], function () {
     Route::post('/delivery', [OrderController::class, 'getDeliveryRange'])->name('delivery.range');
+    Route::post('/resend/code', [OrderController::class, 'resendCode'])->name('resend.code');
     Route::post('/', [OrderController::class, 'order'])->name('order');
 });
 
@@ -50,6 +51,8 @@ Route::group(['prefix' => 'auth', 'middleware'=>'guest'], function(){
     Route::post('register', [AuthController::class, 'register'])->name('register');
     Route::post('login', [AuthController::class, 'login'])->name('login');
 });
+
+Route::get('user', [AuthController::class, 'getUser'])->name('user');
 
 Route::middleware('auth')
     ->post('logout', [AuthController::class, 'logout'])

@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Order;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class OrderRequest extends FormRequest
 {
@@ -28,6 +29,8 @@ class OrderRequest extends FormRequest
             'delivery_price' => ['required', 'integer'],
             'delivery_range' => ['required'],
             'products' => ['required', 'array'],
+            'code'=>['sometimes', 'nullable', Rule::exists('password_reset_tokens', 'token')
+                ->where('phone', $this->phone), 'max:4', 'min:4']
         ];
     }
 
@@ -49,7 +52,12 @@ class OrderRequest extends FormRequest
             'name.required' => 'Поле имя обязательно для заполнения',
             'phone.required' => 'Поле телефон обязательно для заполнения',
             'address.required' => 'Поле адрес обязательно для заполнения',
-            'products.*' => 'Продукты в корзине некорректны'
+            'products.*' => 'Продукты в корзине некорректны',
+            'code.required' => 'Поле код подтверждения обязательно для заполнения',
+            'code.exists'=>'Неверный код подтверждения',
+            'code.max'=>'Код подтверждения должен содержать 4 цифры',
+            'code.min'=>'Код подтверждения должен содержать 4 цифры',
+
         ];
     }
 

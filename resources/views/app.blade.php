@@ -10,6 +10,8 @@
 
     <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Favicons -->
     <link rel="shortcut icon" href="/images/logo_obed_go.jpg">
     <link rel="apple-touch-icon" href="/images/logo_obed_go.jpg">
@@ -24,5 +26,8 @@
 </head>
 <body>
 @inertia
+<script>
+    window.Laravel = {csrfToken: '{{ csrf_token() }}'}
+</script>
 </body>
 </html>

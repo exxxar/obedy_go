@@ -11,14 +11,16 @@ import Carousel from "@/Components/Basic/Carousel.vue"
 import Lotteries from "@/Components/Lotteries/Lotteries.vue"
 import {useLotteryStore} from "@/stores/lotteryStore.js"
 import LotteryGame from "@/Components/Lotteries/LotteryGame.vue"
-import {modals, popover} from "@/app"
+import {modals, popover, sendNotify} from "@/app"
 import {useUserStore} from "@/stores/userStore"
 import TextInput from "@/Components/Basic/TextInput.vue"
+import axios from "axios";
 
 //get store
 const main = useMainStore()
+const cartStore = useCartStore()
 const {foodParts, part} = storeToRefs(main)
-const {items, getTotalCount} = storeToRefs(useCartStore())
+const {items, getTotalCount} = storeToRefs(cartStore)
 const {lottery_id, lotteries} = storeToRefs(useLotteryStore())
 
 const userStore = useUserStore()
@@ -42,12 +44,15 @@ provide('ready_to_order', ready_to_order)
 provide('is_cart_open', is_cart_open)
 
 // watch
-watch(part, () => { main.selectPart() })
+watch(part, () => {
+    main.selectPart()
+})
 
 onMounted(() => {
     [...document.querySelectorAll('[data-bs-toggle="popover"]')].forEach(el => popover.getOrCreateInstance(el))
     switchFoodPart()
     window.addEventListener("keyup", switchKeyUp)
+    userStore.getUser()
 })
 
 onUnmounted(() => {
@@ -96,9 +101,9 @@ const swipeHandler = direction => {
 
 const setPopover = async () => {
     for (const el of items.value) {
-        [...document.getElementsByName('btn-popover-'+el.product.id)].forEach(element => popover.getOrCreateInstance(element).dispose())
+        [...document.getElementsByName('btn-popover-' + el.product.id)].forEach(element => popover.getOrCreateInstance(element).dispose())
         await nextTick();
-        [...document.getElementsByName('btn-popover-'+el.product.id)].forEach(element => popover.getOrCreateInstance(element))
+        [...document.getElementsByName('btn-popover-' + el.product.id)].forEach(element => popover.getOrCreateInstance(element))
     }
 }
 
@@ -125,12 +130,13 @@ const btnLogin = () => {
     <div class="wrapper obedygo">
         <notifications position="top left" group="info"/>
 
-        <div class="container-fluid d-flex align-items-center flex-wrap" style="min-height: 100vh;padding:70px 10px 70px 10px;">
+        <div class="container-fluid d-flex align-items-center flex-wrap"
+             style="min-height: 100vh;padding:70px 10px 70px 10px;">
             <slot name="content" v-if="part === 0"></slot>
             <TopMenu v-else></TopMenu>
 
             <div class="w-100 d-flex flex-column align-items-center text-uppercase text-white text-center mt-4"
-                :class="part === 0 ? 'mb-5 mt-5' : ''">
+                 :class="part === 0 ? 'mb-5 mt-5' : ''">
                 <h6 class="col-8 px-3">Полное меню на неделю можно глянуть <a
                     href="#" class="text-danger font-weight-bold" data-bs-toggle="modal" data-bs-target="#menu">ТУТ</a>
                 </h6>
@@ -161,7 +167,9 @@ const btnLogin = () => {
             <CartModal v-if="is_cart_open"/>
 
             <div class="cart-container d-sm-block d-none" v-if="!is_cart_open">
-                <div class="cart-icon login" data-bs-toggle="modal" data-bs-target="#login" v-if="!user.isAuthorized">Войти</div>
+                <div class="cart-icon login" data-bs-toggle="modal" data-bs-target="#login" v-if="!user.isAuthorized">
+                    Войти
+                </div>
                 <div class="cart-icon login" @click="userStore.logout()" v-else>Выйти</div>
                 <div class="cart-icon cart" @click="is_cart_open = true; setPopover();">Корзина <span
                     v-if="getTotalCount>0">{{ getTotalCount }}</span>
@@ -170,7 +178,8 @@ const btnLogin = () => {
                 <div class="cart-icon callback" data-bs-toggle="modal" data-bs-target="#callback">Напиши нам</div>
                 <div class="cart-icon delivery" data-bs-toggle="modal" data-bs-target="#delivery">Доставка</div>
                 <div class="cart-icon lottery" data-bs-toggle="modal" data-bs-target="#lottery"
-                     @click="lottery_id = null" v-if="lotteries.length > 0">Акции</div>
+                     @click="lottery_id = null" v-if="lotteries.length > 0">Акции
+                </div>
             </div>
 
             <ul class="footer-container d-sm-none" @mouseleave="bottom_menu_show = false">
@@ -188,7 +197,8 @@ const btnLogin = () => {
                         <li data-bs-toggle="modal" data-bs-target="#callback">Напиши нам</li>
                         <li data-bs-toggle="modal" data-bs-target="#delivery">Доставка</li>
                         <li data-bs-toggle="modal" data-bs-target="#lottery"
-                            @click="lottery_id = null" v-if="lotteries.length > 0">Акции</li>
+                            @click="lottery_id = null" v-if="lotteries.length > 0">Акции
+                        </li>
                     </ul>
                 </template>
             </ul>
@@ -249,9 +259,11 @@ const btnLogin = () => {
             <Modal id="login" title="Войти в аккаунт" :footer="false" :clear-function="clearForm">
                 <template #body>
                     <div class="row justify-content-center">
-                        <TextInput :errors="errors.hasOwnProperty('phone') ? errors.phone : []" placeholder="Ваш номер телефона"
+                        <TextInput :errors="errors.hasOwnProperty('phone') ? errors.phone : []"
+                                   placeholder="Ваш номер телефона"
                                    v-model="form.phone" mask="+7 (###) ###-##-##"></TextInput>
-                        <TextInput :errors="errors.hasOwnProperty('password') ? errors.password : []" placeholder="Ваш пароль"
+                        <TextInput :errors="errors.hasOwnProperty('password') ? errors.password : []"
+                                   placeholder="Ваш пароль"
                                    v-model="form.password" type="password"></TextInput>
                     </div>
                 </template>

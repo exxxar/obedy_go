@@ -61,10 +61,22 @@ export const useCartStore = defineStore('cart', () => {
                 product,
                 quantity: 1,
                 days: [],
+                name: '',
+                phone: ''
             })
         else
             cartItem.quantity++;
         sendNotify('Товар добавлен в корзину!')
+    }
+
+    function addToCartFromBD(products) {
+        products.forEach(product => {
+            const cartItem = items.value.find(item => item.product.id === product.product.id && item.phone === product.phone && item.name === product.name)
+            if (!cartItem)
+                items.value.push(product)
+            else
+                cartItem.quantity += product.quantity
+        })
     }
 
     function setDaysForItem(product) {
@@ -106,6 +118,6 @@ export const useCartStore = defineStore('cart', () => {
     return {
         items, getProductById, getTotalCount, getTotalPrice, getTotalWeight,
         inCart, addToCart, setDaysForItem, setQuantity, incQuantity, decQuantity,
-        removeProduct, clearCart
+        removeProduct, clearCart, addToCartFromBD
     }
 })
