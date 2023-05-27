@@ -1,63 +1,63 @@
 {
   "BaseLayout.css": {
-    "file": "assets/BaseLayout-c79c1460.css",
+    "file": "assets/BaseLayout-12fba797.css",
     "src": "BaseLayout.css"
   },
-  "_BaseLayout-84aefaf6.js": {
+  "_BaseLayout-058862f9.js": {
     "css": [
-      "assets/BaseLayout-c79c1460.css"
+      "assets/BaseLayout-12fba797.css"
     ],
     "dynamicImports": [
       "resources/js/Pages/Main.vue",
       "resources/js/Pages/Products.vue",
       "resources/js/Pages/Self.vue"
     ],
-    "file": "assets/BaseLayout-84aefaf6.js",
+    "file": "assets/BaseLayout-058862f9.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
   "resources/js/Pages/Main.vue": {
-    "file": "assets/Main-ec104173.js",
+    "file": "assets/Main-9f3e2a52.js",
     "imports": [
-      "_BaseLayout-84aefaf6.js",
+      "_BaseLayout-058862f9.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Main.vue"
   },
   "resources/js/Pages/Products.vue": {
-    "file": "assets/Products-21c475ca.js",
+    "file": "assets/Products-47fc45ac.js",
     "imports": [
-      "_BaseLayout-84aefaf6.js",
+      "_BaseLayout-058862f9.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Products.vue"
   },
   "resources/js/Pages/Self.vue": {
-    "file": "assets/Self-6f1bbe18.js",
+    "file": "assets/Self-31caf729.js",
     "imports": [
-      "_BaseLayout-84aefaf6.js",
+      "_BaseLayout-058862f9.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Self.vue"
   },
   "resources/js/app.css": {
-    "file": "assets/app-e76ed957.css",
+    "file": "assets/app-56b0fb39.css",
     "src": "resources/js/app.css"
   },
   "resources/js/app.js": {
     "css": [
-      "assets/app-e76ed957.css"
+      "assets/app-56b0fb39.css"
     ],
     "dynamicImports": [
       "resources/js/Pages/Main.vue",
       "resources/js/Pages/Products.vue",
       "resources/js/Pages/Self.vue"
     ],
-    "file": "assets/app-c86f6e1a.js",
+    "file": "assets/app-cdd7beda.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }

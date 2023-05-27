@@ -37,18 +37,7 @@ export const popover = Popover
 
 window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-window.axios.defaults.headers.common['X-CSRF-TOKEN'] = window.Laravel.csrfToken;
 
-window.axios.interceptors.response.use(
-    response => response,
-    error => {
-        if (error.response && 419 === error.response.status) {
-            window.location.reload()
-        }
-
-        return Promise.reject(error)
-    }
-)
 
 window.Pusher = Pusher;
 window.Echo = new Echo({

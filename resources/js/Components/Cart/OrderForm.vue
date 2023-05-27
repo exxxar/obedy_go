@@ -35,12 +35,15 @@ const form = reactive({
     total_price: 0,
     total_count: 0,
     addresses: [],
-    code: null
+    code: null,
+    manager_phone: null
 })
 
 const is_calc_distance = ref(false)
 const message = ref(null)
 const errors = ref([])
+
+const codeTimer = ref(60)
 
 onMounted(() => {
     form.name = user.value.name
@@ -82,7 +85,7 @@ const sendOrder = () => {
         if (!user.value.isAuthorized && !isExists.value)
             modals.getOrCreateInstance(document.getElementById('register')).show()
         emit('update:modelValue', false)
-
+        codeTimer.value = 60
     }).catch(async error => {
         if (error.response.status === 422) {
             const errorJson = JSON.parse(await error.response.data.text());
@@ -91,12 +94,38 @@ const sendOrder = () => {
         if (error.response.status === 406) {
             isExists.value = true
             modals.getOrCreateInstance(document.getElementById('confirmOrder')).show()
+            await codeTimerFunc()
+        }
+        if (error.response.status === 409) {
+            modals.getOrCreateInstance(document.getElementById('confirmOrder')).hide()
+            items.value = []
+            if(isExists.value)
+                userStore.login({phone: form.phone, password: form.phone})
+            if (!user.value.isAuthorized && !isExists.value)
+                modals.getOrCreateInstance(document.getElementById('register')).show()
+            emit('update:modelValue', false)
+            codeTimer.value = 60
+            sendNotify('Ваш заказ успешно отправлен менеджеру!')
         }
     })
 }
 
 const clearMessage = () => {
     message.value = null
+}
+
+const codeTimerFunc = async () => {
+    await setTimeout(() => {
+        if(codeTimer.value !== 0) {
+            codeTimer.value--
+            codeTimerFunc()
+        }
+    }, 1000)
+}
+
+const sendCode = () => {
+    userStore.sendCode()
+    codeTimer.value = 60
 }
 
 </script>
@@ -118,6 +147,8 @@ const clearMessage = () => {
         <div v-if="'address' in errors && errors.address.length > 0"
              class="invalid-feedback" v-for="error in errors.address">{{ error }}
         </div>
+        <TextInput :errors="errors.hasOwnProperty('manager_phone') ? errors.manager_phone : []" placeholder="Номер телефона менеджера"
+                   v-model="form.manager_phone" mask="+7 (###) ###-##-##"></TextInput>
         <textarea class="form-control mb-0 mt-2"
                   :class="[
                       errors.hasOwnProperty('message') && errors.message.length > 0 ? 'is-invalid' : '',
@@ -134,7 +165,7 @@ const clearMessage = () => {
                 <p>Примерная цена доставки: <span>{{ form.delivery_price }} руб.</span></p>
             </li>
         </ul>
-        <button class="btn btn-success w-100 p-3 text-uppercase font-weight-bold" :disabled="!is_calc_distance">
+        <button class="btn btn-success w-100 p-3 text-uppercase font-weight-bold" :disabled="!is_calc_distance && form.manager_phone === null">
             Отправить заявку
         </button>
         <p class="end-info">После оформления заявки вам будет предложен для скачивания чек с подробным
@@ -159,11 +190,10 @@ const clearMessage = () => {
 
     <Modal id="confirmOrder" title="Подтвердите Ваш заказ кодом из смс" :footer="false">
         <template #body>
-            <div class="row justify-content-center">
-                <TextInput :errors="errors.hasOwnProperty('code') ? errors.code : []"
-                           placeholder="Введите код подтверждения" v-model="form.code"
-                           type="number"></TextInput>
-            </div>
+            <TextInput :errors="errors.hasOwnProperty('code') ? errors.code : []"
+                       placeholder="Введите код подтверждения" v-model="form.code" mask="####"></TextInput>
+            <button type="button" class="btn btn-link text-decoration-none" :class="codeTimer !== 0 ? 'disabled' : 'text-success'"
+                    @click="codeTimer === 0 ? sendCode() : null">Отправить код повторно{{ codeTimer !== 0 ? ' через ' + codeTimer : '' }}</button>
         </template>
         <template #footer>
             <div class="modal-footer">
@@ -173,36 +203,3 @@ const clearMessage = () => {
         </template>
     </Modal>
 </template>
-
-<style lang="scss">
-
-.v-select {
-    width: 100%;
-    padding: 15px;
-    //border: 1px #d50c0d solid;
-    margin-top: 0.5rem;
-    border-radius: 5px;
-
-    & .vs__dropdown-toggle {
-        border: 0;
-        padding: 0;
-
-        & .vs__selected-options {
-            flex-wrap: nowrap;
-            word-wrap: break-word;
-        }
-
-        & .vs__search {
-            width: 0 !important;
-            border: 0 !important;
-            margin: 4px 0 0 !important;
-            padding: 0 7px !important;
-        }
-
-        & .vs__actions .vs__clear {
-            display: flex;
-        }
-
-    }
-}
-</style>

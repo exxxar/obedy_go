@@ -23,8 +23,8 @@ const props = defineProps({
     <div :id="id" class="carousel slide carousel-fade" data-bs-ride="carousel">
         <div class="carousel-indicators" v-if="hasIndicators">
             <button type="button" :data-bs-target="'#'+id" :data-bs-slide-to="index"
-                    :class="index === 0 ? 'active' : ''" v-for="index in items"
-                    :aria-current="index === 0 ? 'active' : ''" aria-label="Slide"></button>
+                    :class="index === 0 ? 'active' : ''" v-for="(item, index) in items"
+                    :aria-current="index === 0 ? 'active' : ''" :aria-label="item"></button>
         </div>
         <div class="carousel-inner">
             <div class="carousel-item" :class="index === 0 ? 'active' : ''" v-for="(item, index) in items">

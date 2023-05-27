@@ -6,6 +6,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\LotteryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use App\Models\Product;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -45,7 +46,14 @@ Route::group(['prefix' => 'order'], function () {
     Route::post('/', [OrderController::class, 'order'])->name('order');
 });
 
-Route::resource('cart', CartController::class);
+
+Route::group(['prefix' => 'cart'], function () {
+    Route::post('/change', [CartController::class, 'changeCart'])
+        ->name('change.cart');
+    Route::post('/clear', [CartController::class, 'clearCart'])->name('clear.cart');
+    Route::post('/save', [CartController::class, 'saveCart'])->name('save.cart');
+    Route::get('/print', [CartController::class, 'printReport'])->name('print.report');
+});
 
 Route::group(['prefix' => 'auth', 'middleware'=>'guest'], function(){
     Route::post('register', [AuthController::class, 'register'])->name('register');

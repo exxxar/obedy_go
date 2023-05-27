@@ -31,7 +31,7 @@ defineEmits(['update:modelValue'])
 <template>
     <input :type="type" class="form-control w-100 mt-2 mb-0 px-4 py-3" :placeholder="placeholder"
            :value="modelValue"
-           :class="[errors.length > 0 ? 'is-invalid' : '', (errors.length === 0 && modelValue !== '') ? 'is-valid' : '']"
+           :class="[errors.length > 0 ? 'is-invalid' : '', (errors.length === 0 && modelValue !== '' && modelValue !== null) ? 'is-valid' : '']"
            v-maska :data-maska="mask"
            @input="$emit('update:modelValue', $event.target.value)"
            @blur="blur"

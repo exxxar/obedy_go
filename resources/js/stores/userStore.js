@@ -1,7 +1,7 @@
 import {defineStore} from "pinia"
 import {reactive, watch} from "vue"
 import axios from "axios";
-import {modals, sendNotify} from "@/app";
+import {sendNotify} from "@/app";
 import {useCartStore} from "@/stores/cartStore";
 
 
@@ -50,11 +50,12 @@ export const useUserStore = defineStore('userStore', () => {
     async function getUser(){
 
         await axios.get(route('user')).then(resp => {
-            if(resp.data.user === null)
+            if(resp.data.user.user === null)
                 user.isAuthorized = false
             else{
-                saveUser(resp.data)
+                saveUser(resp.data.user)
             }
+            window.axios.defaults.headers.common['X-CSRF-TOKEN'] = resp.data.token
         })
 
     }
@@ -67,5 +68,18 @@ export const useUserStore = defineStore('userStore', () => {
         cartStore.addToCartFromBD(data.cart)
     }
 
-    return {user, register, login, logout, getUser, saveUser}
+    async function sendCode(){
+        await axios.post(route('resend.code'), {phone: user.phone}).then(resp => {
+            sendNotify('Код отправлен на ваш номера телефона')
+            return Promise.resolve(resp);
+        }).catch(errors => {
+            sendNotify('Произошла ошибка при отправке кода', 'error')
+        })
+    }
+
+    function dataUser(){
+        return user
+    }
+
+    return {user, register, login, logout, getUser, sendCode, dataUser}
 })

@@ -2,20 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Cart\SaveCartAction;
 use App\Actions\Confirm\ConfirmCodeAction;
 use App\Actions\Order\OrderChequeGroupAction;
 use App\Contracts\CalculateDeliveryDistanceContract;
-use App\Events\SendSmsEvent;
 use App\Http\Requests\Order\DeliveryRangeRequest;
 use App\Http\Requests\Order\OrderRequest;
 use App\Http\Requests\ResendCodeRequest;
-use App\Http\Resources\UserResource;
 use App\Models\Order;
 use App\Models\User;
 use App\Services\YandexService;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
 
@@ -54,6 +51,21 @@ class OrderController extends Controller
             $user->name = $request->name;
             $user->addresses = $request->addresses;
             $user->save();
+            $user->products()->detach();
+        }
+        if ($request->manager_phone){
+            foreach ($request->products as $product){
+                foreach($product['users'] as $index => $user){
+                    if(!array_key_exists('phone', $user) || $user['phone'] == null){
+                        $user['phone'] = $request->phone;
+                        $user['name'] = $request->name;
+                        $user['inDBCart'] = true;
+                        $product['users'][$index] = $user;
+                    }
+                }
+                (new saveCartAction())($product, 'add', $request->manager_phone);
+            }
+            return response([], 409);
         }
 
         $order = Order::create([
@@ -67,11 +79,12 @@ class OrderController extends Controller
         ]);
 
         foreach ($request->products as $item) {
-            $order->products()
-                ->attach($item['product']['id'], ['quantity' => $item['quantity']]);
-            if(Auth::check()){
-                $user->products()->detach($item['product']['id']);
+            $quantity = 0;
+            foreach ($item['users'] as $user){
+                $quantity+=$user['quantity'];
             }
+            $order->products()
+                ->attach($item['product']['id'], ['quantity' => $quantity]);
         }
 
         return  $chequeGroupAction($order);

@@ -2,7 +2,6 @@
 import {nextTick} from "vue"
 import {popover} from "@/app"
 import ProductControls from "@/Components/Products/ProductControls.vue"
-import ProductModal from "@/Components/Products/ProductModal.vue"
 
 const props = defineProps({
     product: {
@@ -29,5 +28,4 @@ const setPopover = async (id) => {
         <ProductControls :product="product"></ProductControls>
         <div class="week-label" v-if="product.is_week">Бесплатная доставка</div>
     </div>
-    <ProductModal :product="product"></ProductModal>
 </template>

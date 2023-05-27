@@ -1,5 +1,5 @@
 <script setup>
-import {nextTick, onMounted, onUnmounted, provide, reactive, ref, watch} from 'vue'
+import {computed, nextTick, onMounted, onUnmounted, provide, reactive, ref, watch} from 'vue'
 import Modal from '@/Components/Basic/Modal.vue'
 import TopMenu from "@/Components/Layout/TopMenu.vue"
 import AudioCallback from "@/Components/Basic/AudioCallback.vue"
@@ -11,10 +11,10 @@ import Carousel from "@/Components/Basic/Carousel.vue"
 import Lotteries from "@/Components/Lotteries/Lotteries.vue"
 import {useLotteryStore} from "@/stores/lotteryStore.js"
 import LotteryGame from "@/Components/Lotteries/LotteryGame.vue"
-import {modals, popover, sendNotify} from "@/app"
+import {modals, popover} from "@/app"
 import {useUserStore} from "@/stores/userStore"
 import TextInput from "@/Components/Basic/TextInput.vue"
-import axios from "axios";
+import UserCartModal from "@/Components/Cart/UserCartModal.vue";
 
 //get store
 const main = useMainStore()
@@ -52,6 +52,7 @@ onMounted(() => {
     [...document.querySelectorAll('[data-bs-toggle="popover"]')].forEach(el => popover.getOrCreateInstance(el))
     switchFoodPart()
     window.addEventListener("keyup", switchKeyUp)
+    console.log('base mount')
     userStore.getUser()
 })
 
@@ -119,11 +120,24 @@ const btnLogin = () => {
             clearForm()
         },
         (error) => {
-            errors.value = error.response.data.errors
+            if(error.hasOwnProperty('response'))
+                errors.value = error.response.data.errors
         }
     )
 }
 
+const hasOtherUserCart = computed(()=>{
+    return  items.value.find(item =>{
+        let res = item.users.find(userItem => userItem.phone !== user.value.phone)
+        return !!res
+
+    }) !== undefined
+})
+
+watch(hasOtherUserCart, (val) => {
+    if(!val)
+        modals.getOrCreateInstance(document.getElementById('changeUserCart')).hide()
+})
 </script>
 
 <template>
@@ -274,6 +288,7 @@ const btnLogin = () => {
                     </div>
                 </template>
             </Modal>
+            <UserCartModal v-if="user.isAuthorized && hasOtherUserCart"></UserCartModal>
 
             <div class="to-left" @click="main.changePosition(false)"></div>
             <div class="to-right" @click="main.changePosition()"></div>

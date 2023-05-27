@@ -35,6 +35,7 @@ const props = defineProps({
                     <slot name="title"><h5 class="modal-title" :id="id+'Label'">{{title}}</h5></slot>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="clearFunction()"></button>
                 </div>
+                <slot name="header" v-if="!header"></slot>
                 <div class="modal-body">
                     <slot name="body"></slot>
                 </div>

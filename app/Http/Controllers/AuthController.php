@@ -47,7 +47,10 @@ class AuthController extends Controller
 
     public function getUser()
     {
-        return response()->json(new UserResource(Auth::user()));
+        return response()->json([
+            'user'=>new UserResource(Auth::user()),
+            'token'=>csrf_token()
+        ]);
     }
 
     public function logout(Request $request)

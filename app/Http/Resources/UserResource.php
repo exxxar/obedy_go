@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
@@ -20,11 +21,13 @@ class UserResource extends JsonResource
         $cart = [];
         $user = null;
         if($authCheck) {
-            foreach ($this->products as $product) {
-                $cart['product'] = new ProductResource($product);
-                $cart['quantity'] = $product->pivot->quantity;
-                $cart['name'] = $product->pivot->name;
-                $cart['phone'] = $product->pivot->phone;
+            $authUser = User::find(Auth::id());
+            foreach ($authUser->products as $product) {
+                $cartItem = [
+                    'product' => new ProductResource($product),
+                    'users' => json_decode($product->pivot->users, true),
+                ];
+                $cart[] = $cartItem;
             }
             $user =  [
                 'name'=>$this->name,

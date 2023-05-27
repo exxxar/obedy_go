@@ -1,12 +1,16 @@
 <script setup>
-import {inject, provide, reactive} from "vue"
+import {computed, inject, provide, reactive} from "vue"
 import {storeToRefs} from "pinia"
 import {useCartStore} from '@/stores/cartStore.js'
 import ProductCard from "@/Components/Products/ProductCard.vue"
 import OrderForm from "@/Components/Cart/OrderForm.vue";
+import UserCartModal from "@/Components/Cart/UserCartModal.vue";
+import {useUserStore} from "@/stores/userStore";
 
 const cart = useCartStore()
 const {items} = storeToRefs(cart)
+const userStore = useUserStore()
+const {user} = storeToRefs(userStore)
 
 const settings = reactive({
     suppressScrollX: true,
@@ -22,17 +26,29 @@ const hasMainProductInCart = () => {
     let tmp = items.value.filter(item => item.product.addition === 0)
     return tmp.length > 0
 }
+
+const hasOtherUserCart = computed(()=>{
+   return items.value.find(item =>{
+        let res = item.users.find(userItem => userItem.phone !== user.value.phone)
+        return !!res
+    }) !== undefined
+})
 </script>
 
 <template>
     <div class="cart-modal">
         <div class="cart-modal-inner">
-            <div class="custom-modal-header">
-                <button class="btn btn-link" @click="is_cart_open = false">Закрыть</button>
+            <div class="custom-modal-header" :class="hasOtherUserCart ? 'justify-content-between' : ''">
+                <button v-if="hasOtherUserCart" class="btn btn-link fs-2" data-bs-toggle="modal" data-bs-target="#changeUserCart">
+                    <i class="far fa-circle-info text-danger"></i>
+                </button>
+
+                <button class="btn btn-link " @click="is_cart_open = false">Закрыть</button>
             </div>
             <perfect-scrollbar class="scroll-area scroll-area-bottom ms-0 ps-0" :options="settings" tag="ul">
                 <li v-for="item in items" class="day-item-wrapper list-group-numbered" v-if="cart.getTotalCount>0">
                     <ProductCard :product="item.product"></ProductCard>
+                    <UserCartModal :productId="item.product.id"></UserCartModal>
                 </li>
                 <li v-if="cart.getTotalCount===0">
                     <img src="/images/logo_obed_go.jpg" class="img-fluid" alt="">
