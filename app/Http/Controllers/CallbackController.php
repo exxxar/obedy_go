@@ -45,33 +45,4 @@ class CallbackController extends Controller
         }
         return response([], 200);
     }
-
-    public function sendVoice(Request $request)
-    {
-
-        $phone = $request->phone ?? "+380710000000";
-        $username = $request->name ?? "-";
-
-        $files = $request->file('files');
-
-        array_map('unlink', glob(storage_path("app/public/uploads/*")));
-
-        if ($request->hasFile('files')) {
-            foreach ($files as $file) {
-                $name = "record-obedy-" . time() . ".mp3";
-                $file->storeAs("/uploads/", $name);
-                /* Telegram::sendAudio([
-                     'chat_id' => env("TELEGRAM_FASTORAN_OBEDY_GO_CHANNEL"),
-                     "caption" => "<b>Голосовая заявка от пользователя [$username]</b>\nНомер телефона:<i> $phone </i>",
-                     'parse_mode' => 'HTML',
-                     'audio' => \Telegram\Bot\FileUpload\InputFile::create(storage_path('app/public') . "/uploads/$name"),
-                 ]);*/
-
-                Storage::delete("/uploads/$name");
-            }
-        }
-
-
-        return "success";
-    }
 }
