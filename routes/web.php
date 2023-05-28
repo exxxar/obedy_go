@@ -2,12 +2,11 @@
 
 use App\Enums\FoodPartEnum;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CallbackController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\LotteryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
-use App\Models\Product;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -65,3 +64,6 @@ Route::get('user', [AuthController::class, 'getUser'])->name('user');
 Route::middleware('auth')
     ->post('logout', [AuthController::class, 'logout'])
     ->name('logout');
+
+Route::post('callback', [CallbackController::class, 'sendMessage'])->name('callback');
+

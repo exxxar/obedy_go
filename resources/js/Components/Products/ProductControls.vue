@@ -19,6 +19,9 @@ const inModal = inject('inModal', false)
 const cart = useCartStore()
 const {items} = storeToRefs(cart)
 
+const ready_to_order = inject('ready_to_order')
+const is_cart_open = inject('is_cart_open')
+
 const orderDay = (dayIndex) => {
     let dt = new Date()
     dt.setDate(dt.getDate() + 7 - dt.getDay() + dayIndex)
@@ -34,6 +37,12 @@ const setPopover = async (id) => {
     [...document.getElementsByName('btn-popover-'+id)].forEach(element => popover.getOrCreateInstance(element).dispose());
     await nextTick();
     [...document.getElementsByName('btn-popover-'+id)].forEach(element => popover.getOrCreateInstance(element))
+}
+
+const openCart = () => {
+    ready_to_order.value = true
+    is_cart_open.value = true
+
 }
 
 </script>

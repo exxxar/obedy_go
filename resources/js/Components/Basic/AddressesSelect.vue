@@ -14,11 +14,11 @@ const props = defineProps({
     },
     blur: {
         type: Function,
-        required: true
+        default: () => {}
     },
     clearMessage: {
         type: Function,
-        required: true
+        default: () => {}
     }
 })
 

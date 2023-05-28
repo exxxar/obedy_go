@@ -1,7 +1,7 @@
 <script setup>
 import TextInput from "@/Components/Basic/TextInput.vue"
 import {nextTick, onMounted, reactive, ref} from "vue"
-import {modals, popover, sendNotify} from "@/app"
+import {modals, sendNotify} from "@/app"
 import {useCartStore} from '@/stores/cartStore.js'
 import {useUserStore} from '@/stores/userStore.js'
 import {storeToRefs} from "pinia"

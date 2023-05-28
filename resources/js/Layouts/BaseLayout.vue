@@ -1,20 +1,20 @@
 <script setup>
-import {computed, nextTick, onMounted, onUnmounted, provide, reactive, ref, watch} from 'vue'
-import Modal from '@/Components/Basic/Modal.vue'
+import {computed, nextTick, onMounted, onUnmounted, provide, ref, watch} from 'vue'
 import TopMenu from "@/Components/Layout/TopMenu.vue"
-import AudioCallback from "@/Components/Basic/AudioCallback.vue"
 import CartModal from "@/Components/Cart/CartModal.vue"
 import {useMainStore} from '@/stores/mainStore.js'
 import {useCartStore} from '@/stores/cartStore.js'
 import {storeToRefs} from "pinia"
-import Carousel from "@/Components/Basic/Carousel.vue"
-import Lotteries from "@/Components/Lotteries/Lotteries.vue"
 import {useLotteryStore} from "@/stores/lotteryStore.js"
-import LotteryGame from "@/Components/Lotteries/LotteryGame.vue"
 import {modals, popover} from "@/app"
 import {useUserStore} from "@/stores/userStore"
-import TextInput from "@/Components/Basic/TextInput.vue"
-import UserCartModal from "@/Components/Cart/UserCartModal.vue";
+import UserCartModal from "@/Components/Cart/UserCartModal.vue"
+import LoginModal from "@/Components/Modals/LoginModal.vue"
+import AboutModal from "@/Components/Modals/AboutModal.vue"
+import DeliveryModal from "@/Components/Modals/DeliveryModal.vue"
+import LotteryModal from "@/Components/Modals/LotteryModal.vue"
+import MenuModal from "@/Components/Modals/MenuModal.vue"
+import CallbackModal from "@/Components/Modals/CallbackModal.vue"
 
 //get store
 const main = useMainStore()
@@ -31,13 +31,6 @@ const bottom_menu_show = ref(false)
 const is_cart_open = ref(false)
 const ready_to_order = ref(false)
 
-const defaultUser = {
-    phone: '',
-    password: ''
-}
-
-const form = reactive({...defaultUser})
-const errors = ref([])
 
 //provide
 provide('ready_to_order', ready_to_order)
@@ -108,26 +101,9 @@ const setPopover = async () => {
     }
 }
 
-const clearForm = () => {
-    Object.assign(form, defaultUser)
-    errors.value = []
-}
 
-const btnLogin = () => {
-    userStore.login(form).then(
-        (response) => {
-            modals.getOrCreateInstance(document.getElementById('login')).hide()
-            clearForm()
-        },
-        (error) => {
-            if(error.hasOwnProperty('response'))
-                errors.value = error.response.data.errors
-        }
-    )
-}
-
-const hasOtherUserCart = computed(()=>{
-    return  items.value.find(item =>{
+const hasOtherUserCart = computed(() => {
+    return items.value.find(item => {
         let res = item.users.find(userItem => userItem.phone !== user.value.phone)
         return !!res
 
@@ -135,7 +111,7 @@ const hasOtherUserCart = computed(()=>{
 })
 
 watch(hasOtherUserCart, (val) => {
-    if(!val)
+    if (!val)
         modals.getOrCreateInstance(document.getElementById('changeUserCart')).hide()
 })
 </script>
@@ -162,21 +138,8 @@ watch(hasOtherUserCart, (val) => {
             <div class="w-100" v-if="part === 0"></div>
             <div class="w-100" v-if="part === 0"></div>
 
-            <slot name="content" v-if="part>0&&part<4"></slot>
+            <slot name="content" v-if="part>0"></slot>
 
-            <div class="w-100 row m-0 d-flex flex-wrap justify-content-center mb-5" v-if="part===4">
-                <!-- проверить когда будет сделана форма -->
-                <div class="col-lg-6 col-md-6 col-sm-8 col-12">
-                    <h4 class="text-white">
-                        <em>В данный момент этот раздел не доступен, но это не должно Вас огорчать - теперь вы можете
-                            <span class="text-danger">оформить заказ голосом!</span>
-                        </em>
-                    </h4>
-                    <!--  <obedy-callback></obedy-callback> -->
-                </div>
-            </div>
-
-            <div class="w-100" v-if="part === 4"></div>
 
             <CartModal v-if="is_cart_open"/>
 
@@ -217,77 +180,12 @@ watch(hasOtherUserCart, (val) => {
                 </template>
             </ul>
 
-            <Modal id="about" title="О Нас">
-                <template #body>
-                    <img src="/images/logo_obed_go.jpg" class="img-fluid" alt="О нас">
-                    <p class="color--black text-justify">Обеды GO - это доставка вкуснейших обедов, приготовленных с
-                        любовью. Здесь каждый найдет для себя то, что ищет - домашние блюда, блюда "премиум", здоровая
-                        еда, стритфуд и многое другое. Вы можете выбрать для себя сформированное ежедневное комплексное
-                        меню или же собрать свой рацион по вкусу.</p>
-                </template>
-            </Modal>
-
-            <Modal id="delivery" title="Условия доставки">
-                <template #body>
-                    <ul class="about-list">
-                        <li>Доставка осуществляется с 12:00 до 14:00 только в будние дни.</li>
-                        <li>Блюда из разделов "стандарт" и "премиум" заказываются ЗА ДЕНЬ. Предзаказ на понедельник
-                            также доступен и в выходные дни.
-                        </li>
-                        <li>Блюда из раздела "экспресс" заказываются и доставляются день в день.</li>
-                        <li>Дополнительные блюда заказываются за сутки!</li>
-                    </ul>
-                </template>
-            </Modal>
-
-            <Modal id="callback" title="Обратная связь">
-                <template #body>
-                    <div class="row">
-                        <div class="col-12">
-                            <!-- <obedy-callback :selected_type="1"></obedy-callback> -->
-                            <audio-callback></audio-callback>
-                        </div>
-                    </div>
-                </template>
-            </Modal>
-
-            <Modal id="lottery" class_size="modal-lg" title="Розыгрыши и призы" :clear-function="clearForm">
-                <template #body>
-                    <Lotteries v-if="!lottery_id"/>
-                    <LotteryGame v-else/>
-                </template>
-            </Modal>
-
-            <Modal id="menu" class_size="modal-lg" :header="false">
-                <template #body>
-                    <Carousel
-                        id="carousel-fade"
-                        :items="[
-                      '/images/full_1.jpg',
-                      '/images/full_2.jpg',
-                    ]">
-                    </Carousel>
-                </template>
-            </Modal>
-
-            <Modal id="login" title="Войти в аккаунт" :footer="false" :clear-function="clearForm">
-                <template #body>
-                    <div class="row justify-content-center">
-                        <TextInput :errors="errors.hasOwnProperty('phone') ? errors.phone : []"
-                                   placeholder="Ваш номер телефона"
-                                   v-model="form.phone" mask="+7 (###) ###-##-##"></TextInput>
-                        <TextInput :errors="errors.hasOwnProperty('password') ? errors.password : []"
-                                   placeholder="Ваш пароль"
-                                   v-model="form.password" type="password"></TextInput>
-                    </div>
-                </template>
-                <template #footer>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Отмена</button>
-                        <button type="button" class="btn btn-success" @click="btnLogin">Да</button>
-                    </div>
-                </template>
-            </Modal>
+            <AboutModal></AboutModal>
+            <DeliveryModal></DeliveryModal>
+            <CallbackModal></CallbackModal>
+            <LotteryModal></LotteryModal>
+            <MenuModal></MenuModal>
+            <LoginModal></LoginModal>
             <UserCartModal v-if="user.isAuthorized && hasOtherUserCart"></UserCartModal>
 
             <div class="to-left" @click="main.changePosition(false)"></div>
