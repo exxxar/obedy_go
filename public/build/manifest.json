@@ -1,63 +1,70 @@
 {
   "BaseLayout.css": {
-    "file": "assets/BaseLayout-12fba797.css",
+    "file": "assets/BaseLayout-a2bab465.css",
     "src": "BaseLayout.css"
   },
-  "_BaseLayout-058862f9.js": {
+  "_BaseLayout-3f8210a0.js": {
     "css": [
-      "assets/BaseLayout-12fba797.css"
+      "assets/BaseLayout-a2bab465.css"
     ],
     "dynamicImports": [
       "resources/js/Pages/Main.vue",
       "resources/js/Pages/Products.vue",
       "resources/js/Pages/Self.vue"
     ],
-    "file": "assets/BaseLayout-058862f9.js",
+    "file": "assets/BaseLayout-3f8210a0.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
+  "resources/images/12.jpg": {
+    "file": "assets/12-f74ba8a5.jpg",
+    "src": "resources/images/12.jpg"
+  },
   "resources/js/Pages/Main.vue": {
-    "file": "assets/Main-9f3e2a52.js",
+    "file": "assets/Main-f73d4d32.js",
     "imports": [
-      "_BaseLayout-058862f9.js",
+      "_BaseLayout-3f8210a0.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Main.vue"
   },
   "resources/js/Pages/Products.vue": {
-    "file": "assets/Products-47fc45ac.js",
+    "file": "assets/Products-9dc82c97.js",
     "imports": [
-      "_BaseLayout-058862f9.js",
+      "_BaseLayout-3f8210a0.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Products.vue"
   },
   "resources/js/Pages/Self.vue": {
-    "file": "assets/Self-31caf729.js",
+    "file": "assets/Self-f49194ef.js",
     "imports": [
-      "_BaseLayout-058862f9.js",
+      "_BaseLayout-3f8210a0.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Self.vue"
   },
   "resources/js/app.css": {
-    "file": "assets/app-56b0fb39.css",
+    "file": "assets/app-58eb6cfa.css",
     "src": "resources/js/app.css"
   },
   "resources/js/app.js": {
+    "assets": [
+      "assets/12-f74ba8a5.jpg"
+    ],
     "css": [
-      "assets/app-56b0fb39.css"
+      "assets/app-58eb6cfa.css"
     ],
     "dynamicImports": [
       "resources/js/Pages/Main.vue",
       "resources/js/Pages/Products.vue",
       "resources/js/Pages/Self.vue"
     ],
-    "file": "assets/app-cdd7beda.js",
+    "file": "assets/app-201c5557.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }

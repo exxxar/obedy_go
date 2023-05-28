@@ -1,1 +1,0 @@
-import{_ as t}from"./BaseLayout-058862f9.js";import{c as e,w as o,o as _}from"./app-cdd7beda.js";const m={__name:"Self",setup(a){return(c,r)=>(_(),e(t,null,{content:o(()=>[]),_:1}))}};export{m as default};
