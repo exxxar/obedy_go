@@ -237,6 +237,11 @@
             color: #678816;
         }
 
+        &.checkOrder {
+            top: -68px;
+            z-index: 95;
+        }
+
         &:hover {
             transform: translateX(-5px);
             transition: .3s;

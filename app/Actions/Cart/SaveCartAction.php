@@ -27,12 +27,10 @@ class SaveCartAction
                     foreach ($pivot as $item) {
                         $isExist = false;
                         foreach ($users as $index => $userData) {
-                            logger($userData);
-                            logger($item);
-                            logger('----------------');
                             if ($userData['phone'] == $item['phone']) {
-                                if($action == 'addMore'){
+                                if($action == 'addMore' || $item['date'] > $userData['date']){
                                     $userData['quantity'] += $item['quantity'];
+                                    $userData['date'] = $item['date'];
                                     $users[$index] = $userData;
                                 }
                                 $isExist = true;

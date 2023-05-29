@@ -6,6 +6,7 @@ use App\Actions\Cart\SaveCartAction;
 use App\Actions\Confirm\ConfirmCodeAction;
 use App\Actions\Order\OrderChequeGroupAction;
 use App\Contracts\CalculateDeliveryDistanceContract;
+use App\Http\Requests\Order\CheckOrderRequest;
 use App\Http\Requests\Order\DeliveryRangeRequest;
 use App\Http\Requests\Order\OrderRequest;
 use App\Http\Requests\ResendCodeRequest;
@@ -81,7 +82,7 @@ class OrderController extends Controller
         foreach ($request->products as $item) {
             $quantity = 0;
             foreach ($item['users'] as $user){
-                $quantity+=$user['quantity'];
+                $quantity+=(int)$user['quantity'];
             }
             $order->products()
                 ->attach($item['product']['id'], ['quantity' => $quantity]);
@@ -95,6 +96,14 @@ class OrderController extends Controller
     {
         $confirmCodeAction($request->phone);
         return response()->json(['status' => 'ok']);
+    }
+
+    public function checkOrder(CheckOrderRequest $request){
+
+        $order = Order::where('number', $request->number)->first();
+
+        return response()->json(['status'=>$order->status ]);
+
     }
 
 }

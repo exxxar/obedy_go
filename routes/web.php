@@ -42,6 +42,7 @@ Route::group(['prefix' => 'lottery'], function () {
 Route::group(['prefix' => 'order'], function () {
     Route::post('/delivery', [OrderController::class, 'getDeliveryRange'])->name('delivery.range');
     Route::post('/resend/code', [OrderController::class, 'resendCode'])->name('resend.code');
+    Route::post('/check', [OrderController::class, 'checkOrder'])->name('check.order');
     Route::post('/', [OrderController::class, 'order'])->name('order');
 });
 

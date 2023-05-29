@@ -1,5 +1,5 @@
 <script setup>
-import {computed, nextTick, onMounted, onUnmounted, provide, ref, watch} from 'vue'
+import {nextTick, onMounted, onUnmounted, provide, ref, watch} from 'vue'
 import TopMenu from "@/Components/Layout/TopMenu.vue"
 import CartModal from "@/Components/Cart/CartModal.vue"
 import {useMainStore} from '@/stores/mainStore.js'
@@ -15,12 +15,13 @@ import DeliveryModal from "@/Components/Modals/DeliveryModal.vue"
 import LotteryModal from "@/Components/Modals/LotteryModal.vue"
 import MenuModal from "@/Components/Modals/MenuModal.vue"
 import CallbackModal from "@/Components/Modals/CallbackModal.vue"
+import CheckOrderModal from "@/Components/Modals/CheckOrderModal.vue"
 
 //get store
 const main = useMainStore()
 const cartStore = useCartStore()
 const {foodParts, part} = storeToRefs(main)
-const {items, getTotalCount} = storeToRefs(cartStore)
+const {items, getTotalCount, hasOtherUserCart} = storeToRefs(cartStore)
 const {lottery_id, lotteries} = storeToRefs(useLotteryStore())
 
 const userStore = useUserStore()
@@ -101,15 +102,6 @@ const setPopover = async () => {
     }
 }
 
-
-const hasOtherUserCart = computed(() => {
-    return items.value.find(item => {
-        let res = item.users.find(userItem => userItem.phone !== user.value.phone)
-        return !!res
-
-    }) !== undefined
-})
-
 watch(hasOtherUserCart, (val) => {
     if (!val)
         modals.getOrCreateInstance(document.getElementById('changeUserCart')).hide()
@@ -157,6 +149,7 @@ watch(hasOtherUserCart, (val) => {
                 <div class="cart-icon lottery" data-bs-toggle="modal" data-bs-target="#lottery"
                      @click="lottery_id = null" v-if="lotteries.length > 0">Акции
                 </div>
+                <div class="cart-icon checkOrder" data-bs-toggle="modal" data-bs-target="#checkOrder">Узнать статус</div>
             </div>
 
             <ul class="footer-container d-sm-none" @mouseleave="bottom_menu_show = false">
@@ -167,6 +160,10 @@ watch(hasOtherUserCart, (val) => {
                     <ul class="bottom_menu">
                         <li v-for="foodPart in foodParts" @click="part = foodPart.partId">{{ foodPart.title }}</li>
                         <li class="hr"></li>
+                        <li data-bs-toggle="modal" data-bs-target="#login" v-if="!user.isAuthorized">
+                            Войти
+                        </li>
+                        <li @click="userStore.logout()" v-else>Выйти</li>
                         <li @click="is_cart_open = true">
                             Корзина <span class="badge badge-danger" v-if="countInCart>0">{{ countInCart }}</span>
                         </li>
@@ -176,6 +173,7 @@ watch(hasOtherUserCart, (val) => {
                         <li data-bs-toggle="modal" data-bs-target="#lottery"
                             @click="lottery_id = null" v-if="lotteries.length > 0">Акции
                         </li>
+                        <li data-bs-toggle="modal" data-bs-target="#checkOrder">Узнать статус</li>
                     </ul>
                 </template>
             </ul>
@@ -186,6 +184,7 @@ watch(hasOtherUserCart, (val) => {
             <LotteryModal></LotteryModal>
             <MenuModal></MenuModal>
             <LoginModal></LoginModal>
+            <CheckOrderModal></CheckOrderModal>
             <UserCartModal v-if="user.isAuthorized && hasOtherUserCart"></UserCartModal>
 
             <div class="to-left" @click="main.changePosition(false)"></div>

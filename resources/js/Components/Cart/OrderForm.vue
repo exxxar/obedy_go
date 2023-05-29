@@ -190,8 +190,11 @@ const sendCode = () => {
 
     <Modal id="confirmOrder" title="Подтвердите Ваш заказ кодом из смс" :footer="false">
         <template #body>
+
             <TextInput :errors="errors.hasOwnProperty('code') ? errors.code : []"
-                       placeholder="Введите код подтверждения" v-model="form.code" mask="####"></TextInput>
+                       placeholder="Введите код подтверждения" v-model="form.code" mask="####"
+                       :is-masked="true"
+            ></TextInput>
             <button type="button" class="btn btn-link text-decoration-none" :class="codeTimer !== 0 ? 'disabled' : 'text-success'"
                     @click="codeTimer === 0 ? sendCode() : null">Отправить код повторно{{ codeTimer !== 0 ? ' через ' + codeTimer : '' }}</button>
         </template>

@@ -2,7 +2,6 @@
 import {modals} from "@/app"
 import {reactive, ref} from "vue"
 import {useUserStore} from "@/stores/userStore"
-import {storeToRefs} from "pinia"
 import TextInput from "@/Components/Basic/TextInput.vue"
 import Modal from '@/Components/Basic/Modal.vue'
 

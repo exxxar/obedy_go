@@ -67,6 +67,15 @@ export const useCartStore = defineStore('cart', () => {
         }, 0)
     }
 
+    const hasOtherUserCart = computed(() => {
+        let user = userStore.dataUser()
+        return items.value.find(item => {
+            let res = item.users.find(userItem => userItem.phone !== user.phone)
+            return !!res
+
+        }) !== undefined
+    })
+
     function addToCart(product) {
         let cartItem = items.value.find(item => item.product.id === product.id)
         if (!cartItem) {
@@ -78,7 +87,7 @@ export const useCartStore = defineStore('cart', () => {
                         name: user.name,
                         phone: user.phone,
                         quantity: 1,
-                        date: new Date().toLocaleDateString(),
+                        date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
                         inDBCart: user.isAuthorized
                     }
                 ]
@@ -91,10 +100,8 @@ export const useCartStore = defineStore('cart', () => {
     }
 
     function addToCartFromBD(products) {
-        console.log('addToCartFromBD')
         let user = userStore.dataUser()
         products.forEach(product => {
-            console.log(product)
             const cartItem = items.value.find(item => item.product.id === product.product.id)
             if (!cartItem) {
                 items.value.push(product)
@@ -103,7 +110,7 @@ export const useCartStore = defineStore('cart', () => {
                 for (let index = 0; index < product.users.length; index++) {
                     if (index === getUserProductIndex(product.product.id) && user.phone === product.users[index].phone) {
                         if (!cartItem.users[index].inDBCart) {
-                            cartItem.users[index].quantity += product.users[index].quantity
+                            cartItem.users[index].quantity += parseInt(product.users[index].quantity)
                             saveCart(cartItem, 'add')
                         }
                         cartItem.users[index].inDBCart = true
@@ -128,7 +135,7 @@ export const useCartStore = defineStore('cart', () => {
                 usersToAdd.forEach(users => {
                     let userItem = cartItem.users.find(user=>user.phone === users.phone)
                     if(userItem)
-                        userItem.quantity += users.quantity
+                        userItem.quantity += parseInt(users.quantity)
                     else
                         cartItem.users.push(users)
                 })
@@ -149,7 +156,6 @@ export const useCartStore = defineStore('cart', () => {
 
     function getUserProductIndex(id) {
         let user = userStore.dataUser()
-        console.log(user)
         let product = items.value.find(item => item.product.id === id)
         return product.users.findIndex(productUser => productUser.phone === user.phone)
     }
@@ -182,10 +188,6 @@ export const useCartStore = defineStore('cart', () => {
             cartItem.users[index].quantity--
             sendNotify('Лишний товар убран из корзины!')
             saveCart(cartItem, 'dec')
-        } else if (index === getUserProductIndex(id) && cartItem.users[index].quantity <= 1 && cartItem.users.length > 1) {
-            cartItem.users.splice(index, 1)
-            sendNotify('Лишний товар убран из корзины!')
-            saveCart(cartItem, 'dec')
         } else
             removeProduct(id, index)
     }
@@ -197,7 +199,7 @@ export const useCartStore = defineStore('cart', () => {
         }
         let cartItem = items.value.find(item => item.product.id === id)
         let cartItemIndex = items.value.indexOf(cartItem)
-        if (index === getUserProductIndex(id) || cartItem.users.length === 1) {
+        if(index === getUserProductIndex(id) || cartItem.users.length === 1){
             saveCart(items.value[cartItemIndex], 'delete')
             items.value.splice(cartItemIndex, 1)
         } else {
@@ -233,7 +235,8 @@ export const useCartStore = defineStore('cart', () => {
     }
 
     return {
-        items, getProductById, getTotalCount, getTotalPrice, getTotalWeight,
+        items, getProductById, getTotalCount, getTotalPrice,
+        getTotalWeight, hasOtherUserCart,
         inCart, addToCart, incQuantity, decQuantity,
         removeProduct, clearCart, addToCartFromBD
     }

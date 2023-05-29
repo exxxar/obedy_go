@@ -17,6 +17,12 @@ export const useUserStore = defineStore('userStore', () => {
         localStorage.setItem('user', JSON.stringify(user))
     })
 
+    watch(user.phone, (newValue, oldValue) => {
+        console.log(newValue)
+        if (newValue)
+            user.phone.replace(/D/, '')
+    })
+
     async function register(){
         await axios.post(route('register', user)).then(resp => {
             user.isAuthorized = true

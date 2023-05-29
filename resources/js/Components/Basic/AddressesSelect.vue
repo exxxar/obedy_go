@@ -86,7 +86,7 @@ const selected = (value) => {
         @option:selected="selected"
 
         placeholder="Адрес доставки"
-        class="form-control w-100 mt-2 mb-0 px-4 py-3"
+        class="form-control w-100 mt-2 mb-0 ps-3 pe-4 py-3"
         :class="[errors.length > 0 ? 'is-invalid' : '',
         errors.length === 0 && vFormAddress !== null ? 'is-valid' : '']">
         <template #option="{label}">

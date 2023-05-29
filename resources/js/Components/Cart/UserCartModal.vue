@@ -1,5 +1,5 @@
 <script setup>
-import {watch} from "vue"
+import {computed} from "vue"
 import {storeToRefs} from "pinia"
 import {useCartStore} from '@/stores/cartStore.js'
 import Modal from "@/Components/Basic/Modal.vue"
@@ -29,6 +29,9 @@ const print = async () => {
         }
     })
 }
+const foodPart = (product)=>{
+    return foodParts.value.find(foodPart => foodPart.partId === product.product.partId)
+}
 
 </script>
 
@@ -43,7 +46,7 @@ const print = async () => {
         </template>
         <template #body>
             <template v-for="product in items" v-if="items.length>0">
-                <p><strong>{{foodParts.find(foodPart => foodPart.partId === product.product.partId).title}}</strong>. {{product.product.title}}</p>
+                <p><strong v-if="foodPart(product)">{{foodPart(product).title}}. </strong>{{product.product.title}}</p>
                 <div class="table-responsive">
                     <table class="table table-hover ">
                         <thead>

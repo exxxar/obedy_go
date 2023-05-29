@@ -1,18 +1,18 @@
 {
   "BaseLayout.css": {
-    "file": "assets/BaseLayout-a2bab465.css",
+    "file": "assets/BaseLayout-12fba797.css",
     "src": "BaseLayout.css"
   },
-  "_BaseLayout-8a5928cc.js": {
+  "_BaseLayout-0ebb3567.js": {
     "css": [
-      "assets/BaseLayout-a2bab465.css"
+      "assets/BaseLayout-12fba797.css"
     ],
     "dynamicImports": [
       "resources/js/Pages/Main.vue",
       "resources/js/Pages/Products.vue",
       "resources/js/Pages/Self.vue"
     ],
-    "file": "assets/BaseLayout-8a5928cc.js",
+    "file": "assets/BaseLayout-0ebb3567.js",
     "imports": [
       "resources/js/app.js"
     ]
@@ -22,34 +22,34 @@
     "src": "resources/images/12.jpg"
   },
   "resources/js/Pages/Main.vue": {
-    "file": "assets/Main-9222ed85.js",
+    "file": "assets/Main-5ae1fe3d.js",
     "imports": [
-      "_BaseLayout-8a5928cc.js",
+      "_BaseLayout-0ebb3567.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Main.vue"
   },
   "resources/js/Pages/Products.vue": {
-    "file": "assets/Products-2943322d.js",
+    "file": "assets/Products-58292ffc.js",
     "imports": [
-      "_BaseLayout-8a5928cc.js",
+      "_BaseLayout-0ebb3567.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Products.vue"
   },
   "resources/js/Pages/Self.vue": {
-    "file": "assets/Self-c98c2c2b.js",
+    "file": "assets/Self-7df0635a.js",
     "imports": [
-      "_BaseLayout-8a5928cc.js",
+      "_BaseLayout-0ebb3567.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Self.vue"
   },
   "resources/js/app.css": {
-    "file": "assets/app-58eb6cfa.css",
+    "file": "assets/app-15d1e942.css",
     "src": "resources/js/app.css"
   },
   "resources/js/app.js": {
@@ -57,14 +57,14 @@
       "assets/12-f74ba8a5.jpg"
     ],
     "css": [
-      "assets/app-58eb6cfa.css"
+      "assets/app-15d1e942.css"
     ],
     "dynamicImports": [
       "resources/js/Pages/Main.vue",
       "resources/js/Pages/Products.vue",
       "resources/js/Pages/Self.vue"
     ],
-    "file": "assets/app-52f97a97.js",
+    "file": "assets/app-accf9148.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }

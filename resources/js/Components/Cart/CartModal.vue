@@ -8,7 +8,7 @@ import UserCartModal from "@/Components/Cart/UserCartModal.vue";
 import {useUserStore} from "@/stores/userStore";
 
 const cart = useCartStore()
-const {items} = storeToRefs(cart)
+const {items, hasOtherUserCart} = storeToRefs(cart)
 const userStore = useUserStore()
 const {user} = storeToRefs(userStore)
 
@@ -27,12 +27,6 @@ const hasMainProductInCart = () => {
     return tmp.length > 0
 }
 
-const hasOtherUserCart = computed(()=>{
-   return items.value.find(item =>{
-        let res = item.users.find(userItem => userItem.phone !== user.value.phone)
-        return !!res
-    }) !== undefined
-})
 </script>
 
 <template>

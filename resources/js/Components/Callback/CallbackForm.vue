@@ -2,7 +2,7 @@
 import TextInput from "@/Components/Basic/TextInput.vue"
 import AddressesSelect from "@/Components/Basic/AddressesSelect.vue"
 import AudioCallback from "@/Components/Basic/AudioCallback.vue"
-import {onMounted, reactive, ref} from "vue"
+import {onMounted, reactive, ref, watch} from "vue"
 import {sendNotify} from "@/app";
 
 const props = defineProps({
@@ -14,6 +14,7 @@ const props = defineProps({
 
 onMounted(() => {
     form.typeValue = props.selectedType
+    selectForm.value = question_types[props.selectedType]
 })
 
 
@@ -81,6 +82,11 @@ const sendRequest = () => {
 
 }
 
+const selectForm = ref('')
+watch(selectForm, (newValue, oldValue) => {
+    form.typeValue = question_types.indexOf(newValue)
+})
+
 </script>
 
 <template>
@@ -96,12 +102,12 @@ const sendRequest = () => {
                            v-model="form.phone" mask="+7 (###) ###-##-##"></TextInput>
             </div>
             <div class="form-group mb-3">
-                <select name="question-type" v-model="form.typeValue" class="form-select px-4 py-3" required>
-                    <option v-for="(option,index) in question_types" :value="index"
-                            :selected="form.typeValue === index ? 'selected' : ''">
-                        {{ option }}
-                    </option>
-                </select>
+                <v-select
+                    v-model="selectForm"
+                    :options="question_types"
+                    :clearable="false"
+                    class="form-control w-100 mt-2 mb-0 ps-3 pe-4 py-3">
+                </v-select>
             </div>
             <div class="form-group mb-3" v-if="form.typeValue===0">
                 <AddressesSelect v-model:formAddress="form.address"
@@ -148,3 +154,35 @@ const sendRequest = () => {
     </div>
 </template>
 
+<style lang="scss">
+
+.v-select {
+    width: 100%;
+    padding: 15px;
+    //border: 1px #d50c0d solid;
+    margin-top: 0.5rem;
+    border-radius: 5px;
+
+    & .vs__dropdown-toggle {
+        border: 0;
+        padding: 0;
+
+        & .vs__selected-options {
+            flex-wrap: nowrap;
+            word-wrap: break-word;
+        }
+
+        & .vs__search {
+            width: 0 !important;
+            border: 0 !important;
+            margin: 4px 0 0 !important;
+            padding: 0 7px !important;
+        }
+
+        & .vs__actions .vs__clear {
+            display: flex;
+        }
+
+    }
+}
+</style>
