@@ -23,14 +23,18 @@ const props = defineProps({
     clearFunction: {
         type: Function,
         default: null
-    }
+    },
+    class_content: {
+        type: String,
+        default: null
+    },
 })
 </script>
 
 <template>
     <div class="modal fade" :id="id" tabindex="-1" :aria-labelledby="id+'Label'" aria-hidden="true">
         <div class="modal-dialog" :class="class_size">
-            <div class="modal-content">
+            <div class="modal-content" :class="class_content">
                 <div v-if="header" class="modal-header">
                     <slot name="title"><h5 class="modal-title" :id="id+'Label'">{{title}}</h5></slot>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="clearFunction()"></button>

@@ -6,7 +6,7 @@ import {useMainStore} from '@/stores/mainStore.js'
 import {useCartStore} from '@/stores/cartStore.js'
 import {storeToRefs} from "pinia"
 import {useLotteryStore} from "@/stores/lotteryStore.js"
-import {modals, popover} from "@/app"
+import {modals, offcanvas, popover} from "@/app"
 import {useUserStore} from "@/stores/userStore"
 import UserCartModal from "@/Components/Cart/UserCartModal.vue"
 import LoginModal from "@/Components/Modals/LoginModal.vue"
@@ -16,6 +16,7 @@ import LotteryModal from "@/Components/Modals/LotteryModal.vue"
 import MenuModal from "@/Components/Modals/MenuModal.vue"
 import CallbackModal from "@/Components/Modals/CallbackModal.vue"
 import CheckOrderModal from "@/Components/Modals/CheckOrderModal.vue"
+import { router } from '@inertiajs/vue3'
 
 //get store
 const main = useMainStore()
@@ -48,10 +49,17 @@ onMounted(() => {
     window.addEventListener("keyup", switchKeyUp)
     console.log('base mount')
     userStore.getUser()
+
+    document.getElementById('obedyNavbarMenu').addEventListener('hidden.bs.offcanvas', () => {
+        setTimeout(() => document.getElementById('cartMenu').scrollTo(0,0), 350);
+    })
 })
 
 onUnmounted(() => {
     window.removeEventListener('keyup', switchKeyUp)
+    document.getElementById('obedyNavbarMenu').removeEventListener('hidden.bs.offcanvas', () => {
+        setTimeout(() => document.getElementById('cartMenu').scrollTo(0,0), 350);
+    })
 })
 
 const switchFoodPart = () => {
@@ -68,6 +76,9 @@ const switchFoodPart = () => {
                 break
             case "self":
                 part.value = 4
+                break
+            case "special":
+                part.value = 5
                 break
         }
     }
@@ -130,27 +141,36 @@ watch(hasOtherUserCart, (val) => {
             <div class="w-100" v-if="part === 0"></div>
             <div class="w-100" v-if="part === 0"></div>
 
-            <slot name="content" v-if="part>0"></slot>
+            <slot name="content" v-if="part > 0"></slot>
 
 
             <CartModal v-if="is_cart_open"/>
 
-            <div class="cart-container d-sm-block d-none" v-if="!is_cart_open">
-                <div class="cart-icon login" data-bs-toggle="modal" data-bs-target="#login" v-if="!user.isAuthorized">
-                    Войти
+            <nav class="navbar navbar-menu d-sm-flex d-none" v-if="!is_cart_open">
+                <i class="fa-solid fa-burger fa-2xl"  data-bs-toggle="offcanvas" data-bs-target="#obedyNavbarMenu" aria-controls="obedyNavbarMenu"
+                   aria-label="Toggle navigation" role="button"></i>
+                <div class="offcanvas cart-container" tabindex="-1" id="obedyNavbarMenu">
+                        <div class="cart-icon cart-icon-close">
+                            <i class="fa-solid fa-xmark fa-2xl"  data-bs-dismiss="offcanvas"></i>
+                        </div>
+                        <div id="cartMenu" class="cart-menu">
+                            <div class="cart-icon login" data-bs-toggle="modal" data-bs-target="#login" v-if="!user.isAuthorized">Войти</div>
+                            <div class="cart-icon login" @click="userStore.logout()" v-else>Выйти</div>
+                            <div class="cart-icon cart" @click="is_cart_open = true; setPopover();">Корзина<span
+                                v-if="getTotalCount>0">{{ getTotalCount }}</span></div>
+                            <div class="cart-icon about" data-bs-toggle="modal" data-bs-target="#about">О нас</div>
+                            <div class="cart-icon callback" data-bs-toggle="modal" data-bs-target="#callback">Напиши нам</div>
+                            <div class="cart-icon delivery" data-bs-toggle="modal" data-bs-target="#delivery">Доставка</div>
+                            <div class="cart-icon lottery" data-bs-toggle="modal" data-bs-target="#lottery"
+                                 @click="lottery_id = null" v-if="lotteries.length > 0">Акции</div>
+                            <div class="cart-icon checkOrder" data-bs-toggle="modal" data-bs-target="#checkOrder">Узнать статус</div>
+
+                            <div class="cart-icon icon-1" @click="router.get(route('chats'))">Чаты</div>
+                            <div class="cart-icon icon-2" data-bs-toggle="modal" data-bs-target="#checkOrder">Узнать статус</div>
+                            <div class="cart-icon icon-3" data-bs-toggle="modal" data-bs-target="#checkOrder">Узнать статус</div>
+                        </div>
                 </div>
-                <div class="cart-icon login" @click="userStore.logout()" v-else>Выйти</div>
-                <div class="cart-icon cart" @click="is_cart_open = true; setPopover();">Корзина <span
-                    v-if="getTotalCount>0">{{ getTotalCount }}</span>
-                </div>
-                <div class="cart-icon about" data-bs-toggle="modal" data-bs-target="#about">О нас</div>
-                <div class="cart-icon callback" data-bs-toggle="modal" data-bs-target="#callback">Напиши нам</div>
-                <div class="cart-icon delivery" data-bs-toggle="modal" data-bs-target="#delivery">Доставка</div>
-                <div class="cart-icon lottery" data-bs-toggle="modal" data-bs-target="#lottery"
-                     @click="lottery_id = null" v-if="lotteries.length > 0">Акции
-                </div>
-                <div class="cart-icon checkOrder" data-bs-toggle="modal" data-bs-target="#checkOrder">Узнать статус</div>
-            </div>
+            </nav>
 
             <ul class="footer-container d-sm-none" @mouseleave="bottom_menu_show = false">
                 <li class="p-2 text-center" v-if="!bottom_menu_show" @click="bottom_menu_show = true">Показать меню
@@ -192,3 +212,11 @@ watch(hasOtherUserCart, (val) => {
         </div>
     </div>
 </template>
+
+<style>
+/*.navbar-obedy {
+    width: 100px;
+    top: 100px;
+    right: 0;
+}*/
+</style>

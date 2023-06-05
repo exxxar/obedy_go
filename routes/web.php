@@ -4,6 +4,7 @@ use App\Enums\FoodPartEnum;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CallbackController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\LotteryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
@@ -32,6 +33,8 @@ Route::get('/self', function () {
 Route::get('/{foodPart}', [ProductController::class, 'getProducts'])
     ->whereIn('foodPart', FoodPartEnum::getConstants())
     ->name('products');
+
+Route::get('/chats', [ChatController::class, 'getChats'])->name('chats');
 
 Route::group(['prefix' => 'lottery'], function () {
     Route::get('/all', [LotteryController::class, 'getLotteryList'])->name('lotteries');

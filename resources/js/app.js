@@ -1,6 +1,6 @@
 import 'bootstrap'
 import '../sass/app.scss'
-import {Modal, Popover} from "bootstrap";
+import {Modal, Popover, Offcanvas} from "bootstrap";
 import axios from 'axios';
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
@@ -34,6 +34,7 @@ const appName = window.document.getElementsByTagName('title')[0]?.innerText || '
 
 export const modals = Modal
 export const popover = Popover
+export const offcanvas = Offcanvas
 
 window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';

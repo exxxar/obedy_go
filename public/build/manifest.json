@@ -3,7 +3,7 @@
     "file": "assets/BaseLayout-12fba797.css",
     "src": "BaseLayout.css"
   },
-  "_BaseLayout-0ebb3567.js": {
+  "_BaseLayout-5b880201.js": {
     "css": [
       "assets/BaseLayout-12fba797.css"
     ],
@@ -12,7 +12,7 @@
       "resources/js/Pages/Products.vue",
       "resources/js/Pages/Self.vue"
     ],
-    "file": "assets/BaseLayout-0ebb3567.js",
+    "file": "assets/BaseLayout-5b880201.js",
     "imports": [
       "resources/js/app.js"
     ]
@@ -22,27 +22,27 @@
     "src": "resources/images/12.jpg"
   },
   "resources/js/Pages/Main.vue": {
-    "file": "assets/Main-5ae1fe3d.js",
+    "file": "assets/Main-b22133a3.js",
     "imports": [
-      "_BaseLayout-0ebb3567.js",
+      "_BaseLayout-5b880201.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Main.vue"
   },
   "resources/js/Pages/Products.vue": {
-    "file": "assets/Products-58292ffc.js",
+    "file": "assets/Products-6c820c0d.js",
     "imports": [
-      "_BaseLayout-0ebb3567.js",
+      "_BaseLayout-5b880201.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Products.vue"
   },
   "resources/js/Pages/Self.vue": {
-    "file": "assets/Self-7df0635a.js",
+    "file": "assets/Self-20450de9.js",
     "imports": [
-      "_BaseLayout-0ebb3567.js",
+      "_BaseLayout-5b880201.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
@@ -64,7 +64,7 @@
       "resources/js/Pages/Products.vue",
       "resources/js/Pages/Self.vue"
     ],
-    "file": "assets/app-accf9148.js",
+    "file": "assets/app-0aeeb73b.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }

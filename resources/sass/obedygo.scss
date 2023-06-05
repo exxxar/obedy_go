@@ -1,3 +1,7 @@
+body {
+    padding: 0 !important;
+}
+
 .go-item {
     background-color: white;
     width: 100%;
@@ -87,3 +91,21 @@
     }
 }
 
+.navbar-menu {
+    position: fixed;
+    top: 100px;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #e3342f;
+    z-index: 20;
+    background: white;
+    border-radius: 5px 0 0 5px;
+    box-shadow: 1px 1px 2px 0 #000000;
+    padding: 0;
+
+    & .fa-burger {
+        padding: 10px;
+    }
+}
