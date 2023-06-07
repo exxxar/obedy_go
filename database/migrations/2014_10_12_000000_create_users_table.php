@@ -15,15 +15,15 @@ return new class extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->string('phone')->unique();
+            $table->string('image')->nullable();
+            $table->string('description')->nullable();
             $table->string('password');
-            $table->boolean('active')->default(false);
-
-            $table->string('telegram_chat_id')->nullable();
             $table->json('addresses')->nullable();
-
+           /* $table->boolean('active')->default(false);
+            $table->string('telegram_chat_id')->nullable();
             $table->boolean('is_trusted')->default(false);
             $table->integer('trusted_count')->default(0);
-            $table->integer('trusted_limit')->default(1000);
+            $table->integer('trusted_limit')->default(1000);*/
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

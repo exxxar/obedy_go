@@ -2,8 +2,14 @@
 import BaseLayout from "@/Layouts/BaseLayout.vue"
 import {storeToRefs} from "pinia"
 import {useMainStore} from '@/stores/mainStore.js'
+import {onMounted} from "vue";
+import {popover} from "@/app";
 
 const {foodParts, part} = storeToRefs(useMainStore())
+onMounted(() => {
+   part.value = 0
+})
+
 </script>
 
 <template>

@@ -8,6 +8,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\LotteryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -30,11 +31,21 @@ Route::get('/self', function () {
     return Inertia::render('Self');
 })->name('self');
 
+Route::get('/specialists', [ProfileController::class, 'getSpecialists'])->name('specialists');
+
 Route::get('/{foodPart}', [ProductController::class, 'getProducts'])
     ->whereIn('foodPart', FoodPartEnum::getConstants())
     ->name('products');
 
-Route::get('/chats', [ChatController::class, 'getChats'])->name('chats');
+
+Route::group(['prefix' => 'chats', 'middleware' => 'auth'], function () {
+    Route::get('/', [ChatController::class, 'getChats'])->name('chats');
+    Route::get('/{id}', [ChatController::class, 'getMessages'])->name('chat.messages');
+    Route::get('/create/{id}', [ChatController::class, 'createChat'])->name('create.chat');
+    Route::post('/send', [ChatController::class, 'sendMessage'])->name('send.message');
+});
+
+
 
 Route::group(['prefix' => 'lottery'], function () {
     Route::get('/all', [LotteryController::class, 'getLotteryList'])->name('lotteries');
@@ -58,7 +69,7 @@ Route::group(['prefix' => 'cart'], function () {
     Route::get('/print', [CartController::class, 'printReport'])->name('print.report');
 });
 
-Route::group(['prefix' => 'auth', 'middleware'=>'guest'], function(){
+Route::group(['prefix' => 'auth', 'middleware' => 'guest'], function () {
     Route::post('register', [AuthController::class, 'register'])->name('register');
     Route::post('login', [AuthController::class, 'login'])->name('login');
 });

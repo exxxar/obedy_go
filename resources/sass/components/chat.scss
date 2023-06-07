@@ -2,6 +2,10 @@
     margin-top: auto;
     margin-bottom: auto;
 
+    .fixed-max-height-125px{
+        max-height: 125px;
+    }
+
     .card {
         height: 70vh;
         border-radius: 15px !important;
@@ -64,6 +68,9 @@
        // border: 0 !important;
         color: black !important;
         cursor: pointer;
+        &:hover {
+            background: lightgray !important;
+        }
     }
 
     .send_btn {
@@ -72,6 +79,9 @@
        // border: 0 !important;
         color: black !important;
         cursor: pointer;
+        &:hover {
+            background: lightgray !important;
+        }
     }
 
     .search_btn {
@@ -80,6 +90,9 @@
        // border: 0 !important;
         color: black !important;
         cursor: pointer;
+        &:hover {
+            background: lightgray !important;
+        }
     }
 
     .contacts {
@@ -151,18 +164,6 @@
         color: rgba(0, 0, 0, 0.6);
     }
 
-    .video_cam {
-        margin-left: 50px;
-        margin-top: 5px;
-    }
-
-    .video_cam span {
-        color: black;
-        font-size: 20px;
-        cursor: pointer;
-        margin-right: 20px;
-    }
-
     .msg_cotainer {
         margin-top: auto;
         margin-bottom: auto;
@@ -192,10 +193,6 @@
         position: relative;
         color: white;
 
-        & img {
-            //width:200px;
-            //height:150px;
-        }
         & a.link {
             color: #678816;
         }

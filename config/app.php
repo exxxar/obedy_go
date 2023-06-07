@@ -58,6 +58,7 @@ return [
     'url' => env('APP_URL', 'http://localhost'),
 
     'asset_url' => env('ASSET_URL'),
+    'logo'=>env('LOGO'),
 
     /*
     |--------------------------------------------------------------------------
@@ -170,6 +171,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         App\Providers\ActionServiceProvider::class,
+        Spatie\Permission\PermissionServiceProvider::class,
     ])->toArray(),
 
     /*

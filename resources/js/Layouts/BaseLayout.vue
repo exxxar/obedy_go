@@ -6,7 +6,7 @@ import {useMainStore} from '@/stores/mainStore.js'
 import {useCartStore} from '@/stores/cartStore.js'
 import {storeToRefs} from "pinia"
 import {useLotteryStore} from "@/stores/lotteryStore.js"
-import {modals, offcanvas, popover} from "@/app"
+import {modals, popover} from "@/app"
 import {useUserStore} from "@/stores/userStore"
 import UserCartModal from "@/Components/Cart/UserCartModal.vue"
 import LoginModal from "@/Components/Modals/LoginModal.vue"
@@ -40,7 +40,8 @@ provide('is_cart_open', is_cart_open)
 
 // watch
 watch(part, () => {
-    main.selectPart()
+    if(part.value !== null)
+        main.selectPart()
 })
 
 onMounted(() => {
@@ -63,7 +64,7 @@ onUnmounted(() => {
 })
 
 const switchFoodPart = () => {
-    if (route().current('products') && part.value === 0) {
+    if (route().current('products')) {
         switch (route().params.foodPart) {
             case "standard":
                 part.value = 1
@@ -81,6 +82,8 @@ const switchFoodPart = () => {
                 part.value = 5
                 break
         }
+    }else{
+        part.value = null
     }
 }
 
@@ -129,7 +132,7 @@ watch(hasOtherUserCart, (val) => {
             <TopMenu v-else></TopMenu>
 
             <div class="w-100 d-flex flex-column align-items-center text-uppercase text-white text-center mt-4"
-                 :class="part === 0 ? 'mb-5 mt-5' : ''">
+                 v-if="part !== null" :class="part === 0 ? 'mb-5 mt-5' : ''">
                 <h6 class="col-8 px-3">Полное меню на неделю можно глянуть <a
                     href="#" class="text-danger font-weight-bold" data-bs-toggle="modal" data-bs-target="#menu">ТУТ</a>
                 </h6>
@@ -141,7 +144,7 @@ watch(hasOtherUserCart, (val) => {
             <div class="w-100" v-if="part === 0"></div>
             <div class="w-100" v-if="part === 0"></div>
 
-            <slot name="content" v-if="part > 0"></slot>
+            <slot name="content" v-if="part !== 0"></slot>
 
 
             <CartModal v-if="is_cart_open"/>
@@ -166,7 +169,7 @@ watch(hasOtherUserCart, (val) => {
                             <div class="cart-icon checkOrder" data-bs-toggle="modal" data-bs-target="#checkOrder">Узнать статус</div>
 
                             <div class="cart-icon icon-1" @click="router.get(route('chats'))">Чаты</div>
-                            <div class="cart-icon icon-2" data-bs-toggle="modal" data-bs-target="#checkOrder">Узнать статус</div>
+                            <div class="cart-icon icon-2" @click="router.get(route('specialists'))">Специалисты</div>
                             <div class="cart-icon icon-3" data-bs-toggle="modal" data-bs-target="#checkOrder">Узнать статус</div>
                         </div>
                 </div>
@@ -213,10 +216,3 @@ watch(hasOtherUserCart, (val) => {
     </div>
 </template>
 
-<style>
-/*.navbar-obedy {
-    width: 100px;
-    top: 100px;
-    right: 0;
-}*/
-</style>

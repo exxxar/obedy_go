@@ -22,7 +22,7 @@ const props = defineProps({
     },
     clearFunction: {
         type: Function,
-        default: null
+        default: () => {}
     },
     class_content: {
         type: String,

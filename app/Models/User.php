@@ -10,10 +10,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable, SoftDeletes;
+    use HasApiTokens, Notifiable, SoftDeletes, HasRoles;
 
     protected $table = 'users';
 
@@ -25,13 +26,15 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'phone',
-        'telegram_chat_id',
         'addresses',
-        'active',
         'password',
-        'trusted_count',
+        'image',
+        'description'
+        /*'trusted_count',
         'trusted_limit',
         'is_trusted',
+        'active',
+        'telegram_chat_id',*/
     ];
 
     /**
@@ -74,5 +77,17 @@ class User extends Authenticatable
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
+    }
+
+
+    public function menus(): HasMany
+    {
+        return $this->hasMany(Menu::class);
+    }
+
+
+    public function purchasedMenus(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'menu_user');
     }
 }

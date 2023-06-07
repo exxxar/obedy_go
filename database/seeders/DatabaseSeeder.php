@@ -23,7 +23,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             CategoryTableSeeder::class,
             ProductTableSeeder::class,
-            LotteryTableSeeder::class
+            LotteryTableSeeder::class,
+            RolePermissionSeeder::class,
+            UserTableSeeder::class
         ]);
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }

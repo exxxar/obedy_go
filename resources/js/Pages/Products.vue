@@ -52,7 +52,7 @@ const productByCategory = computed(() => {
                 <div class="row ingrs pb-2 mt-2">
                     <div class="col-12 d-flex flex-wrap justify-content-start">
                         <p :class="(current_category_id===item.id?'active':'')" v-for="item in categories"
-                           @click="current_category_id=item.id">#{{ item.title }}</p>
+                           @click="current_category_id===item.id">#{{ item.title }}</p>
                     </div>
                 </div>
                 <div class="row">

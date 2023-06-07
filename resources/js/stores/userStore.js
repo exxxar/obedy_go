@@ -18,7 +18,6 @@ export const useUserStore = defineStore('userStore', () => {
     })
 
     watch(user.phone, (newValue, oldValue) => {
-        console.log(newValue)
         if (newValue)
             user.phone.replace(/D/, '')
     })
