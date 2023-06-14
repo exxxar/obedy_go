@@ -4,7 +4,7 @@ import {vMaska} from "maska"
 const props = defineProps({
     modelValue: {
         type: String,
-        required: true,
+        default: null,
     },
     placeholder: {
         type: String,

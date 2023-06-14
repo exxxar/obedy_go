@@ -35,8 +35,10 @@ class ChatResource extends JsonResource
             'image'=>is_null($this->specialist->image) ? config('app.logo') : $this->specialist->image,
         ];
         $messages = [];
+        $messageCount = 0;
         if($this->isChatMessages){
-            $messages = MessageResource::collection($this->messages()->simplePaginate(5));
+            $messages = MessageResource::collection($this->messages()->simplePaginate(20));
+            $messageCount = $this->messages->count();
         }
         $lastMessage = null;
         $unseenMessageCount = 0;
@@ -49,11 +51,12 @@ class ChatResource extends JsonResource
             'interlocutor'=>$this->specialist_id != $userId ? $specialist : $user,
             $this->mergeWhen($this->isChatMessages, [
                 'user'=>$this->user_id == $userId ? $user : $specialist,
-                'messages'=> $messages
+                'messages'=> $messages,
+                'messageCount'=>$messageCount
             ]),
+            'unseenMessageCount'=> $unseenMessageCount,
             $this->mergeWhen(!$this->isChatMessages, [
                 'lastMessage'=> $lastMessage,
-                'unseenMessageCount'=> $unseenMessageCount
             ]),
         ];
     }

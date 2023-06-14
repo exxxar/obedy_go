@@ -1,13 +1,13 @@
 <script setup>
 import GalleryModal from "@/Components/Modals/GalleryModal.vue"
-import {computed, nextTick, onMounted, reactive, ref} from "vue"
+import {computed, nextTick, onBeforeMount, onMounted, reactive, ref, watch} from "vue"
 import {useChatStore} from "@/stores/chatStore"
 import {storeToRefs} from "pinia"
 import {useUserStore} from "@/stores/userStore"
 import {modals, sendNotify} from "@/app"
 
 const chatStore = useChatStore()
-const {chats, currentChat} = storeToRefs(chatStore)
+const {filterChats, currentChat, searchString} = storeToRefs(chatStore)
 const userStore = useUserStore()
 const {user} = storeToRefs(userStore)
 
@@ -41,6 +41,9 @@ onMounted(() => {
             });
     }
 
+    document.getElementById('chatSearch').addEventListener("click", (e) => {
+        e.target.setAttribute('type', 'text')
+    }, {once: true})
 })
 
 const messageDates = computed(() => {
@@ -96,6 +99,15 @@ const openGallery = async (images, index) => {
     })
 }
 
+const scrollBottomAndSeenNewMessages = (id) => {
+    let element = document.getElementById('current-chat-body-' + id)
+    element.scroll({
+        top: element.scrollHeight,
+        behavior: 'smooth'
+    });
+    currentChat.value.data.unseenMessageCount = 0
+}
+
 </script>
 <template>
     <div class="container p-0 z-10">
@@ -104,15 +116,15 @@ const openGallery = async (images, index) => {
                 <div class="card mb-sm-3 mb-md-0 contacts_card">
                     <div class="card-header">
                         <div class="input-group">
-                            <input type="text" placeholder="Поиск..." autocomplete="off"
-                                   name="chatSearch" id="chatSearch" class="form-control chat-search">
-                            <span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
+                            <input type="password" placeholder="Поиск..." autocomplete="off"
+                                   readonly onfocus="this.removeAttribute('readonly')"
+                                   name="chatSearch" id="chatSearch" class="form-control chat-search" v-model="searchString">
                         </div>
                     </div>
                     <div class="card-body contacts_body">
                         <ul class="contacts">
-                            <li class="active" v-for="chat in chats" @click="chatStore.getChat(chat.id)">
-                                <div class="d-flex bd-highlight">
+                            <li class="active" v-for="chat in filterChats" @click="chatStore.getChat(chat.id)">
+                                <div class="d-flex cursor-pointer bd-highlight">
                                     <div class="img_cont">
                                         <img :src="chat.interlocutor.image"
                                              class="rounded-circle object-fit-cover user_img">
@@ -161,7 +173,7 @@ const openGallery = async (images, index) => {
                                 </div>
                                 <div class="user_info">
                                     <span>{{ currentChat.data.interlocutor.name }}</span>
-                                    <p>{{ currentChat.data.messages.length }} сообщений</p>
+                                    <p>{{ currentChat.data.messageCount }} сообщений</p>
                                 </div>
                             </div>
                         </div>
@@ -169,6 +181,17 @@ const openGallery = async (images, index) => {
                              :id="'current-chat-body-'+currentChat.data.id"
                              :class="currentChat.data.messages.length > 0 ? '' : 'd-flex flex-column justify-content-center'">
                             <template v-if="currentChat.data.messages.length > 0">
+                                <div v-if="currentChat.data.unseenMessageCount > 0"
+                                     class="cursor-pointer position-absolute bottom-0 end-0"
+                                     style="transform: translate(-50%, -200%);"
+                                    @click="scrollBottomAndSeenNewMessages(currentChat.data.id)">
+                                    <div class="img_cont_msg">
+                                        <div class="d-flex flex-column justify-content-center align-items-center rounded-circle bg-danger h-100 fw-bold">
+                                            <p class="text-white lh-1" style="font-size: 12px">{{ currentChat.data.unseenMessageCount }}</p>
+                                            <i class="fa-solid fa-chevron-down fa-lg fa-beat text-white"></i>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="d-flex flex-column" v-for="date in messageDates">
                                     <div class="d-flex justify-content-center mb-3">{{ date }}</div>
                                     <div v-for="message in messagesByDate(date)"
@@ -192,7 +215,7 @@ const openGallery = async (images, index) => {
                                                     <div class="col-auto"
                                                          v-for="(image, index) in message.images">
                                                         <img v-lazy="image" @click="openGallery(message.images, index)"
-                                                             class="img-fluid rounded image-container">
+                                                             class="cursor-pointer img-fluid rounded image-container">
                                                     </div>
                                                 </div>
                                                 <div class="col-12 d-flex flex-wrap gap-2"

@@ -1,7 +1,7 @@
 import {defineStore} from "pinia"
 import axios from "axios"
 import {sendNotify} from "@/app"
-import {nextTick, reactive, ref} from "vue"
+import {computed, nextTick, reactive, ref} from "vue"
 
 
 export const useChatStore = defineStore('chat', () => {
@@ -11,16 +11,20 @@ export const useChatStore = defineStore('chat', () => {
     })
     const currentChatId = ref(null)
 
-    const searchString = ref(null)
+    const searchString = ref('')
 
     const chats = ref([])
 
     const page = ref(1)
 
-    const hasNextPage = ref(true)
-
     let observerSeenMessage = null
     let observerGetMessages = null
+
+    const filterChats = computed(() => {
+        if(searchString.value !== '')
+            return chats.value.filter(chat => chat.interlocutor.name.toLowerCase().indexOf(searchString.value.toLowerCase()) !== -1)
+        return chats.value
+    })
 
     const getChats = async () => {
         await axios.get(route('chats.get')).then(resp => {
@@ -33,22 +37,17 @@ export const useChatStore = defineStore('chat', () => {
     const getChat = async (id) => {
         observerSeenMessage = null
         await axios.get(route('chat.messages', {id: id, page: page.value})).then(resp => {
-            if(currentChat.data !== null && currentChat.data.id === id){
+            if (currentChat.data !== null && currentChat.data.id === id) {
                 resp.data.messages.sort((a, b) => {
                     return parseInt(b.id) - parseInt(a.id);
                 })
-                if(resp.data.messages.length === 0)
-                    hasNextPage.value = false
-                else {
-                    resp.data.messages.forEach(message => {
-                        let messageIndex = currentChat.data.messages.findIndex(mes => mes.id === message.id)
-                        if (messageIndex === -1) {
+                resp.data.messages.forEach(message => {
+                    let messageIndex = currentChat.data.messages.findIndex(mes => mes.id === message.id)
+                    if (messageIndex === -1) {
+                        currentChat.data.messages.unshift(message)
+                    }
+                })
 
-                            currentChat.data.messages.unshift(message)
-
-                        }
-                    })
-                }
                 let element = document.getElementById('current-chat-body-' + currentChat.data.id)
                 let prevScrollTop = element.scrollTop
                 let prevScrollHeight = element.scrollHeight
@@ -56,14 +55,13 @@ export const useChatStore = defineStore('chat', () => {
                     let element = document.getElementById('current-chat-body-' + currentChat.data.id)
                     element.scrollTop = prevScrollTop + (element.scrollHeight - prevScrollHeight)
                 })
-            }else {
+            } else {
                 resp.data.messages.sort((a, b) => {
                     return parseInt(a.id) - parseInt(b.id);
                 })
                 currentChat.data = resp.data
                 currentChatId.value = id
-                hasNextPage.value = true
-                page.value=1
+                page.value = 1
                 nextTick(() => {
                     let element = document.getElementById('current-chat-body-' + currentChat.data.id)
                     element.scrollTop = element.scrollHeight
@@ -72,7 +70,7 @@ export const useChatStore = defineStore('chat', () => {
                         chats.value[chatIndex].unseenMessageCount = 0
                 })
             }
-            if(hasNextPage.value && currentChat.data.messages.length > 0)
+            if (currentChat.data.messages.length > 0)
                 chatObserveGetMessage(currentChat.data.messages[0].id)
 
         }).catch(error => {
@@ -118,8 +116,10 @@ export const useChatStore = defineStore('chat', () => {
         if (currentChat.data !== null && currentChat.data.id === chatData.id) {
             if (currentChat.data.messages.findIndex(message => message.id === chatData.lastMessage.id) === -1) {
                 currentChat.data.messages.push(chatData.lastMessage)
+                currentChat.data.messageCount +=1
                 if (!chatData.lastMessage.isUserMessage) {
                     await chatObserveSeenMessage(chatData.lastMessage.id)
+                    currentChat.data.unseenMessageCount +=1
                 }
             }
         }
@@ -137,11 +137,11 @@ export const useChatStore = defineStore('chat', () => {
     const makeSeenMessage = (chatId, messageId) => {
         let chatIndex = chats.value.findIndex(chat => chat.id === chatId)
         if (chatIndex !== -1 && chats.value[chatIndex].lastMessage !== null) {
-            if(chats.value[chatIndex].lastMessage.id === messageId)
+            if (chats.value[chatIndex].lastMessage.id === messageId)
                 chats.value[chatIndex].lastMessage.isSeen = true
         }
         if (currentChat.data !== null && currentChat.data.id === chatId) {
-            let messageIndex = currentChat.data.messages.findIndex(item => item.id ===  parseInt(messageId))
+            let messageIndex = currentChat.data.messages.findIndex(item => item.id === parseInt(messageId))
             currentChat.data.messages[messageIndex].isSeen = true
         }
     }
@@ -157,10 +157,11 @@ export const useChatStore = defineStore('chat', () => {
                         if (!currentChat.data.messages[messageIndex].isSeen) {
                             let chatIndex = chats.value.findIndex(chat => chat.id === currentChat.data.id)
                             if (chatIndex !== -1) {
-                                if(chats.value[chatIndex].unseenMessageCount > 1)
+                                if (chats.value[chatIndex].unseenMessageCount > 1)
                                     chats.value[chatIndex].unseenMessageCount -= 1
                                 else
                                     chats.value[chatIndex].unseenMessageCount = 0
+
                             }
                             axios.put(route('seen.message', {id: messageId}))
                                 .then((resp) => {
@@ -190,7 +191,7 @@ export const useChatStore = defineStore('chat', () => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         const target = entry.target
-                        if(hasNextPage.value) {
+                        if (currentChat.data.messages.length < currentChat.data.messageCount) {
                             page.value += 1
                             getChat(currentChatId.value)
                         }
@@ -211,6 +212,6 @@ export const useChatStore = defineStore('chat', () => {
     }
 
     return {
-        chats, currentChat, getChats, getChat, sendMessage, newMessage, updateChat, makeSeenMessage
+        chats, filterChats, searchString, currentChat, getChats, getChat, sendMessage, newMessage, updateChat, makeSeenMessage
     }
 })
