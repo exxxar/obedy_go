@@ -3,53 +3,98 @@
     "file": "assets/BaseLayout-12fba797.css",
     "src": "BaseLayout.css"
   },
-  "_BaseLayout-5b880201.js": {
+  "_BaseLayout-b0f321c8.js": {
     "css": [
       "assets/BaseLayout-12fba797.css"
     ],
     "dynamicImports": [
+      "resources/js/Pages/Chats.vue",
       "resources/js/Pages/Main.vue",
       "resources/js/Pages/Products.vue",
-      "resources/js/Pages/Self.vue"
+      "resources/js/Pages/Self.vue",
+      "resources/js/Pages/Specialists.vue",
+      "resources/js/Pages/Test.vue"
     ],
-    "file": "assets/BaseLayout-5b880201.js",
+    "file": "assets/BaseLayout-b0f321c8.js",
     "imports": [
-      "resources/js/app.js"
+      "resources/js/app.js",
+      "__plugin-vue_export-helper-c27b6911.js"
     ]
+  },
+  "__plugin-vue_export-helper-c27b6911.js": {
+    "file": "assets/_plugin-vue_export-helper-c27b6911.js"
   },
   "resources/images/12.jpg": {
     "file": "assets/12-f74ba8a5.jpg",
     "src": "resources/images/12.jpg"
   },
-  "resources/js/Pages/Main.vue": {
-    "file": "assets/Main-b22133a3.js",
+  "resources/js/Pages/Chats.css": {
+    "file": "assets/Chats-5ff92cd5.css",
+    "src": "resources/js/Pages/Chats.css"
+  },
+  "resources/js/Pages/Chats.vue": {
+    "css": [
+      "assets/Chats-5ff92cd5.css"
+    ],
+    "file": "assets/Chats-f972dcb6.js",
     "imports": [
-      "_BaseLayout-5b880201.js",
-      "resources/js/app.js"
+      "resources/js/app.js",
+      "_BaseLayout-b0f321c8.js",
+      "__plugin-vue_export-helper-c27b6911.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/Chats.vue"
+  },
+  "resources/js/Pages/Main.vue": {
+    "file": "assets/Main-cd07b5d5.js",
+    "imports": [
+      "_BaseLayout-b0f321c8.js",
+      "resources/js/app.js",
+      "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Main.vue"
   },
   "resources/js/Pages/Products.vue": {
-    "file": "assets/Products-6c820c0d.js",
+    "file": "assets/Products-acd3401b.js",
     "imports": [
-      "_BaseLayout-5b880201.js",
-      "resources/js/app.js"
+      "_BaseLayout-b0f321c8.js",
+      "resources/js/app.js",
+      "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Products.vue"
   },
   "resources/js/Pages/Self.vue": {
-    "file": "assets/Self-20450de9.js",
+    "file": "assets/Self-59f95f8f.js",
     "imports": [
-      "_BaseLayout-5b880201.js",
-      "resources/js/app.js"
+      "_BaseLayout-b0f321c8.js",
+      "resources/js/app.js",
+      "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Self.vue"
   },
+  "resources/js/Pages/Specialists.vue": {
+    "file": "assets/Specialists-5d5987c5.js",
+    "imports": [
+      "_BaseLayout-b0f321c8.js",
+      "resources/js/app.js",
+      "__plugin-vue_export-helper-c27b6911.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/Specialists.vue"
+  },
+  "resources/js/Pages/Test.vue": {
+    "file": "assets/Test-032a0731.js",
+    "imports": [
+      "__plugin-vue_export-helper-c27b6911.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/Test.vue"
+  },
   "resources/js/app.css": {
-    "file": "assets/app-15d1e942.css",
+    "file": "assets/app-d207c2ed.css",
     "src": "resources/js/app.css"
   },
   "resources/js/app.js": {
@@ -57,14 +102,17 @@
       "assets/12-f74ba8a5.jpg"
     ],
     "css": [
-      "assets/app-15d1e942.css"
+      "assets/app-d207c2ed.css"
     ],
     "dynamicImports": [
+      "resources/js/Pages/Chats.vue",
       "resources/js/Pages/Main.vue",
       "resources/js/Pages/Products.vue",
-      "resources/js/Pages/Self.vue"
+      "resources/js/Pages/Self.vue",
+      "resources/js/Pages/Specialists.vue",
+      "resources/js/Pages/Test.vue"
     ],
-    "file": "assets/app-0aeeb73b.js",
+    "file": "assets/app-8624114e.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }

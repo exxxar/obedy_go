@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Message;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -19,4 +22,8 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 
 Broadcast::channel('lottery.{lotteryId}', function (int $lotteryId) {
     return true;
+});
+
+Broadcast::channel('chat.{userId}', function (User $user, int $userId) {
+    return (int) $user->id === $userId;
 });

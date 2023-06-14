@@ -1,8 +1,8 @@
-import {defineStore, storeToRefs} from 'pinia'
-import {computed, reactive, ref, watch} from 'vue'
-import {modals, sendNotify} from "@/app";
-import axios from "axios";
-import {useUserStore} from "@/stores/userStore";
+import {defineStore} from 'pinia'
+import {computed, ref, watch} from 'vue'
+import {modals, sendNotify} from "@/app"
+import axios from "axios"
+import {useUserStore} from "@/stores/userStore"
 
 export const useCartStore = defineStore('cart', () => {
 

@@ -17,12 +17,14 @@ class Message extends Model
         'receiver_id',
         'message',
         'images',
-        'files'
+        'files',
+        'is_seen'
     ];
 
     protected $casts = [
         'images'=>'array',
-        'files'=>'array'
+        'files'=>'array',
+        'is_seen'=>'boolean'
     ];
 
     public function chat(): BelongsTo

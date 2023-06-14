@@ -1,6 +1,17 @@
 <script setup>
 import Modal from '@/Components/Basic/Modal.vue'
 
+const props = defineProps({
+    images: {
+        type: Array,
+        default: []
+    },
+    active: {
+        type: Number,
+        default: 0
+    }
+})
+
 </script>
 
 <template>
@@ -12,28 +23,27 @@ import Modal from '@/Components/Basic/Modal.vue'
             </div>
         </template>
         <template #body>
-                    <div id="carouselExampleIndicators" class="carousel slide h-100">
+                    <div id="galleryCarouselIndicators" class="carousel slide h-100">
                         <div class="carousel-indicators">
-                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                            <button v-for="(image, index) in images"
+                                    type="button"
+                                    data-bs-target="#galleryCarouselIndicators"
+                                    :data-bs-slide-to="index"
+                                    :class="index === active ? 'active' : ''"
+                                    aria-current="true"
+                                    :aria-label="'Slide ' + index"></button>
                         </div>
                         <div class="carousel-inner h-100">
-                            <div class="carousel-item h-100 active">
-                                <img src="https://therichpost.com/wp-content/uploads/2020/06/avatar2.png" class="d-block w-100 h-100 object-fit-contain" alt="...">
-                            </div>
-                            <div class="carousel-item h-100">
-                                <img src="https://wallpaper-house.com/data/out/8/wallpaper2you_232438.jpg" class="d-block w-100 h-100 object-fit-contain" alt="...">
-                            </div>
-                            <div class="carousel-item h-100">
-                                <img src="https://therichpost.com/wp-content/uploads/2020/06/avatar2.png" class="d-block w-100 h-100 object-fit-contain" alt="...">
+                            <div v-for="(image, index) in images"
+                                 class="carousel-item h-100"  :class="index === active ? 'active' : ''">
+                                <img :src="image" class="d-block w-100 h-100 object-fit-contain" alt="...">
                             </div>
                         </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                        <button class="carousel-control-prev" type="button" data-bs-target="#galleryCarouselIndicators" data-bs-slide="prev">
                             <i class="fa-solid fa-chevron-left cursor-pointer fa-2xl" aria-hidden="true"></i>
                             <span class="visually-hidden">Previous</span>
                         </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                        <button class="carousel-control-next" type="button" data-bs-target="#galleryCarouselIndicators" data-bs-slide="next">
                             <i class="fa-solid fa-chevron-right cursor-pointer fa-2xl" aria-hidden="true"></i>
                             <span class="visually-hidden">Next</span>
                         </button>

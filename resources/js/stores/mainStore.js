@@ -1,5 +1,5 @@
-import {defineStore, storeToRefs} from 'pinia'
-import {reactive, ref} from "vue";
+import {defineStore} from 'pinia'
+import {reactive, ref} from "vue"
 import { router } from '@inertiajs/vue3'
 
 
@@ -24,12 +24,12 @@ export const useMainStore = defineStore('main', () => {
             if (part.value === 5)
                 part.value = 1
             else
-                part.value++;
+                part.value++
         } else {
             if (part.value === 1)
                 part.value = 5
             else
-                part.value--;
+                part.value--
         }
     }
 

@@ -1,5 +1,5 @@
 <script setup>
-import {inject, provide} from "vue"
+import {provide} from "vue"
 import Modal from '@/Components/Basic/Modal.vue'
 import ProductControls from "@/Components/Products/ProductControls.vue"
 
@@ -13,7 +13,7 @@ provide('inModal', true)
 </script>
 
 <template>
-    <Modal :id="'modal-' + product.id" class_size="modal-lg">
+    <Modal id="productModal" class_size="modal-lg">
         <template #title>
             <h3><span class="badge bg-danger">"{{ product.title }}"</span></h3>
         </template>

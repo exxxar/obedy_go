@@ -1,23 +1,23 @@
 import {defineStore} from "pinia"
 import {reactive, watch} from "vue"
-import axios from "axios";
-import {sendNotify} from "@/app";
-import {useCartStore} from "@/stores/cartStore";
+import axios from "axios"
+import {sendNotify} from "@/app"
+import {useCartStore} from "@/stores/cartStore"
 
 
 export const useUserStore = defineStore('userStore', () => {
 
     const user = window.localStorage.getItem('user') === null ?
-        reactive({name: '', phone: '', addresses: [], isAuthorized: false}) :
+        reactive({id: 0, name: '', phone: '', addresses: [], isAuthorized: false}) :
         reactive(JSON.parse(window.localStorage.getItem('user')))
 
     const cartStore = useCartStore()
 
-    watch(user, (val) => {
+    watch(() => user, (newValue, oldValue) => {
         localStorage.setItem('user', JSON.stringify(user))
-    })
+    },{ deep: true })
 
-    watch(user.phone, (newValue, oldValue) => {
+    watch(() => user.phone, (newValue, oldValue) => {
         if (newValue)
             user.phone.replace(/D/, '')
     })
@@ -66,6 +66,7 @@ export const useUserStore = defineStore('userStore', () => {
     }
 
     function saveUser(data){
+        user.id = data.user.id
         user.name = data.user.name
         user.phone = data.user.phone
         user.addresses = data.user.addresses

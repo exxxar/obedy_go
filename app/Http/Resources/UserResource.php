@@ -30,9 +30,10 @@ class UserResource extends JsonResource
                 $cart[] = $cartItem;
             }
             $user =  [
+                'id'=>$this->id,
                 'name'=>$this->name,
                 'phone'=>$this->phone,
-                'addresses'=>$this->addresses
+                'addresses'=> is_null($this->addresses) ? [] : $this->addresses
             ];
         }
         return [

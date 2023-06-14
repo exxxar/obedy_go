@@ -39,12 +39,15 @@ Route::get('/{foodPart}', [ProductController::class, 'getProducts'])
 
 
 Route::group(['prefix' => 'chats', 'middleware' => 'auth'], function () {
-    Route::get('/', [ChatController::class, 'getChats'])->name('chats');
+    Route::get('/', function () {
+        return Inertia::render('Chats');
+    })->name('chats');
+    Route::get('/get', [ChatController::class, 'getChats'])->name('chats.get');
     Route::get('/{id}', [ChatController::class, 'getMessages'])->name('chat.messages');
     Route::get('/create/{id}', [ChatController::class, 'createChat'])->name('create.chat');
     Route::post('/send', [ChatController::class, 'sendMessage'])->name('send.message');
+    Route::put('/seen/{id}', [ChatController::class, 'seenMessage'])->name('seen.message');
 });
-
 
 
 Route::group(['prefix' => 'lottery'], function () {

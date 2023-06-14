@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Chats;
 
+use App\Rules\Chat\ChatRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class MessageRequest extends FormRequest
@@ -11,7 +12,7 @@ class MessageRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +23,9 @@ class MessageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            ''
+            'chatId'=>['required', new ChatRule()],
+            'message'=>['required_without:files'],
+            'files' => ['required_without:message']
         ];
     }
 }

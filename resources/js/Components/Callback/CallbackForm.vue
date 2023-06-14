@@ -59,8 +59,7 @@ const sendRequest = () => {
     formData.append('typeValue', form.typeValue)
 
     for (let i = 0; i < form.recordings.length; i++) {
-        let file = form.recordings[i].data;
-        console.log(file);
+        let file = form.recordings[i].data
         formData.append('files[' + i + ']', file)
     }
 

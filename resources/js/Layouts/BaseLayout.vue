@@ -6,7 +6,7 @@ import {useMainStore} from '@/stores/mainStore.js'
 import {useCartStore} from '@/stores/cartStore.js'
 import {storeToRefs} from "pinia"
 import {useLotteryStore} from "@/stores/lotteryStore.js"
-import {modals, popover} from "@/app"
+import {modals, popover, sendNotify} from "@/app"
 import {useUserStore} from "@/stores/userStore"
 import UserCartModal from "@/Components/Cart/UserCartModal.vue"
 import LoginModal from "@/Components/Modals/LoginModal.vue"
@@ -16,11 +16,13 @@ import LotteryModal from "@/Components/Modals/LotteryModal.vue"
 import MenuModal from "@/Components/Modals/MenuModal.vue"
 import CallbackModal from "@/Components/Modals/CallbackModal.vue"
 import CheckOrderModal from "@/Components/Modals/CheckOrderModal.vue"
-import { router } from '@inertiajs/vue3'
+import {router} from '@inertiajs/vue3'
+import {useChatStore} from "@/stores/chatStore";
 
 //get store
 const main = useMainStore()
 const cartStore = useCartStore()
+const chatStore = useChatStore()
 const {foodParts, part} = storeToRefs(main)
 const {items, getTotalCount, hasOtherUserCart} = storeToRefs(cartStore)
 const {lottery_id, lotteries} = storeToRefs(useLotteryStore())
@@ -40,7 +42,7 @@ provide('is_cart_open', is_cart_open)
 
 // watch
 watch(part, () => {
-    if(part.value !== null)
+    if (part.value !== null)
         main.selectPart()
 })
 
@@ -48,43 +50,28 @@ onMounted(() => {
     [...document.querySelectorAll('[data-bs-toggle="popover"]')].forEach(el => popover.getOrCreateInstance(el))
     switchFoodPart()
     window.addEventListener("keyup", switchKeyUp)
-    console.log('base mount')
     userStore.getUser()
 
     document.getElementById('obedyNavbarMenu').addEventListener('hidden.bs.offcanvas', () => {
-        setTimeout(() => document.getElementById('cartMenu').scrollTo(0,0), 350);
+        setTimeout(() => document.getElementById('cartMenu').scrollTo(0, 0), 350);
     })
-})
-
-onUnmounted(() => {
-    window.removeEventListener('keyup', switchKeyUp)
-    document.getElementById('obedyNavbarMenu').removeEventListener('hidden.bs.offcanvas', () => {
-        setTimeout(() => document.getElementById('cartMenu').scrollTo(0,0), 350);
-    })
+    if (user.value.isAuthorized) {
+        Echo.private('chat.' + user.value.id)
+            .listen('MessageSentEvent', data => {
+                if(route().current('chats'))
+                    chatStore.newMessage(data.chat)
+                else
+                    sendNotify('У Вас новое сообщение!')
+            });
+    }
 })
 
 const switchFoodPart = () => {
-    if (route().current('products')) {
-        switch (route().params.foodPart) {
-            case "standard":
-                part.value = 1
-                break
-            case "express":
-                part.value = 2
-                break
-            case "premium":
-                part.value = 3
-                break
-            case "self":
-                part.value = 4
-                break
-            case "special":
-                part.value = 5
-                break
-        }
-    }else{
+    if (route().current('products'))
+        part.value = foodParts.value.find(foodPart => foodPart.slug === route().params.foodPart).partId
+    else
         part.value = null
-    }
+
 }
 
 const switchKeyUp = event => {
@@ -128,7 +115,7 @@ watch(hasOtherUserCart, (val) => {
 
         <div class="container-fluid d-flex align-items-center flex-wrap"
              style="min-height: 100vh;padding:70px 10px 70px 10px;">
-            <slot name="content" v-if="part === 0"></slot>
+            <slot v-if="part === 0"></slot>
             <TopMenu v-else></TopMenu>
 
             <div class="w-100 d-flex flex-column align-items-center text-uppercase text-white text-center mt-4"
@@ -144,34 +131,45 @@ watch(hasOtherUserCart, (val) => {
             <div class="w-100" v-if="part === 0"></div>
             <div class="w-100" v-if="part === 0"></div>
 
-            <slot name="content" v-if="part !== 0"></slot>
+            <slot v-if="part !== 0"></slot>
 
 
             <CartModal v-if="is_cart_open"/>
 
             <nav class="navbar navbar-menu d-sm-flex d-none" v-if="!is_cart_open">
-                <i class="fa-solid fa-burger fa-2xl"  data-bs-toggle="offcanvas" data-bs-target="#obedyNavbarMenu" aria-controls="obedyNavbarMenu"
+                <i class="fa-solid fa-burger fa-2xl" data-bs-toggle="offcanvas" data-bs-target="#obedyNavbarMenu"
+                   aria-controls="obedyNavbarMenu"
                    aria-label="Toggle navigation" role="button"></i>
                 <div class="offcanvas cart-container" tabindex="-1" id="obedyNavbarMenu">
-                        <div class="cart-icon cart-icon-close">
-                            <i class="fa-solid fa-xmark fa-2xl"  data-bs-dismiss="offcanvas"></i>
+                    <div class="cart-icon cart-icon-close">
+                        <i class="fa-solid fa-xmark fa-2xl" data-bs-dismiss="offcanvas"></i>
+                    </div>
+                    <div id="cartMenu" class="cart-menu">
+                        <div class="cart-icon login" data-bs-toggle="modal" data-bs-target="#login"
+                             v-if="!user.isAuthorized">Войти
                         </div>
-                        <div id="cartMenu" class="cart-menu">
-                            <div class="cart-icon login" data-bs-toggle="modal" data-bs-target="#login" v-if="!user.isAuthorized">Войти</div>
-                            <div class="cart-icon login" @click="userStore.logout()" v-else>Выйти</div>
-                            <div class="cart-icon cart" @click="is_cart_open = true; setPopover();">Корзина<span
-                                v-if="getTotalCount>0">{{ getTotalCount }}</span></div>
-                            <div class="cart-icon about" data-bs-toggle="modal" data-bs-target="#about">О нас</div>
-                            <div class="cart-icon callback" data-bs-toggle="modal" data-bs-target="#callback">Напиши нам</div>
-                            <div class="cart-icon delivery" data-bs-toggle="modal" data-bs-target="#delivery">Доставка</div>
-                            <div class="cart-icon lottery" data-bs-toggle="modal" data-bs-target="#lottery"
-                                 @click="lottery_id = null" v-if="lotteries.length > 0">Акции</div>
-                            <div class="cart-icon checkOrder" data-bs-toggle="modal" data-bs-target="#checkOrder">Узнать статус</div>
+                        <div class="cart-icon login" @click="userStore.logout()" v-else>Выйти</div>
+                        <div class="cart-icon cart" @click="is_cart_open = true; setPopover();">Корзина<span
+                            v-if="getTotalCount>0">{{ getTotalCount }}</span></div>
+                        <div class="cart-icon about" data-bs-toggle="modal" data-bs-target="#about">О нас</div>
+                        <div class="cart-icon callback" data-bs-toggle="modal" data-bs-target="#callback">Напиши нам
+                        </div>
+                        <div class="cart-icon delivery" data-bs-toggle="modal" data-bs-target="#delivery">Доставка</div>
+                        <div class="cart-icon lottery" data-bs-toggle="modal" data-bs-target="#lottery"
+                             @click="lottery_id = null" v-if="lotteries.length > 0">Акции
+                        </div>
+                        <div class="cart-icon checkOrder" data-bs-toggle="modal" data-bs-target="#checkOrder">Узнать
+                            статус
+                        </div>
 
-                            <div class="cart-icon icon-1" @click="router.get(route('chats'))">Чаты</div>
-                            <div class="cart-icon icon-2" @click="router.get(route('specialists'))">Специалисты</div>
-                            <div class="cart-icon icon-3" data-bs-toggle="modal" data-bs-target="#checkOrder">Узнать статус</div>
+                        <div class="cart-icon icon-1" v-if="user.isAuthorized" @click="router.get(route('chats'))">
+                            Чаты
                         </div>
+                        <div class="cart-icon icon-2" @click="router.get(route('specialists'))">Специалисты</div>
+                        <div class="cart-icon icon-3" data-bs-toggle="modal" data-bs-target="#checkOrder">Узнать
+                            статус
+                        </div>
+                    </div>
                 </div>
             </nav>
 

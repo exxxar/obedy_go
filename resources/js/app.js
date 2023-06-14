@@ -8,16 +8,17 @@ import Pusher from 'pusher-js';
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { InertiaProgress } from '@inertiajs/progress';
-import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
 import { ZiggyVue } from "ziggyVue";
 import { Ziggy } from "./ziggy";
+import BaseLayout from "@/Layouts/BaseLayout.vue"
 import { createPinia } from 'pinia'
 import VueLazyload from '@jambonn/vue-lazyload'
 import Notifications, {useNotification} from '@kyvg/vue3-notification'
 import PerfectScrollbar from 'vue3-perfect-scrollbar'
 import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css'
-import vSelect from "vue-select";
-import 'vue-select/dist/vue-select.css';
+import vSelect from "vue-select"
+import 'vue-select/dist/vue-select.css'
 
 // font-awesome 6
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -70,7 +71,14 @@ const VueLazyLoadOptions = {
 
 createInertiaApp({
     title: () => `${appName}`,
-    resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
+    resolve: (name) => {
+        const page = resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue'))
+        page.then((module) => {
+            if (module.default.layout === undefined)
+                module.default.layout = BaseLayout
+        })
+        return page
+    },
     setup({ el, App, props, plugin }) {
         return createApp({ render: () => h(App, props) })
             .use(ZiggyVue, Ziggy)

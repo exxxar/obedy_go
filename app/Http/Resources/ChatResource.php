@@ -7,6 +7,17 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ChatResource extends JsonResource
 {
+
+    protected $receiverId;
+    protected $isChatMessages;
+
+    public function content($receiverId=null, $isChatMessages=false)
+    {
+        $this->receiverId = $receiverId;
+        $this->isChatMessages = $isChatMessages;
+        return $this;
+    }
+
     /**
      * Transform the resource into an array.
      *
@@ -14,30 +25,35 @@ class ChatResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $userId = auth()->id();
-        $messageCount = 0;
-        $user = [];
-        if($request->route()->named('chat.messages')) {
-            $user = [
-                'name' => $this->user->name,
-                'image' => is_null($this->user->image) ? config('app.logo') : $this->user->image
-            ];
-            $messageCount = $this->messages->count();
-        }
+        $userId = is_null($this->receiverId) ? auth()->id() : $this->receiverId;
+        $user = [
+            'name' => $this->user->name,
+            'image' => is_null($this->user->image) ? config('app.logo') : $this->user->image
+        ];
         $specialist = [
             'name'=>$this->specialist->name,
             'image'=>is_null($this->specialist->image) ? config('app.logo') : $this->specialist->image,
         ];
+        $messages = [];
+        if($this->isChatMessages){
+            $messages = MessageResource::collection($this->messages()->simplePaginate(5));
+        }
+        $lastMessage = null;
+        $unseenMessageCount = 0;
+        if(!$this->isChatMessages){
+            $lastMessage = $this->lastMessage ? (new MessageResource($this->lastMessage))->content($this->receiverId) : null;
+            $unseenMessageCount = $this->messages()->where(['is_seen'=> false, 'receiver_id'=>$userId])->count();
+        }
         return [
             'id'=>$this->id,
             'interlocutor'=>$this->specialist_id != $userId ? $specialist : $user,
-            $this->mergeWhen($request->route()->named('chat.messages'), [
+            $this->mergeWhen($this->isChatMessages, [
                 'user'=>$this->user_id == $userId ? $user : $specialist,
-                'messages'=> MessageResource::collection($this->messages),
-                'messageCount'=>$messageCount
+                'messages'=> $messages
             ]),
-            $this->mergeWhen($request->route()->named('chats'), [
-                'lastMessage'=>$this->lastMessage ? (is_null($this->lastMessage->message) ? 'Вложения' : $this->lastMessage->message) : null
+            $this->mergeWhen(!$this->isChatMessages, [
+                'lastMessage'=> $lastMessage,
+                'unseenMessageCount'=> $unseenMessageCount
             ]),
         ];
     }

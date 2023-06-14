@@ -1,8 +1,8 @@
 <script setup>
 import axios from "axios";
 import {router} from '@inertiajs/vue3'
-import {sendNotify} from "@/app"
-import {reactive} from "vue";
+import {modals, sendNotify} from "@/app"
+import {nextTick, reactive, ref, watch} from "vue";
 
 const props = defineProps({
     specialist: {
@@ -12,6 +12,10 @@ const props = defineProps({
     inModal: {
         type: Boolean,
         default: false
+    },
+    modelValue: {
+        type: Number,
+        default: null
     }
 })
 
@@ -28,7 +32,24 @@ const chooseSpecialist = async (id) => {
     })
 }
 
-
+const emit = defineEmits(['update:modelValue']);
+const local = ref(props.modelValue);
+watch(local, (newValue) => {
+    emit('update:modelValue', newValue);
+});
+watch(() => props.modelValue, (newValue) => {
+    local.value = newValue;
+})
+const selectSpecialist = async (id) => {
+    local.value = id
+    await nextTick(() => {
+        let productModal = document.getElementById('specialistModal');
+        modals.getOrCreateInstance(productModal).show()
+        productModal.addEventListener('hidden.bs.modal', (event) => {
+            local.value = null
+        }, { once: true })
+    })
+}
 </script>
 
 <template>
@@ -38,7 +59,8 @@ const chooseSpecialist = async (id) => {
             <div class="d-flex flex-column">
                 <h5 class="card-title">{{ specialist.name }}</h5>
                 <p class="card-text" :class="inModal ? '' : 'cropped-text'">{{ specialist.description }}</p>
-                <p v-if="!inModal" class="link-primary cursor-pointer m-auto" data-bs-toggle="modal" :data-bs-target="'#specialist-'+specialist.id">подробнее</p>
+                <p v-if="!inModal" class="link-primary cursor-pointer m-auto"
+                   @click="selectSpecialist(specialist.id)">подробнее</p>
             </div>
             <button class="btn btn-lg btn-danger" :class="inModal ? 'mt-3' : ''" @click="chooseSpecialist(specialist.id)"
                     v-if="!specialist.isCurrentUser">Написать
