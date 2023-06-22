@@ -24,7 +24,6 @@ class Order extends Model
         'status',
         'delivery_price',
         'changed_summary_price',
-        'changed_delivery_price',
         'delivery_range'
     ];
 

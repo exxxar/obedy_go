@@ -22,7 +22,6 @@ class Product extends Model
         'category_id',
         'food_part_id',
         'positions',
-        'checked',
         'is_week',
         'disabled',
         'addition'

@@ -19,11 +19,6 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->string('password');
             $table->json('addresses')->nullable();
-           /* $table->boolean('active')->default(false);
-            $table->string('telegram_chat_id')->nullable();
-            $table->boolean('is_trusted')->default(false);
-            $table->integer('trusted_count')->default(0);
-            $table->integer('trusted_limit')->default(1000);*/
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

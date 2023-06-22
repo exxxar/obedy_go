@@ -25,7 +25,6 @@ return new class extends Migration
             $table->integer('status')->default(OrderStatusEnum::OrderAccepted->value);
             $table->integer('delivery_price')->default(0);
             $table->integer('summary_price')->default(0);
-            $table->integer('changed_delivery_price')->default(0);
             $table->float('delivery_range')->default(0.00);
             $table->timestamps();
         });

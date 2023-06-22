@@ -5,14 +5,16 @@ import {storeToRefs} from "pinia"
 import {onMounted} from "vue"
 const main = useMainStore()
 const {part} = storeToRefs(main)
+import PageTitle from "@/Components/Layout/PageTitle.vue"
 
 onMounted(() => {
-    part.value = 4
+    //part.value = 4
 })
 
 </script>
 
 <template>
+    <PageTitle/>
     <div class="w-100 row m-0 d-flex flex-wrap justify-content-center mb-5">
         <div class="col-lg-6 col-md-6 col-sm-8 col-12">
             <h4 class="text-white">

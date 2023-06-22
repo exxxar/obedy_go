@@ -1,8 +1,8 @@
 <script setup>
-import {inject, nextTick, ref} from "vue"
-import {popover} from "@/app"
-import {storeToRefs} from "pinia"
-import {useCartStore} from "@/stores/cartStore"
+import {inject, nextTick, onMounted, ref} from "vue"
+import { storeToRefs } from "pinia"
+import { popover } from "@/app"
+import { useCartStore } from "@/stores/cartStore"
 
 const props = defineProps({
     product: {
@@ -17,15 +17,19 @@ const current_day_index = ref(new Date().getDay())
 const inModal = inject('inModal', false)
 
 const cart = useCartStore()
-const {items} = storeToRefs(cart)
+const { items } = storeToRefs(cart)
 
 const ready_to_order = inject('ready_to_order')
 const is_cart_open = inject('is_cart_open')
 
+onMounted(() => {
+    [...document.getElementsByName('btn-popover-' + props.product.id)].forEach(element => popover.getOrCreateInstance(element))
+})
+
 const orderDay = (dayIndex) => {
-    let dt = new Date()
-    dt.setDate(dt.getDate() + 7 - dt.getDay() + dayIndex)
-    return dt.getDate() + "." + (dt.getMonth() + 1) + "." + dt.getFullYear()
+    let date = new Date()
+    date.setDate(date.getDate() + 7 - date.getDay() + dayIndex)
+    return date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear()
 }
 
 const hasMainProductInCart = () => {
@@ -34,15 +38,35 @@ const hasMainProductInCart = () => {
 }
 
 const setPopover = async (id) => {
-    [...document.getElementsByName('btn-popover-'+id)].forEach(element => popover.getOrCreateInstance(element).dispose());
-    await nextTick();
-    [...document.getElementsByName('btn-popover-'+id)].forEach(element => popover.getOrCreateInstance(element))
+    [...document.getElementsByName('btn-popover-'+id)].forEach(element => popover.getOrCreateInstance(element).dispose())
+    await nextTick(() => {
+        [...document.getElementsByName('btn-popover-'+id)].forEach(element => popover.getOrCreateInstance(element))
+    })
 }
 
 const openCart = () => {
     ready_to_order.value = true
     is_cart_open.value = true
+}
 
+const clickRemoveProduct = (productId) => {
+    cart.removeProduct(productId)
+    setPopover(productId)
+}
+
+const clickDecQuantity = (productId) => {
+    cart.decQuantity(productId)
+    setPopover(productId)
+}
+
+const clickIncQuantity = (productId) => {
+    cart.incQuantity(productId)
+    setPopover(productId)
+}
+
+const clickAddToCart = (product) => {
+    cart.addToCart(product)
+    setPopover(product.id)
 }
 
 </script>
@@ -55,18 +79,18 @@ const openCart = () => {
                 <button class="btn btn-danger btn-coutner me-3" :name="'btn-popover-' + product.id"
                         data-bs-trigger="hover" data-bs-toggle="popover" data-bs-placement="bottom"
                         data-bs-content="Убрать весь продукт из корзины"
-                        @click="cart.removeProduct(product.id); setPopover(product.id);">
+                        @click="clickRemoveProduct(product.id)">
                     <span><i class="fas fa-trash"></i></span>
                 </button>
                 <button class="btn btn-danger btn-coutner" :name="'btn-popover-' + product.id"
-                        @click="cart.decQuantity(product.id); setPopover(product.id);" data-bs-trigger="hover"
+                        @click="clickDecQuantity(product.id)" data-bs-trigger="hover"
                         data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Убрать порцию из корзины">
                     -
                 </button>
             </div>
             <p v-html="cart.inCart(product.id)" :class="inModal ? 'text-dark' : 'text-white'"></p>
             <button class="btn btn-danger btn-coutner" :name="'btn-popover-' + product.id"
-                    @click="cart.incQuantity(product.id); setPopover(product.id);" data-bs-trigger="hover"
+                    @click="clickIncQuantity(product.id)" data-bs-trigger="hover"
                     data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Добавить еще порцию в корзину">
                 <span>+</span>
             </button>
@@ -76,7 +100,7 @@ const openCart = () => {
                 :name="'btn-popover-' + product.id"
                 data-bs-trigger="hover" data-bs-toggle="popover" data-bs-placement="bottom"
                 :data-bs-content="'Добавить товар в корзину - ' + orderDay(product.day_index)"
-                @click="cart.addToCart(product); setPopover(product.id);"
+                @click="clickAddToCart(product)"
                 :disabled="!hasMainProductInCart()"
                 v-if="!(current_day_index < product.day_index) && cart.inCart(product.id) === 0">В КОРЗИНУ
             <span class="fw-bolder">{{ orderDay(product.day_index) }}</span>
@@ -85,7 +109,7 @@ const openCart = () => {
                 :name="'btn-popover-' + product.id"
                 data-bs-trigger="hover" data-bs-toggle="popover" data-bs-placement="bottom"
                 data-bs-content="Добавить товар в корзину"
-                @click="cart.addToCart(product); setPopover(product.id);"
+                @click="clickAddToCart(product)"
                 :disabled="!hasMainProductInCart()"
                 v-if="(current_day_index < product.day_index) && cart.inCart(product.id) === 0">
             В КОРЗИНУ

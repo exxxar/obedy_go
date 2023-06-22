@@ -30,11 +30,6 @@ class User extends Authenticatable
         'password',
         'image',
         'description'
-        /*'trusted_count',
-        'trusted_limit',
-        'is_trusted',
-        'active',
-        'telegram_chat_id',*/
     ];
 
     /**

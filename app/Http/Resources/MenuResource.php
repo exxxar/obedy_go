@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProductResource extends JsonResource
+class MenuResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,22 +14,19 @@ class ProductResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-
         return [
             'id'=>$this->id,
             'title'=>$this->title,
-            'image'=>$this->image,
             'description'=>$this->description,
-            'positions'=>$this->positions,
             'price'=>$this->price,
-            'weight'=>$this->weight,
-            'day_index'=>$this->day_index,
-            $this->mergeWhen($request->route()->getName() == 'products', [
-                'is_week'=>$this->is_week,
-                'addition'=>$this->addition,
-                'partId'=>$this->food_part_id
+            'image'=> is_null($this->image) ? config('app.logo') : $this->image,
+            $this->mergeWhen( $request->route()->getName() == 'special', [
+                'specialist'=> new ProfileResource($this->user),
+                'slug'=>$this->slug,
+            ]),
+            $this->mergeWhen( $request->route()->getName() == 'menu.edit', [
+                'products'=> ProductResource::collection($this->products),
             ])
         ];
-
     }
 }

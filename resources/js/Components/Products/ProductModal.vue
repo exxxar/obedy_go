@@ -2,6 +2,7 @@
 import {provide} from "vue"
 import Modal from '@/Components/Basic/Modal.vue'
 import ProductControls from "@/Components/Products/ProductControls.vue"
+import ProductInfo from "@/Components/Products/ProductInfo.vue"
 
 const props = defineProps({
     product: {
@@ -18,22 +19,11 @@ provide('inModal', true)
             <h3><span class="badge bg-danger">"{{ product.title }}"</span></h3>
         </template>
         <template #body>
-            <div class="row" v-if="!product.is_week">
-                <div class="col-md-7 col-sm-6">
-                    <img :src="product.image" class="img-fluid" alt="">
-                </div>
-                <div class="col-md-5 col-sm-6">
-                    <p v-if="product.description">{{ product.description }}</p>
-                    <ul v-if="product.positions">
-                        <li v-for="pos in product.positions" class="d-flex mb-2 flex-wrap text-dark">
-                            <p><span class="badge bg-danger me-1">{{ pos.weight }} гр.</span>{{ pos.title }}</p>
-                        </li>
-                    </ul>
-                    <p v-if="product.price" class="text-dark">Цена: <strong>{{ product.price }} руб.</strong></p>
-                    <p v-if="product.weight" class="text-dark">Масса: <strong>{{ product.weight }} гр.</strong></p>
+            <ProductInfo v-if="!product.is_week" :product="product">
+                <template #controls>
                     <ProductControls  :product="product"></ProductControls>
-                </div>
-            </div>
+                </template>
+            </ProductInfo>
             <div class="row" v-if="product.is_week">
                 <ul v-if="product.positions" class="row p-2">
                     <li v-for="pos in product.positions" class="col-md-6 mt-2">

@@ -1,8 +1,8 @@
 <script setup>
-import axios from "axios";
+import axios from "axios"
 import {router} from '@inertiajs/vue3'
 import {modals, sendNotify} from "@/app"
-import {nextTick, reactive, ref, watch} from "vue";
+import {nextTick, ref, watch} from "vue"
 
 const props = defineProps({
     specialist: {
@@ -13,7 +13,7 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
-    modelValue: {
+    specialistId: {
         type: Number,
         default: null
     }
@@ -32,12 +32,12 @@ const chooseSpecialist = async (id) => {
     })
 }
 
-const emit = defineEmits(['update:modelValue']);
-const local = ref(props.modelValue);
+const emit = defineEmits(['update:specialistId']);
+const local = ref(props.specialistId);
 watch(local, (newValue) => {
-    emit('update:modelValue', newValue);
+    emit('update:specialistId', newValue);
 });
-watch(() => props.modelValue, (newValue) => {
+watch(() => props.specialistId, (newValue) => {
     local.value = newValue;
 })
 const selectSpecialist = async (id) => {
@@ -57,7 +57,7 @@ const selectSpecialist = async (id) => {
         <img :src="specialist.image" class="card-img-top fixed-height-250px object-fit-cover" alt="...">
         <div class="card-body d-flex flex-column justify-content-between">
             <div class="d-flex flex-column">
-                <h5 class="card-title">{{ specialist.name }}</h5>
+                <h5 class="card-title text-truncate">{{ specialist.name }}</h5>
                 <p class="card-text" :class="inModal ? '' : 'cropped-text'">{{ specialist.description }}</p>
                 <p v-if="!inModal" class="link-primary cursor-pointer m-auto"
                    @click="selectSpecialist(specialist.id)">подробнее</p>

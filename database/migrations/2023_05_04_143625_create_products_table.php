@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->default('');
+            $table->string('title')->nullable();
             $table->string('description')->nullable();
             $table->integer('day_index')->default(7);
-            $table->string('image',1000)->default('');
+            $table->string('image',1000)->nullable();
             $table->double('price')->default(0);
             $table->double('weight')->default(0);
             $table->foreignId('category_id')->nullable()
@@ -24,7 +24,6 @@ return new class extends Migration
                 ->nullOnDelete();
             $table->unsignedInteger('food_part_id')->nullable();
             $table->json('positions');
-            $table->boolean('checked')->nullable();
             $table->boolean('is_week')->default(false);
             $table->boolean('addition')->default(false);
             $table->boolean('disabled')->nullable();

@@ -1,10 +1,11 @@
 <script setup>
 import GalleryModal from "@/Components/Modals/GalleryModal.vue"
-import {computed, nextTick, onBeforeMount, onMounted, reactive, ref, watch} from "vue"
+import {computed, nextTick, onMounted, reactive, ref, watch} from "vue"
 import {useChatStore} from "@/stores/chatStore"
 import {storeToRefs} from "pinia"
 import {useUserStore} from "@/stores/userStore"
 import {modals, sendNotify} from "@/app"
+import PageTitle from "@/Components/Layout/PageTitle.vue"
 
 const chatStore = useChatStore()
 const {filterChats, currentChat, searchString} = storeToRefs(chatStore)
@@ -110,6 +111,7 @@ const scrollBottomAndSeenNewMessages = (id) => {
 
 </script>
 <template>
+    <PageTitle title="Чаты"/>
     <div class="container p-0 z-10">
         <div class="w-100 row m-0 d-flex flex-wrap justify-content-center mb-5">
             <div class="col-md-5 col-lg-4 col-12 chat">

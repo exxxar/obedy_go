@@ -19,6 +19,15 @@ const props = defineProps({
     clearMessage: {
         type: Function,
         default: () => {}
+    },
+
+    inputClass: {
+        type: String,
+        default: null
+    },
+    ariaDescribedby: {
+        type: String,
+        default: null
     }
 })
 
@@ -30,8 +39,9 @@ const vFormAddress = ref(null)
 const closeOnSelect = ref(true)
 const deletedOption = ref('')
 
-watch(vFormAddress, () => {
-    emit('update:formAddress', vFormAddress.value)
+watch(() => vFormAddress.value, (newValue, oldValue) => {
+    if (newValue)
+        emit('update:formAddress', newValue)
 })
 
 const search = (value) => {
@@ -86,9 +96,14 @@ const selected = (value) => {
         @option:selected="selected"
 
         placeholder="Адрес доставки"
-        class="form-control w-100 mt-2 mb-0 ps-3 pe-4 py-3"
-        :class="[errors.length > 0 ? 'is-invalid' : '',
-        errors.length === 0 && vFormAddress !== null ? 'is-valid' : '']">
+        class="v--select form-control w-100 mt-2 mb-0 ps-3 py-3"
+        :class="[
+            errors.length > 0 ? 'is-invalid' : '',
+            errors.length === 0 && vFormAddress !== null ? 'is-valid' : '',
+            inputClass !== null ? inputClass : ''
+        ]"
+        :aria-describedby="ariaDescribedby !== null ? ariaDescribedby : ''"
+    >
         <template #option="{label}">
             <button v-if="user.addresses.indexOf(label) !== -1"
                     type="button" class="btn-close position-relative z-3" aria-label="Close"
@@ -99,17 +114,13 @@ const selected = (value) => {
 </template>
 
 <style lang="scss">
-
-.v-select {
-    width: 100%;
-    padding: 15px;
+.v-select.v--select {
     //border: 1px #d50c0d solid;
-    margin-top: 0.5rem;
-    border-radius: 5px;
 
     & .vs__dropdown-toggle {
         border: 0;
         padding: 0;
+        overflow: hidden;
 
         & .vs__selected-options {
             flex-wrap: nowrap;
@@ -121,12 +132,20 @@ const selected = (value) => {
             border: 0 !important;
             margin: 4px 0 0 !important;
             padding: 0 7px !important;
+            color: var(--bs-secondary-color);
+            opacity: 1;
         }
 
         & .vs__actions .vs__clear {
             display: flex;
         }
 
+    }
+
+    & .vs__dropdown-menu {
+        & .vs__dropdown-option {
+            overflow-y: hidden;
+        }
     }
 }
 </style>

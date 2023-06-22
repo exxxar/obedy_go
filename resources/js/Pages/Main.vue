@@ -1,13 +1,9 @@
 <script setup>
 import {storeToRefs} from "pinia"
 import {useMainStore} from '@/stores/mainStore.js'
-import {onMounted} from "vue"
+import PageTitle from "@/Components/Layout/PageTitle.vue"
 
-const {foodParts, part} = storeToRefs(useMainStore())
-onMounted(() => {
-    part.value = 0
-})
-
+const { foodParts, part } = storeToRefs(useMainStore())
 </script>
 
 <template>
@@ -22,4 +18,6 @@ onMounted(() => {
             <div v-if="foodPart.partId % 2 === 0 && foodPart.partId < foodParts.length" class="w-100"></div>
         </template>
     </div>
+    <PageTitle/>
+    <div class="w-100"></div><div class="w-100"></div>
 </template>

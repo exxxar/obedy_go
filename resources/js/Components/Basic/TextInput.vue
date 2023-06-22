@@ -18,6 +18,10 @@ const props = defineProps({
         type: String,
         default: null,
     },
+    error: {
+      type: Boolean,
+      default: true
+    },
     errors: {
         type: Array,
         default: [],
@@ -25,9 +29,24 @@ const props = defineProps({
     blur: {
         default: null
     },
+    keyupOnlyNumber: {
+        default: null
+    },
     isMasked: {
         type: Boolean,
         default: false
+    },
+    inputClass: {
+        type: String,
+        default: null
+    },
+    inputId: {
+        type: String,
+        default: null
+    },
+    ariaDescribedby: {
+        type: String,
+        default: null
     }
 })
 const emit = defineEmits(['update:modelValue'])
@@ -43,14 +62,34 @@ const onInput = (e) => {
         emit('update:modelValue', e.target.value)
     }
 }
+
+const onPress = (e) => {
+    if (props.keyupOnlyNumber !== null)
+        emit('update:modelValue', e.target.value.replace(/[^0-9]/g, ""))
+}
 </script>
 <template>
-    <input :type="type" class="form-control w-100 mt-2 mb-0 px-4 py-3" :placeholder="placeholder"
-           :value="modelValue"
-           :class="[errors.length > 0 ? 'is-invalid' : '', (errors.length === 0 && modelValue !== '' && modelValue !== null) ? 'is-valid' : '']"
+    <input :type="type" class="form-control w-100 mt-2 mb-0 px-4 py-3 col-important" :placeholder="placeholder"
+           :value="modelValue" :id="inputId"
+           :class="[
+               errors.length > 0 ? 'is-invalid' : '',
+               (errors.length === 0 && modelValue !== '' && modelValue !== null) ? 'is-valid' : '',
+               inputClass
+           ]"
            v-maska :data-maska="mask" @maska="onMaska"
            @input="onInput"
            @blur="blur"
-           >
-    <div v-if="errors.length > 0" class="invalid-feedback" v-for="error in errors">{{ error }}</div>
+           @keyup="onPress"
+           :aria-describedby="ariaDescribedby"
+           autocomplete="off"
+           readonly onfocus="this.removeAttribute('readonly')">
+    <div v-if="errors.length > 0 && error" class="invalid-feedback" v-for="err in errors">{{ err }}</div>
 </template>
+<style scoped>
+.m--0{
+    margin: 0 !important;
+}
+.col-important {
+    flex: 1 0 0% !important;
+}
+</style>

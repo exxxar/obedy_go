@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('lotteries', function (Blueprint $table) {
             $table->id();
             $table->string('image',1000);
-            $table->string('title')->default('');
+            $table->string('title')->nullable();
             $table->longText('description');
             $table->json('occupied_places')->nullable();
             $table->integer('place_count')->default(0);

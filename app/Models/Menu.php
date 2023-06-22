@@ -11,14 +11,14 @@ class Menu extends Model
 {
     use HasFactory;
 
-    protected $table = 'menu';
+    protected $table = 'menus';
 
     protected $fillable = [
         'image',
         'title',
         'description',
         'price',
-        'qr',
+        'slug',
         'user_id',
     ];
 
