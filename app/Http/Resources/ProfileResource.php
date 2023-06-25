@@ -23,7 +23,7 @@ class ProfileResource extends JsonResource
                 'phone'=>$this->phone,
                 'isSpecialist'=>$this->hasRole('specialist')
             ]),
-            $this->mergeWhen($request->route()->getName() == 'specialists', [
+            $this->mergeWhen(in_array($request->route()->getName(), ['specialists', 'special']), [
                 'id'=>$this->id,
                 'isCurrentUser'=>auth()->id() == $this->id,
             ])

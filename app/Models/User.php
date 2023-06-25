@@ -83,6 +83,6 @@ class User extends Authenticatable
 
     public function purchasedMenus(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class, 'menu_user');
+        return $this->belongsToMany(Menu::class, 'menu_user');
     }
 }

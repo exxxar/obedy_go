@@ -43,7 +43,7 @@ const productByCategory = computed(() => {
 </script>
 
 <template>
-    <PageTitle/>
+    <PageTitle :title="title"/>
     <div class="container tab-content pb-3">
         <Search></Search>
         <div class="row">

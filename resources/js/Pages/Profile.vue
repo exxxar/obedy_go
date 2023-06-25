@@ -178,7 +178,7 @@ const openProfileImage = (e) => {
                                  data-bs-parent="#accordionExample">
                                 <div class="accordion-body d-flex gap-3 align-items-center">
                                     <div class="col-sm-6 col-md-6 col-lg-4 col-12" v-if="menus.length > 0" v-for="menu in menus">
-                                        <MenuCard v-model="selectSpecialId" :menu="menu"></MenuCard>
+                                        <MenuCard v-model:special-id="selectSpecialId" :menu="menu"></MenuCard>
                                     </div>
                                     <p v-else>У Вас пока нет добавленных меню</p>
                                 </div>
@@ -192,7 +192,8 @@ const openProfileImage = (e) => {
 
     <Modal v-if="selectSpecialId !== null" id="specialModal">
         <template #body>
-            <MenuCard :in-modal="true" v-model="selectSpecialId" :menu="menus[menus.map((o) => o.id).indexOf(selectSpecialId)]"></MenuCard>
+            <MenuCard :in-modal="true" v-model:special-id="selectSpecialId"
+                      :menu="menus[menus.map((o) => o.id).indexOf(selectSpecialId)]"></MenuCard>
         </template>
     </Modal>
 </template>

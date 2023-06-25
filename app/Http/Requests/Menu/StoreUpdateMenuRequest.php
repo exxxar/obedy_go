@@ -32,7 +32,7 @@ class StoreUpdateMenuRequest extends FormRequest
             'products.*.id'=>['sometimes', 'exists:products,id'],
             'products.*.title'=>['required', 'string'],
             'products.*.description'=>['required', 'max:255'],
-            'products.*.image'=>['sometimes', 'required', 'image', 'dimensions:min_width=100,min_height=100', 'max:2048'],
+            'products.*.image'=>['sometimes', 'required', 'image', 'dimensions:min_width=100,min_height=100,ratio=1/1', 'max:2048'],
             'products.*.positions'=>[ 'array'],
             'products.*.positions.*.title'=>['required', 'string'],
             'products.*.positions.*.weight'=>['required', 'numeric'],
@@ -61,7 +61,7 @@ class StoreUpdateMenuRequest extends FormRequest
             'products.*.image.required' => 'Поле картинка товара обязательно для заполнения',
             'products.*.image.image' => 'Поле картинка товара должно быть картинкой',
             'products.*.image.max' => 'Максимальный размер изображения 2Мб',
-            'products.*.image.dimensions' => 'Минимальный размер изображения 100x100',
+            'products.*.image.dimensions' => 'Минимальный размер изображения 100x100, а также изображение должно быть 1:1',
             'products.*.positions.*.title'=>'Поле название ингридиента в товаре обязательно для заполнения',
             'products.*.positions.*.weight'=>'Поле вес ингридиента в товаре обязательно для заполнения',
         ];
