@@ -112,6 +112,8 @@ export const useChatStore = defineStore('chat', () => {
         let chatIndex = chats.value.findIndex(chat => chat.id === chatData.id)
         if (chatIndex !== -1) {
             chats.value[chatIndex] = chatData
+        }else{
+            chats.value.unshift(chatData)
         }
         if (currentChat.data !== null && currentChat.data.id === chatData.id) {
             if (currentChat.data.messages.findIndex(message => message.id === chatData.lastMessage.id) === -1) {
