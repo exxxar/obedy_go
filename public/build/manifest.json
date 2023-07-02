@@ -1,18 +1,18 @@
 {
-  "_MenuCard-1b95c5e6.js": {
-    "file": "assets/MenuCard-1b95c5e6.js",
+  "_MenuCard-17d0b08e.js": {
+    "file": "assets/MenuCard-17d0b08e.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_PageTitle-c3a23627.js": {
-    "file": "assets/PageTitle-c3a23627.js",
+  "_PageTitle-2dc63d32.js": {
+    "file": "assets/PageTitle-2dc63d32.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_SpecialistCard-84614099.js": {
-    "file": "assets/SpecialistCard-84614099.js",
+  "_SpecialistCard-9e71d010.js": {
+    "file": "assets/SpecialistCard-9e71d010.js",
     "imports": [
       "resources/js/app.js"
     ]
@@ -22,10 +22,10 @@
     "src": "resources/images/12.jpg"
   },
   "resources/js/Pages/Chats.vue": {
-    "file": "assets/Chats-f7dae79a.js",
+    "file": "assets/Chats-f829dd35.js",
     "imports": [
       "resources/js/app.js",
-      "_PageTitle-c3a23627.js"
+      "_PageTitle-2dc63d32.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Chats.vue"
@@ -38,19 +38,19 @@
     "css": [
       "assets/Error-01b79d67.css"
     ],
-    "file": "assets/Error-67578040.js",
+    "file": "assets/Error-274e5e29.js",
     "imports": [
-      "_PageTitle-c3a23627.js",
+      "_PageTitle-2dc63d32.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Error.vue"
   },
   "resources/js/Pages/Main.vue": {
-    "file": "assets/Main-a59db904.js",
+    "file": "assets/Main-f5d721da.js",
     "imports": [
       "resources/js/app.js",
-      "_PageTitle-c3a23627.js"
+      "_PageTitle-2dc63d32.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Main.vue"
@@ -63,19 +63,19 @@
     "css": [
       "assets/Menu-1a377924.css"
     ],
-    "file": "assets/Menu-43e09f72.js",
+    "file": "assets/Menu-d584e719.js",
     "imports": [
       "resources/js/app.js",
-      "_PageTitle-c3a23627.js"
+      "_PageTitle-2dc63d32.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Menu.vue"
   },
   "resources/js/Pages/Products.vue": {
-    "file": "assets/Products-db8514cb.js",
+    "file": "assets/Products-5830d171.js",
     "imports": [
       "resources/js/app.js",
-      "_PageTitle-c3a23627.js"
+      "_PageTitle-2dc63d32.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Products.vue"
@@ -88,41 +88,41 @@
     "css": [
       "assets/Profile-8790448d.css"
     ],
-    "file": "assets/Profile-3d6e8165.js",
+    "file": "assets/Profile-ab17db74.js",
     "imports": [
-      "_PageTitle-c3a23627.js",
+      "_PageTitle-2dc63d32.js",
       "resources/js/app.js",
-      "_MenuCard-1b95c5e6.js"
+      "_MenuCard-17d0b08e.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Profile.vue"
   },
   "resources/js/Pages/Self.vue": {
-    "file": "assets/Self-739930e9.js",
+    "file": "assets/Self-eff52dc7.js",
     "imports": [
       "resources/js/app.js",
-      "_PageTitle-c3a23627.js"
+      "_PageTitle-2dc63d32.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Self.vue"
   },
   "resources/js/Pages/Special.vue": {
-    "file": "assets/Special-61fb8464.js",
+    "file": "assets/Special-0fd81b64.js",
     "imports": [
-      "_MenuCard-1b95c5e6.js",
+      "_MenuCard-17d0b08e.js",
       "resources/js/app.js",
-      "_PageTitle-c3a23627.js",
-      "_SpecialistCard-84614099.js"
+      "_PageTitle-2dc63d32.js",
+      "_SpecialistCard-9e71d010.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Special.vue"
   },
   "resources/js/Pages/Specialists.vue": {
-    "file": "assets/Specialists-c0c1068b.js",
+    "file": "assets/Specialists-4360c1bf.js",
     "imports": [
-      "_SpecialistCard-84614099.js",
+      "_SpecialistCard-9e71d010.js",
       "resources/js/app.js",
-      "_PageTitle-c3a23627.js"
+      "_PageTitle-2dc63d32.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Specialists.vue"
@@ -158,7 +158,7 @@
       "resources/js/Pages/Special.vue",
       "resources/js/Pages/Specialists.vue"
     ],
-    "file": "assets/app-9980b3d6.js",
+    "file": "assets/app-7b2c3ffe.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }

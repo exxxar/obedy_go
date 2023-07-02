@@ -66,18 +66,21 @@ class MenuController extends Controller
             ];
             $weekPrice+=$product->price;
             $weekWeight+=$product->weight;
-            $menu->products()->attach($product);
+            if(!$menu->products()->where('products.id', $product->id)->exists())
+                $menu->products()->attach($product);
         }
-        $weekProduct = Product::create([
-            'title' => $menu->title . ' неделя',
-            'image' => config('app.logo'),
-            'day_index'=>7,
-            'price'=>$weekPrice,
-            'weight'=>$weekWeight,
-            'positions'=>$weekPositions,
-            'is_week'=>true
-        ]);
-        $menu->products()->attach($weekProduct);
+        if(!$menu->products()->where('products.is_week', true)->exists()) {
+            $weekProduct = Product::create([
+                'title' => $menu->title . ' неделя',
+                'image' => config('app.logo'),
+                'day_index' => 7,
+                'price' => $weekPrice,
+                'weight' => $weekWeight,
+                'positions' => $weekPositions,
+                'is_week' => true
+            ]);
+            $menu->products()->attach($weekProduct);
+        }
         return response(null, 200);
     }
 

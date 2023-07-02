@@ -160,7 +160,9 @@ export const useCartStore = defineStore('cart', () => {
         return product.users.findIndex(productUser => productUser.phone === user.phone)
     }
 
-    function incQuantity(id, index = getUserProductIndex(id)) {
+    function incQuantity(id, index = null) {
+        if(index === null)
+            index = getUserProductIndex(id)
         let cartItem = items.value.find(item => item.product.id === id)
         if (index === -1) {
             let user = userStore.dataUser()
@@ -178,7 +180,9 @@ export const useCartStore = defineStore('cart', () => {
         saveCart(cartItem, 'inc')
     }
 
-    function decQuantity(id, index = getUserProductIndex(id)) {
+    function decQuantity(id, index = null) {
+        if(index === null)
+            index = getUserProductIndex(id)
         if (index === -1) {
             modals.getOrCreateInstance(document.getElementById('changeUserCart')).show()
             return
@@ -188,7 +192,10 @@ export const useCartStore = defineStore('cart', () => {
             cartItem.users[index].quantity--
             sendNotify('Лишний товар убран из корзины!')
             saveCart(cartItem, 'dec')
-        } else
+        } else if(cartItem.users[index].quantity === 1 && cartItem.users.length > 1){
+            items.value.find(item => item.product.id === id).users.splice(index, 1)
+        }
+        else
             removeProduct(id, index)
     }
 
@@ -203,7 +210,7 @@ export const useCartStore = defineStore('cart', () => {
             saveCart(items.value[cartItemIndex], 'delete')
             items.value.splice(cartItemIndex, 1)
         } else {
-            cartItem.users.splice(index, 1)
+            items.value.find(item => item.product.id === id).users.splice(index, 1)
             saveCart(items.value[cartItemIndex], 'dec')
         }
         sendNotify('Лишний товар убран из корзины!')
