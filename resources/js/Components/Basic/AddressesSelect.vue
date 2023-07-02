@@ -20,15 +20,10 @@ const props = defineProps({
         type: Function,
         default: () => {}
     },
-
     inputClass: {
         type: String,
         default: null
     },
-    ariaDescribedby: {
-        type: String,
-        default: null
-    }
 })
 
 const emit = defineEmits(['update:formAddress', 'option:selected', 'search:blur'])
@@ -85,32 +80,36 @@ const selected = (value) => {
 </script>
 
 <template>
-    <v-select
-        v-model="vFormAddress"
-        :options="user.addresses"
-        taggable
-        @search="search"
-        @search:blur="searchBlur"
-        @change="addOption"
-        :closeOnSelect="closeOnSelect"
-        @option:selected="selected"
+    <div class="input-group">
+        <span class="input-group-text justify-content-center w-40px">
+           <font-awesome-icon icon="fa-solid fa-location-dot"/>
+        </span>
+        <v-select
+            v-model="vFormAddress"
+            :options="user.addresses"
+            taggable
+            @search="search"
+            @search:blur="searchBlur"
+            @change="addOption"
+            :closeOnSelect="closeOnSelect"
+            @option:selected="selected"
 
-        placeholder="Адрес доставки"
-        class="v--select form-control w-100 mt-2 mb-0 ps-3 py-3"
-        :class="[
-            errors.length > 0 ? 'is-invalid' : '',
-            errors.length === 0 && vFormAddress !== null ? 'is-valid' : '',
-            inputClass !== null ? inputClass : ''
-        ]"
-        :aria-describedby="ariaDescribedby !== null ? ariaDescribedby : ''"
-    >
-        <template #option="{label}">
-            <button v-if="user.addresses.indexOf(label) !== -1"
-                    type="button" class="btn-close position-relative z-3" aria-label="Close"
-                    @click="deleteOptionAddress(label)"></button>
-            {{ label }}
-        </template>
-    </v-select>
+            placeholder="Адрес доставки"
+            class="v--select form-control m-0 ps-3 pe-4 py-3 z-4-important"
+            :class="[inputClass, errors.length > 0 ? 'is-invalid' : '',
+                errors.length === 0 && vFormAddress !== '' && vFormAddress !== null ? 'is-valid' : '']"
+        >
+            <template #option="{label}">
+                <button v-if="user.addresses.indexOf(label) !== -1"
+                        type="button" class="btn-close position-relative z-3" aria-label="Close"
+                        @click="deleteOptionAddress(label)"></button>
+                {{ label }}
+            </template>
+        </v-select>
+        <div class="invalid-feedback" v-if="errors.length > 0" v-for="error in errors">
+            {{ error }}
+        </div>
+    </div>
 </template>
 
 <style lang="scss">
@@ -135,7 +134,9 @@ const selected = (value) => {
             color: var(--bs-secondary-color);
             opacity: 1;
         }
-
+        & .vs__actions {
+            padding-right: 1rem;
+        }
         & .vs__actions .vs__clear {
             display: flex;
         }
@@ -144,7 +145,29 @@ const selected = (value) => {
 
     & .vs__dropdown-menu {
         & .vs__dropdown-option {
-            overflow-y: hidden;
+            overflow: auto;
+
+            /* width */
+            &::-webkit-scrollbar {
+                //width: 5px;
+                height: 0.5rem;
+            }
+
+            /* Track */
+            &::-webkit-scrollbar-track {
+                box-shadow: inset 0 0 0.25rem grey;
+            }
+
+            /* Handle */
+            &::-webkit-scrollbar-thumb {
+                background: #e3342f;
+                border-radius: 0.25rem;
+            }
+
+            /* Handle on hover */
+            &::-webkit-scrollbar-thumb:hover {
+                background: #e64844;
+            }
         }
     }
 }

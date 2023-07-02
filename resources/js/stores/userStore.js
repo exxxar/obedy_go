@@ -3,6 +3,7 @@ import {reactive, watch} from "vue"
 import axios from "axios"
 import {sendNotify} from "@/app"
 import {useCartStore} from "@/stores/cartStore"
+import {router} from "@inertiajs/vue3";
 
 
 export const useUserStore = defineStore('userStore', () => {
@@ -47,6 +48,7 @@ export const useUserStore = defineStore('userStore', () => {
             user.isAuthorized = false
             window.axios.defaults.headers.common['X-CSRF-TOKEN'] = resp.data.token
             sendNotify('Вы успешно вышли из аккаунта!')
+            return Promise.resolve(resp);
         }).catch(errors => {
             user.isAuthorized = false
         })

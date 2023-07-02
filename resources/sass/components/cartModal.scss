@@ -111,7 +111,7 @@
         border: 1px #e9e9e9 solid;
         z-index: 2;
 
-        form.order-form {
+        & .order-form {
             padding: 10px 0px;
             box-sizing: border-box;
             width: 100%;
@@ -121,9 +121,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-wrap: wrap;
+            //flex-wrap: wrap;
 
-            .hider {
+            & .hider {
                 position: absolute;
                 top: -25px;
                 width: 100px;
@@ -150,11 +150,11 @@
 
             textarea,
             input {
-                width: 100%;
-                padding: 15px;
+                //width: 100%;
+                //padding: 15px;
                 //border: 1px #d50c0d solid;
-                margin-bottom: 5px;
-                border-radius: 5px;
+                //margin-bottom: 5px;
+                //border-radius: 5px;
             }
         }
     }
@@ -199,7 +199,7 @@
                 position: absolute;
                 width: 100%;
                 z-index: 10;
-                background: rgba(0, 0, 0, 0.5) url('/img/logo_obed_go.jpg') center center no-repeat;
+                background: rgba(0, 0, 0, 0.5) url('/images/logo_obed_go.jpg') center center no-repeat;
                 background-size: cover;
                 height: 100%;
                 top: 0;

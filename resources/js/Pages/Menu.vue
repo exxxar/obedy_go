@@ -1,11 +1,12 @@
 <script setup>
-import {nextTick, onMounted, reactive, ref, watch} from "vue"
+import { nextTick, onMounted, reactive, ref } from "vue"
 import TextInput from "@/Components/Basic/TextInput.vue"
 import PageTitle from "@/Components/Layout/PageTitle.vue"
 import ProductInfo from "@/Components/Products/ProductInfo.vue"
 import ImageInput from "@/Components/Basic/ImageInput.vue"
-import {modals, sendNotify} from "@/app"
+import { modals, sendNotify, myHasOwnProperty } from "@/app"
 import MenuProductModal from "@/Components/Menu/MenuProductModal.vue"
+import TextTextarea from "@/Components/Basic/TextTextarea.vue"
 
 const props = defineProps({
     menu: {
@@ -64,11 +65,6 @@ const addProducts = () => {
     }
 }
 
-const textAreaAdjust = (element) => {
-    element.style.height = "1px";
-    element.style.height = (24 + element.scrollHeight) + "px";
-}
-
 const openMenuProductModal = async (isEdit, id) => {
     selectProduct.id = id
     selectProduct.isEdit = isEdit
@@ -123,66 +119,38 @@ const createFormData = (obj, formData = new FormData(), subKeyStr = '') => {
                 <div class="card">
                     <div class="card-body d-flex flex-column gap-3 align-items-center">
                         <div class="w-100 d-flex flex-column gap-3">
-                            <div class="input-group">
-                                <span class="input-group-text justify-content-center w-40px">
-                                    <font-awesome-icon icon="fa-solid fa-heading"/>
-                                </span>
-                                <TextInput :errors="errors.hasOwnProperty('title') ? errors.title : []"
-                                           placeholder="Название"
-                                           v-model="form.title"
-                                           input-class="w-auto m--0"></TextInput>
-                            </div>
-                            <div class="input-group">
-                                <span class="input-group-text justify-content-center w-40px">
-                                    <font-awesome-icon icon="fa-solid fa-utensils"/>
-                                </span>
-                                <textarea name="description" v-model="form.description"
-                                          class="form-control px-4 py-3 overflow-hidden"
-                                          placeholder="Описание"
-                                          :class="[
-                                                      errors.hasOwnProperty('description') && errors.description.length > 0 ? 'is-invalid' : '',
-                                                      (!errors.hasOwnProperty('description') || errors.description.length === 0) && form.description !== null && form.description.length > 0 ? 'is-valid' : ''
-                                                  ]"
-                                          style="resize:none"
-                                          @keyup="textAreaAdjust($event.target)">
-                                        </textarea>
-                                <div v-if="errors.hasOwnProperty('description') && errors.description.length > 0"
-                                     class="invalid-feedback" v-for="error in errors.description">{{ error }}
-                                </div>
-                            </div>
-                            <div class="input-group">
-                                <TextInput :errors="errors.hasOwnProperty('price') ? errors.price : []"
-                                           placeholder="Цена"
-                                           v-model="form.price"
-                                           :keyup-only-number="true"
-                                           :error="false"
-                                           input-class="w-auto m--0"></TextInput>
-                                <span class="input-group-text justify-content-center w-40px">
-                                    <font-awesome-icon icon="fa-solid fa-ruble-sign"/>
-                                </span>
-                                <div v-if="errors.hasOwnProperty('price') && errors.price.length > 0"
-                                     class="invalid-feedback" v-for="error in errors.price">{{ error }}
-                                </div>
-                            </div>
+                            <TextInput :errors="myHasOwnProperty.call(errors, 'title') ? errors.title : []"
+                                       placeholder="Название"
+                                       v-model="form.title"
+                                       groupTextIconLeft="fa-solid fa-heading"/>
 
-                            <ImageInput v-model:image="form.image"
-                                        :errors="errors.hasOwnProperty('image') ? errors.image : []"/>
+                            <TextTextarea  :errors="myHasOwnProperty.call(errors, 'description') ? errors.description : []"
+                                           placeholder="Описание"
+                                           v-model="form.description"
+                                           textareaName="description"
+                                           groupTextIconLeft="fa-solid fa-utensils"/>
+
+                            <TextInput :errors="myHasOwnProperty.call(errors, 'price') ? errors.price : []"
+                                       placeholder="Цена"
+                                       v-model="form.price"
+                                       :keyup-only-number="true"
+                                       groupTextIconRight="fa-solid fa-ruble-sign"/>
+
+                            <ImageInput :errors="myHasOwnProperty.call(errors, 'image') ? errors.image : []"
+                                        v-model:image="form.image"/>
 
                             <div class="w-100 list-group">
-                                <div class="list-group-item px-2 py-2"
-
-                                     v-for="(day, index) in days">
+                                <div class="list-group-item px-2 py-2" v-for="(day, index) in days">
                                     <div class="d-flex flex-column px-3 py-2 gap-3"
                                          :class="[
                                          Object.keys(errors).filter(element => element.toLowerCase().indexOf(('products.'+index).toLowerCase()) !== -1).length > 0 ? 'border rounded div-invalid' : '',
                                          Object.keys(errors).length > 0 && Object.keys(errors).filter(element => element.toLowerCase().indexOf(('products.'+index).toLowerCase()) !== -1).length === 0 ? 'border rounded div-valid' : ''
                                      ]">
                                         <div class="w-100 d-flex align-items-center justify-content-between">
-                                            <h5 class="m-0" v-if="form.products[index]">{{
-                                                    form.products[index].title
-                                                }}</h5>
+                                            <h5 class="m-0" v-if="form.products[index]">{{ form.products[index].title }}</h5>
                                             <button class="btn btn-success" type="button"
-                                                    v-if="form.products[index] && !form.products[index].hasOwnProperty('day_index')"
+                                                    v-if="form.products[index] &&
+                                                          !myHasOwnProperty.call(form.products[index], 'day_index')"
                                                     @click="openMenuProductModal(false, index)">
                                                 <font-awesome-icon icon="fa-solid fa-plus"/>
                                             </button>
@@ -218,10 +186,6 @@ const createFormData = (obj, formData = new FormData(), subKeyStr = '') => {
 </template>
 
 <style scoped>
-.w-40px {
-    width: 40px;
-}
-
 .div-invalid {
     border-color: var(--bs-form-invalid-border-color) !important
 }

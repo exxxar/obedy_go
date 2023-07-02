@@ -2,21 +2,21 @@
 import TextInput from "@/Components/Basic/TextInput.vue"
 import AddressesSelect from "@/Components/Basic/AddressesSelect.vue"
 import AudioCallback from "@/Components/Basic/AudioCallback.vue"
-import {onMounted, reactive, ref, watch} from "vue"
-import {sendNotify} from "@/app";
+import TextTextarea from "@/Components/Basic/TextTextarea.vue"
+import { onMounted, reactive, ref, watch } from "vue"
+import { sendNotify, myHasOwnProperty } from "@/app"
 
 const props = defineProps({
     selectedType: {
         type: Number,
         default: 0
-    },
+    }
 })
 
 onMounted(() => {
     form.typeValue = props.selectedType
     selectForm.value = question_types[props.selectedType]
 })
-
 
 const question_types = [
     "Оформление заказа",
@@ -26,6 +26,7 @@ const question_types = [
     "Реклама и продвижение",
     "Другие вопросы"
 ]
+
 const dialog_titles = [
     "Оформить заказ голосом",
     "Опиши свои проблемы",
@@ -35,54 +36,43 @@ const dialog_titles = [
     "Что-то другое..."
 ]
 
-const baseForm = {
+const baseForm = () => ({
     name: '',
     phone: '',
     address: '',
     recordings: [],
     message: '',
     typeValue: 0
-}
+})
 
+const form = reactive(baseForm())
 const errors = ref([])
 
-const form = reactive({...baseForm})
-
-const sendRequest = () => {
-
+const sendRequest = async () => {
     let formData = new FormData()
-
-    formData.append('phone', form.phone)
     formData.append('name', form.name)
+    formData.append('phone', form.phone)
     formData.append('address', form.address)
     formData.append('message', form.message)
     formData.append('typeValue', form.typeValue)
-
-    for (let i = 0; i < form.recordings.length; i++) {
-        let file = form.recordings[i].data
-        formData.append('files[' + i + ']', file)
-    }
-
-    axios.post(route('callback'), formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            },
-        }
-    ).then(function () {
-        sendNotify('Ваше сообщение успешно отправлено!')
-        Object.assign(form, baseForm)
-        errors.value = []
-    }).catch(async error => {
-        if (error.response.status === 422) {
-            errors.value = error.response.data.errors
-        }
+    form.recordings.forEach((element, index) => {
+        formData.append('files[' + index + ']', element.data)
     })
 
-
+    await axios.post(route('callback'), formData, {
+        headers: {'Content-Type': 'multipart/form-data'}
+    }).then(response => {
+        sendNotify('Ваше сообщение успешно отправлено!')
+        errors.value = []
+        Object.assign(form, baseForm())
+    }).catch(error => {
+        if (error.response.status === 422)
+            errors.value = error.response.data.errors
+    })
 }
 
-const selectForm = ref('')
-watch(selectForm, (newValue, oldValue) => {
+const selectForm = ref(null)
+watch(() => selectForm.value, (newValue, oldValue) => {
     form.typeValue = question_types.indexOf(newValue)
 })
 
@@ -90,98 +80,52 @@ watch(selectForm, (newValue, oldValue) => {
 
 <template>
     <div class="card mb-3 obedy-callback-card">
-        <form v-on:submit.prevent="sendRequest" class="card-body">
-            <h5 class="card-title">{{ dialog_titles[form.typeValue] }}</h5>
-            <div class="form-group mb-3">
-                <TextInput :errors="errors.hasOwnProperty('name') ? errors.name : []" placeholder="Ваше Ф.И.О"
-                           v-model="form.name"></TextInput>
-            </div>
-            <div class="form-group mb-3">
-                <TextInput :errors="errors.hasOwnProperty('phone') ? errors.phone : []" placeholder="Номер телефона"
-                           v-model="form.phone" mask="+7 (###) ###-##-##"></TextInput>
-            </div>
-            <div class="form-group mb-3">
+        <div class="card-body w-100 d-flex flex-column gap-3">
+            <h5 class="card-title m-0">{{ dialog_titles[form.typeValue] }}</h5>
+
+            <TextInput :errors="myHasOwnProperty.call(errors, 'name') ? errors.name : []"
+                       placeholder="Ваше Ф.И.О"
+                       v-model="form.name"
+                       groupTextIconLeft="fa-solid fa-user"/>
+            <TextInput :errors="myHasOwnProperty.call(errors, 'phone') ? errors.phone : []"
+                       placeholder="Номер телефона"
+                       v-model="form.phone"
+                       groupTextIconLeft="fa-solid fa-phone"
+                       mask="+7 (###) ###-##-##"/>
+            <div class="input-group">
+                <span class="input-group-text justify-content-center w-40px">
+                    <font-awesome-icon icon="fa-solid fa-list"/>
+                </span>
                 <v-select
                     v-model="selectForm"
                     :options="question_types"
                     :clearable="false"
-                    class="form-control w-100 mt-2 mb-0 ps-3 pe-4 py-3">
+                    class="v--select form-control m-0 ps-3 pe-4 py-3 z-5-important"
+                    :class="[selectForm !== null ? 'is-valid' : '']"
+                >
                 </v-select>
             </div>
-            <div class="form-group mb-3" v-if="form.typeValue===0">
-                <AddressesSelect v-model:formAddress="form.address"
-                                 :errors="errors.hasOwnProperty('address') ? errors.address : []"
-                />
-                <div v-if="'address' in errors && errors.address.length > 0"
-                     class="invalid-feedback" v-for="error in errors.address">{{ error }}
-                </div>
-            </div>
-            <div class="form-group mb-3">
-                    <textarea name="message" v-model="form.message" class="form-control"
-                              placeholder="Текст сообщения"
-                              :class="[errors.hasOwnProperty('message') && errors.message.length > 0 ? 'is-invalid' : '',
-                              (!errors.hasOwnProperty('message') || errors.message.length === 0) && form.message.length > 0 ? 'is-valid' : '']">
-                    </textarea>
-                <div v-if="errors.hasOwnProperty('message') && errors.message.length > 0 " class="invalid-feedback"
-                     v-for="error in errors.message">{{ error }}
-                </div>
-            </div>
+            <AddressesSelect v-if="form.typeValue === 0" v-model:formAddress="form.address"
+                             :errors="myHasOwnProperty.call(errors, 'address') ? errors.address : []"/>
+            <TextTextarea  :errors="myHasOwnProperty.call(errors, 'message') ? errors.message : []"
+                           placeholder="Текст сообщения"
+                           v-model="form.message"
+                           textareaName="message"
+                           groupTextIconLeft="fa-solid fa-comment"/>
+            <AudioCallback v-model:recordings="form.recordings"></AudioCallback>
 
-
-            <div class="form-group mb-3">
-                <AudioCallback v-model="form.recordings"></AudioCallback>
-            </div>
-            <div class="form-group">
-                <button class="btn btn-danger w-100 p-3 text-uppercase font-weight-bold mr-1 mb-1 w-100">
-                    <i class="icon ion-md-mail"></i>
-                    Отправить
-                </button>
-            </div>
-            <div class="form-group mb-2 d-flex justify-content-center">
-
-                <a data-bs-toggle="modal" data-bs-target="#delivery" class="btn btn-link mr-1 mb-1"
-                   title="Подробности о доставке"
-                   aria-label="Подробности о доставке">
-                    <i class="icon ion-ios-filing"></i>
+            <button class="btn btn-danger text-uppercase fw-bolder p-3 mb-1"
+                    @click="sendRequest">
+                <font-awesome-icon icon="fa-solid fa-envelope"/>
+                Отправить
+            </button>
+            <div class="input-group justify-content-center mb-2">
+                <a data-bs-toggle="modal" data-bs-target="#delivery" class="btn btn-link mb-1"
+                   title="Подробности о доставке" aria-label="Подробности о доставке">
+                    <font-awesome-icon icon="fa-solid fa-box-tissue"/>
                     Подробности о доставке!
                 </a>
-
             </div>
-
-
-        </form>
+        </div>
     </div>
 </template>
-
-<style lang="scss">
-
-.v-select {
-    width: 100%;
-    padding: 15px;
-    //border: 1px #d50c0d solid;
-    margin-top: 0.5rem;
-    border-radius: 5px;
-
-    & .vs__dropdown-toggle {
-        border: 0;
-        padding: 0;
-
-        & .vs__selected-options {
-            flex-wrap: nowrap;
-            word-wrap: break-word;
-        }
-
-        & .vs__search {
-            width: 0 !important;
-            border: 0 !important;
-            margin: 4px 0 0 !important;
-            padding: 0 7px !important;
-        }
-
-        & .vs__actions .vs__clear {
-            display: flex;
-        }
-
-    }
-}
-</style>

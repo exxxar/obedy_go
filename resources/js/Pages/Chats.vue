@@ -57,11 +57,9 @@ const messagesByDate = (date) => {
 
 
 const sendMessage = async () => {
-    chatStore.sendMessage(form).then(
-        (response) => {
-            Object.assign(form, defaultMessage())
-        }
-    )
+    await chatStore.sendMessage(form).then((response) => {
+        Object.assign(form, defaultMessage())
+    })
 }
 
 const handleFileChange = async (evt) => {
@@ -109,6 +107,11 @@ const scrollBottomAndSeenNewMessages = (id) => {
     currentChat.value.data.unseenMessageCount = 0
 }
 
+const checkScroll = computed(() => {
+    let chat = document.getElementById('current-chat-body-'+currentChat.value.data.id)
+    return chat !== null && chat.offsetWidth > chat.clientWidth
+})
+
 </script>
 <template>
     <PageTitle title="Чаты"/>
@@ -144,9 +147,12 @@ const scrollBottomAndSeenNewMessages = (id) => {
                                                     }}
                                                 </p>
                                                 <template v-if="chat.lastMessage.isUserMessage">
-                                                    <p v-if="!chat.lastMessage.isSeen"><i
-                                                        class="fa-solid fa-check fa-lg"></i></p>
-                                                    <p v-else><i class="fa-solid fa-check-double fa-lg"></i></p>
+                                                    <p v-if="!chat.lastMessage.isSeen">
+                                                        <font-awesome-icon icon="fa-solid fa-check" size="lg"/>
+                                                    </p>
+                                                    <p v-else>
+                                                        <font-awesome-icon icon="fa-solid fa-check-double" size="lg"/>
+                                                    </p>
                                                 </template>
                                                 <div
                                                     class="message-counter d-flex justify-content-center align-items-center"
@@ -183,14 +189,15 @@ const scrollBottomAndSeenNewMessages = (id) => {
                              :id="'current-chat-body-'+currentChat.data.id"
                              :class="currentChat.data.messages.length > 0 ? '' : 'd-flex flex-column justify-content-center'">
                             <template v-if="currentChat.data.messages.length > 0">
-                                <div v-if="currentChat.data.unseenMessageCount > 0"
-                                     class="cursor-pointer position-absolute bottom-0 end-0"
+                                <div v-if="currentChat.data.unseenMessageCount > 0 && checkScroll"
+                                     class="cursor-pointer position-absolute bottom-0 end-0 z-10"
                                      style="transform: translate(-50%, -200%);"
                                     @click="scrollBottomAndSeenNewMessages(currentChat.data.id)">
                                     <div class="img_cont_msg">
                                         <div class="d-flex flex-column justify-content-center align-items-center rounded-circle bg-danger h-100 fw-bold">
                                             <p class="text-white lh-1" style="font-size: 12px">{{ currentChat.data.unseenMessageCount }}</p>
-                                            <i class="fa-solid fa-chevron-down fa-lg fa-beat text-white"></i>
+                                            <font-awesome-icon class="text-white"
+                                                               icon="fa-solid fa-chevron-down" beat size="lg"/>
                                         </div>
                                     </div>
                                 </div>
@@ -224,10 +231,11 @@ const scrollBottomAndSeenNewMessages = (id) => {
                                                      v-if="message.files.length > 0">
                                                     <div class="col-auto overflow-hidden file-link-container"
                                                          v-for="file in message.files">
-                                                        <a class="d-flex gap-2 align-items-center text-break justify-content-between link"
-                                                           :href="file.path" target="_blank">
+                                                        <a class="d-flex gap-2 align-items-center text-break
+                                                            justify-content-between link" :href="file.path"
+                                                            target="_blank">
                                                             <p>{{ file.name }}</p>
-                                                            <i class="fa-solid fa-download"></i>
+                                                            <font-awesome-icon icon="fa-solid fa-download"/>
                                                         </a>
                                                     </div>
                                                 </div>
@@ -237,12 +245,14 @@ const scrollBottomAndSeenNewMessages = (id) => {
                                                  :class="message.isUserMessage ? 'msg_time_send' : 'msg_time'">
                                                 <span>{{ message.time }}</span>
                                                 <template v-if="message.isUserMessage">
-                                                            <span v-if="!message.isSeen"><i
-                                                                class="fa-solid fa-check fa-lg"></i></span>
-                                                    <span v-else><i class="fa-solid fa-check-double fa-lg"></i></span>
+                                                    <span v-if="!message.isSeen">
+                                                        <font-awesome-icon icon="fa-solid fa-check" size="lg"/>
+                                                    </span>
+                                                    <span v-else>
+                                                        <font-awesome-icon icon="fa-solid fa-check-double" size="lg"/>
+                                                    </span>
                                                 </template>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -251,16 +261,16 @@ const scrollBottomAndSeenNewMessages = (id) => {
                         </div>
                         <div class="card-footer">
                             <div class="input-group">
-                                <input type='file' id="actual-btn" @change="handleFileChange($event)" multiple
-                                       hidden>
+                                <input type='file' id="actual-btn" @change="handleFileChange($event)" multiple hidden/>
                                 <label class="input-group-text attach_btn" for="actual-btn">
-                                    <i class="fas fa-paperclip"></i>
+                                    <font-awesome-icon icon="fa-solid fa-paperclip"/>
                                 </label>
                                 <textarea name="message" class="form-control type_msg" v-model="form.message"
                                           placeholder="Напишите ваше сообщение..."></textarea>
                                 <button class="input-group-text send_btn" @click="sendMessage"
-                                        :disabled="form.message === null && form.files.length === 0"><i
-                                    class="fas fa-location-arrow"></i></button>
+                                        :disabled="form.message === null && form.files.length === 0">
+                                    <font-awesome-icon icon="fa-solid fa-location-arrow"/>
+                                </button>
                             </div>
                         </div>
                         <div class="d-flex flex-column fixed-height-min-max-125px" v-if="form.files.length > 0">
@@ -268,8 +278,10 @@ const scrollBottomAndSeenNewMessages = (id) => {
                                 <li class="list-group-item d-flex justify-content-between align-items-center bg-white px-4"
                                     v-for="(file, index) in form.files">
                                     <a :id="'messageFile-'+index" href="#" target="_blank">{{ file.name }}</a>
-                                    <span @click="form.files.splice(index, 1)"><i
-                                        class="fa-solid fa-xmark fa-lg cursor-pointer"></i></span>
+                                    <span @click="form.files.splice(index, 1)">
+                                        <font-awesome-icon class="cursor-pointer"
+                                                           icon="fa-solid fa-location-arrow" size="lg"/>
+                                    </span>
                                 </li>
                             </ul>
                         </div>
@@ -279,5 +291,5 @@ const scrollBottomAndSeenNewMessages = (id) => {
             </div>
         </div>
     </div>
-    <GalleryModal v-if="messageImages.length>0" :images="messageImages" :active="messageImageIndex"></GalleryModal>
+    <GalleryModal v-if="messageImages.length > 0" :images="messageImages" :active="messageImageIndex"></GalleryModal>
 </template>

@@ -1,5 +1,5 @@
 <script setup>
-import {nextTick, onMounted, ref} from "vue"
+import {nextTick, ref} from "vue"
 import {modals, popover} from "@/app"
 import ProductControls from "@/Components/Products/ProductControls.vue"
 import ProductModal from "@/Components/Products/ProductModal.vue"

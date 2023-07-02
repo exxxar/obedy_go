@@ -2,10 +2,6 @@ import RecorderMixin from './RecorderMixin'
 
 const mixins = [RecorderMixin];
 
-if (!window.MediaRecorder) {
-
-}
-
 /**
  * The element mixin defines the mode behaviour and creates two
  * functions to start and stop the recording execution

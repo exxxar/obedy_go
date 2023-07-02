@@ -1,8 +1,8 @@
 <script setup>
 import axios from "axios"
-import {router} from '@inertiajs/vue3'
-import {modals, sendNotify} from "@/app"
-import {nextTick, onMounted, ref, watch} from "vue"
+import { router } from '@inertiajs/vue3'
+import { modals, sendNotify } from "@/app"
+import { nextTick, onMounted } from "vue"
 
 const props = defineProps({
     specialist: {
@@ -19,14 +19,14 @@ const props = defineProps({
     }
 })
 
+const emit = defineEmits(['update:specialistId'])
+
 onMounted(() => {
     if (props.specialistId !== null)
         document.getElementById('specialistModal').addEventListener('hidden.bs.modal', (event) => {
             emit('update:specialistId', null)
         }, { once: true })
 })
-
-const emit = defineEmits(['update:specialistId'])
 
 const selectSpecialist = async (id) => {
     emit('update:specialistId', id)
@@ -44,12 +44,10 @@ const chooseSpecialist = async (id) => {
         closeSpecialistModal()
         router.get(route('chats'), {'chatId': resp.data.chatId})
     }).catch(error => {
-        if (error.response.status === 401) {
+        if (error.response.status === 401)
             sendNotify('Для начала общения Вам необходимо войти в свой аккаунт', 'error')
-        }
-        if (error.response.status === 404) {
+        if (error.response.status === 404)
             sendNotify('Выбранный специалист недоступен для общения', 'error')
-        }
     })
 }
 

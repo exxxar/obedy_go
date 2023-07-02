@@ -24,8 +24,9 @@ const is_cart_open = inject('is_cart_open')
 const setPopover = async () => {
     for (const el of items.value) {
         [...document.getElementsByName('btn-popover-' + el.product.id)].forEach(element => popover.getOrCreateInstance(element).dispose())
-        await nextTick();
-        [...document.getElementsByName('btn-popover-' + el.product.id)].forEach(element => popover.getOrCreateInstance(element))
+        await nextTick(
+            () => { [...document.getElementsByName('btn-popover-' + el.product.id)].forEach(element => popover.getOrCreateInstance(element)) }
+        )
     }
 }
 
@@ -34,16 +35,23 @@ const cartOpen = () => {
     setPopover()
 }
 
+const logout = () => {
+    userStore.logout().then( (response) => { router.reload() })
+}
+
 </script>
 
 <template>
+    <div class="navbar-menu-profile" @click="cartOpen()">
+        <font-awesome-icon icon="fa-solid fa-cart-shopping" size="2xl" role="button"/>
+        <span v-if="getTotalCount>0" class="cart-count">{{ getTotalCount }}</span>
+    </div>
     <nav class="navbar navbar-menu d-sm-flex d-none" v-if="!is_cart_open">
-        <i class="fa-solid fa-burger fa-2xl" data-bs-toggle="offcanvas" data-bs-target="#obedyNavbarMenu"
-           aria-controls="obedyNavbarMenu"
-           aria-label="Toggle navigation" role="button"></i>
+        <font-awesome-icon icon="fa-solid fa-burger" size="2xl" data-bs-toggle="offcanvas" data-bs-target="#obedyNavbarMenu"
+            aria-controls="obedyNavbarMenu" aria-label="Toggle navigation" role="button"/>
         <div class="offcanvas cart-container" tabindex="-1" id="obedyNavbarMenu">
             <div class="cart-icon cart-icon-close">
-                <i class="fa-solid fa-xmark fa-2xl" data-bs-dismiss="offcanvas"></i>
+                <font-awesome-icon icon="fa-solid fa-xmark" size="2xl" data-bs-dismiss="offcanvas"/>
             </div>
             <div id="cartMenu" class="cart-menu">
                 <div class="cart-icon login" data-bs-toggle="modal" data-bs-target="#login"
@@ -62,14 +70,11 @@ const cartOpen = () => {
                 <div class="cart-icon checkOrder" data-bs-toggle="modal" data-bs-target="#checkOrder">Узнать
                     статус
                 </div>
-
-                <div class="cart-icon icon-1" v-if="user.isAuthorized" @click="router.get(route('chats'))">
+                <div class="cart-icon icon-1" @click="router.get(route('specialists'))">Специалисты</div>
+                <div class="cart-icon icon-2" v-if="user.isAuthorized" @click="router.get(route('chats'))">
                     Чаты
                 </div>
-                <div class="cart-icon icon-2" @click="router.get(route('specialists'))">Специалисты</div>
-                <div class="cart-icon icon-3" data-bs-toggle="modal" data-bs-target="#checkOrder">Узнать
-                    статус
-                </div>
+                <div class="cart-icon icon-3" v-if="user.isAuthorized" @click="logout()">Выход</div>
             </div>
         </div>
     </nav>
@@ -82,9 +87,7 @@ const cartOpen = () => {
             <ul class="bottom_menu">
                 <li v-for="foodPart in foodParts" @click="part = foodPart.partId">{{ foodPart.title }}</li>
                 <li class="hr"></li>
-                <li data-bs-toggle="modal" data-bs-target="#login" v-if="!user.isAuthorized">
-                    Войти
-                </li>
+                <li data-bs-toggle="modal" data-bs-target="#login" v-if="!user.isAuthorized">Войти</li>
                 <li @click="router.get(route('profile'))" v-else>Профиль</li>
                 <li @click="is_cart_open = true">
                     Корзина <span class="badge badge-danger" v-if="countInCart>0">{{ countInCart }}</span>
@@ -96,10 +99,9 @@ const cartOpen = () => {
                     @click="lottery_id = null" v-if="lotteries.length > 0">Акции
                 </li>
                 <li data-bs-toggle="modal" data-bs-target="#checkOrder">Узнать статус</li>
-                <li v-if="user.isAuthorized" @click="router.get(route('chats'))">
-                    Чаты
-                </li>
+                <li v-if="user.isAuthorized" @click="router.get(route('chats'))">Чаты</li>
                 <li @click="router.get(route('specialists'))">Специалисты</li>
+                <li v-if="user.isAuthorized" @click="logout()">Выход</li>
             </ul>
         </template>
     </ul>

@@ -21,7 +21,7 @@ class MenuResource extends JsonResource
             'description'=>$this->description,
             'price'=>$this->price,
             'image'=> is_null($this->image) ? config('app.logo') : $this->image,
-            'isUserMenu'=> ($user->purchasedMenus()->where('menu_id', $this->id)->exists() || $this->price == 0),
+            'isUserMenu'=> $user && (($user->purchasedMenus()->where('menu_id', $this->id)->exists() || $this->price == 0)),
             $this->mergeWhen( $request->route()->getName() == 'special', [
                 'specialist'=> new ProfileResource($this->user),
                 'slug'=>$this->slug,

@@ -1,16 +1,15 @@
 <script setup>
-import {computed, inject, provide, reactive} from "vue"
+import {inject, provide, reactive} from "vue"
 import {storeToRefs} from "pinia"
 import {useCartStore} from '@/stores/cartStore.js'
 import ProductCard from "@/Components/Products/ProductCard.vue"
 import OrderForm from "@/Components/Cart/OrderForm.vue";
-import UserCartModal from "@/Components/Cart/UserCartModal.vue";
-import {useUserStore} from "@/stores/userStore";
+import UserCartModal from "@/Components/Cart/UserCartModal.vue"
+import {useUserStore} from "@/stores/userStore.js"
 
 const cart = useCartStore()
 const {items, hasOtherUserCart} = storeToRefs(cart)
-const userStore = useUserStore()
-const {user} = storeToRefs(userStore)
+const {user} = storeToRefs(useUserStore())
 
 const settings = reactive({
     suppressScrollX: true,
@@ -33,11 +32,11 @@ const hasMainProductInCart = () => {
     <div class="cart-modal">
         <div class="cart-modal-inner">
             <div class="custom-modal-header" :class="hasOtherUserCart ? 'justify-content-between' : ''">
-                <button v-if="hasOtherUserCart" class="btn btn-link fs-2" data-bs-toggle="modal" data-bs-target="#changeUserCart">
-                    <i class="far fa-circle-info text-danger"></i>
+                <button v-if="hasOtherUserCart" class="btn btn-link fs-5 py-0"
+                        data-bs-toggle="modal" data-bs-target="#changeUserCart">
+                    <font-awesome-icon class="text-danger" icon="fa-solid fa-circle-info"/>
                 </button>
-
-                <button class="btn btn-link " @click="is_cart_open = false">Закрыть</button>
+                <button class="btn btn-link" @click="is_cart_open = false">Закрыть</button>
             </div>
             <perfect-scrollbar class="scroll-area scroll-area-bottom ms-0 ps-0" :options="settings" tag="ul">
                 <li v-for="item in items" class="day-item-wrapper list-group-numbered" v-if="cart.getTotalCount>0">
@@ -57,14 +56,9 @@ const hasMainProductInCart = () => {
                     <strong>{{cart.getTotalPrice}} руб</strong>
                 </button>
                 <button class="btn btn-outline-danger mt-2 w-100 p-3 text-uppercase fw-bold"
-                        v-if="!ready_to_order"
-                        @click="cart.clearCart">Очистить
-                </button>
-
+                        v-if="!ready_to_order" @click="cart.clearCart">Очистить</button>
                 <OrderForm v-if="ready_to_order" v-model="ready_to_order"></OrderForm>
             </div>
-
-
         </div>
         <div class="cart-shadow" @click="is_cart_open = false"></div>
     </div>

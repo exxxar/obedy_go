@@ -64,6 +64,8 @@ export const sendNotify = (message, type = 'success') => {
     })
 }
 
+export const myHasOwnProperty = Object.prototype.hasOwnProperty
+
 const VueLazyLoadOptions = {
     preLoad: 1.3,
     error: '/images/logo_obed_go.jpg',

@@ -1,17 +1,13 @@
 <script setup>
-import {computed} from "vue"
 import {storeToRefs} from "pinia"
 import {useCartStore} from '@/stores/cartStore.js'
 import Modal from "@/Components/Basic/Modal.vue"
-import {sendNotify} from "@/app";
-import {useMainStore} from "@/stores/mainStore";
+import {sendNotify} from "@/app"
+import {useMainStore} from "@/stores/mainStore.js"
 
 const cart = useCartStore()
-const {items} = storeToRefs(cart)
-const main = useMainStore()
-const {foodParts} = storeToRefs(main)
-
-
+const { items } = storeToRefs(cart)
+const { foodParts } = storeToRefs(useMainStore())
 
 const print = async () => {
     await axios.get(route('print.report'), {responseType: 'blob'}).then(response => {
@@ -24,12 +20,11 @@ const print = async () => {
 
         fURL.click();
     }).catch(async error => {
-        if (error.response.status === 403) {
+        if (error.response.status === 403)
             sendNotify('Для печати отчета необходима авторизация!', 'error')
-        }
     })
 }
-const foodPart = (product)=>{
+const foodPart = (product) => {
     return foodParts.value.find(foodPart => foodPart.partId === product.product.partId)
 }
 
@@ -45,8 +40,11 @@ const foodPart = (product)=>{
             </div>
         </template>
         <template #body>
-            <template v-for="product in items" v-if="items.length>0">
-                <p><strong v-if="foodPart(product)">{{foodPart(product).title}}. </strong>{{product.product.title}}</p>
+            <template v-for="product in items" v-if="items.length > 0">
+                <p>
+                    <strong v-if="foodPart(product)">{{foodPart(product).title}}. </strong>
+                    {{product.product.title}}
+                </p>
                 <div class="table-responsive">
                     <table class="table table-hover ">
                         <thead>
@@ -59,27 +57,26 @@ const foodPart = (product)=>{
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="(user, index) in product.users">
-                            <td>{{ user.name }}</td>
-                            <td>{{ user.phone }}</td>
-                            <td>{{ user.quantity }}</td>
-                            <td>{{ user.date }}</td>
-                            <td>
-                                <div class="d-flex gap-3">
-                                    <div class="group-btn-counter gap-1">
-                                        <button class="btn btn-danger btn-coutner"
-                                                @click="cart.decQuantity(product.product.id, index)">
-                                            -
-                                        </button>
-                                        <button class="btn btn-danger btn-coutner"
-                                                @click="cart.incQuantity(product.product.id, index)">
-                                            <span>+</span>
-                                        </button>
+                            <tr v-for="(user, index) in product.users">
+                                <td>{{ user.name }}</td>
+                                <td>{{ user.phone }}</td>
+                                <td>{{ user.quantity }}</td>
+                                <td>{{ user.date }}</td>
+                                <td>
+                                    <div class="d-flex gap-3">
+                                        <div class="group-btn-counter gap-1">
+                                            <button class="btn btn-danger btn-coutner"
+                                                    @click="cart.decQuantity(product.product.id, index)">
+                                                -
+                                            </button>
+                                            <button class="btn btn-danger btn-coutner"
+                                                    @click="cart.incQuantity(product.product.id, index)">
+                                                <span>+</span>
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

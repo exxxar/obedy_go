@@ -24,7 +24,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:specialId', "update:specialistId"])
 
-const isProfile = computed(()=>{
+const isProfile = computed(() => {
     return route().current('profile')
 })
 

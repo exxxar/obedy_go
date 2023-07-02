@@ -15,11 +15,14 @@ const props = defineProps({
 </script>
 
 <template>
-    <Modal id="gallery" class_size="modal-dialog-centered modal-fullscreen" class_content="bg-transparent" :header="false" title="">
+    <Modal id="gallery" class_size="modal-dialog-centered modal-fullscreen"
+           class_content="bg-transparent" :header="false" title="">
         <template #header>
             <div class="modal-header border-0">
                 <h5 class="modal-title"></h5>
-                <i class="fa-solid fa-xmark text-white px-3 cursor-pointer fa-2xl"  data-bs-dismiss="modal"></i>
+                <font-awesome-icon class="text-white px-3 cursor-pointer"
+                                   data-bs-dismiss="modal"
+                                   icon="fa-solid fa-xmark" size="2xl"/>
             </div>
         </template>
         <template #body>
@@ -40,20 +43,18 @@ const props = defineProps({
                             </div>
                         </div>
                         <button class="carousel-control-prev" type="button" data-bs-target="#galleryCarouselIndicators" data-bs-slide="prev">
-                            <i class="fa-solid fa-chevron-left cursor-pointer fa-2xl" aria-hidden="true"></i>
+                            <font-awesome-icon class="cursor-pointer"
+                                               aria-hidden="true"
+                                               icon="fa-solid fa-chevron-left" size="2xl"/>
                             <span class="visually-hidden">Previous</span>
                         </button>
                         <button class="carousel-control-next" type="button" data-bs-target="#galleryCarouselIndicators" data-bs-slide="next">
-                            <i class="fa-solid fa-chevron-right cursor-pointer fa-2xl" aria-hidden="true"></i>
+                            <font-awesome-icon class="cursor-pointer"
+                                               aria-hidden="true"
+                                               icon="fa-solid fa-chevron-right" size="2xl"/>
                             <span class="visually-hidden">Next</span>
                         </button>
                     </div>
         </template>
     </Modal>
 </template>
-
-<style scoped>
-.cursor-pointer {
-    cursor: pointer;
-}
-</style>

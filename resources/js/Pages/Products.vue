@@ -19,13 +19,11 @@ const props = defineProps({
     }
 })
 
-const filteredText = ref(null)
+const filteredText = ref('')
 const current_category_id = ref(1)
 
-provide('filteredText', filteredText)
-
 const filteredProducts = computed(() => {
-    return filteredText.value == null ? props.products :
+    return filteredText.value === '' ? props.products :
         props.products.filter(item => item
                 .title
                 .toLowerCase()
@@ -45,7 +43,7 @@ const productByCategory = computed(() => {
 <template>
     <PageTitle :title="title"/>
     <div class="container tab-content pb-3">
-        <Search></Search>
+        <Search v-model:filtered-text="filteredText"></Search>
         <div class="row">
             <div class="col-sm-6 col-md-6 col-lg-4 col-12" v-for="product in filteredProducts">
                 <ProductCard :product="product" :week="product.is_week"></ProductCard>
@@ -65,6 +63,5 @@ const productByCategory = computed(() => {
                 </div>
             </div>
         </template>
-
     </div>
 </template>

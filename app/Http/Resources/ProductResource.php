@@ -16,19 +16,18 @@ class ProductResource extends JsonResource
     {
 
         return [
-            'id'=>$this->id,
-            'title'=>$this->title,
-            'image'=>$this->image,
-            'description'=>$this->description,
-            'positions'=>$this->positions,
-            'price'=>$this->price,
-            'weight'=>$this->weight,
-            'day_index'=>$this->day_index,
-            $this->mergeWhen($request->route()->getName() == 'products', [
-                'is_week'=>$this->is_week,
-                'addition'=>$this->addition,
-                'partId'=>$this->food_part_id
-            ])
+            'id' => $this->id,
+            'title' => $this->title,
+            'image' => $this->image,
+            'description' => $this->description,
+            'positions' => $this->positions,
+            'price' => $this->price,
+            'weight' => $this->weight,
+            'day_index' => $this->day_index,
+            'is_week' => $this->is_week,
+            'addition' => $this->addition,
+            'partId' => $this->food_part_id
+
         ];
 
     }

@@ -1,5 +1,5 @@
 <script setup>
-import {nextTick, onMounted, ref, watch} from "vue"
+import { nextTick, onMounted, ref } from "vue"
 import PageTitle from "@/Components/Layout/PageTitle.vue"
 import Modal from '@/Components/Basic/Modal.vue'
 import MenuCard from "@/Components/Menu/MenuCard.vue"
@@ -8,7 +8,8 @@ import AddressesSelect from "@/Components/Basic/AddressesSelect.vue"
 import { useProfileStore } from "@/stores/profileStore"
 import { storeToRefs } from "pinia"
 import { router } from '@inertiajs/vue3'
-import {sendNotify} from "@/app";
+import { sendNotify, myHasOwnProperty } from "@/app"
+import TextTextarea from "@/Components/Basic/TextTextarea.vue"
 
 const profileStore = useProfileStore()
 const { profile, errors, menus, uploadImage } = storeToRefs(profileStore)
@@ -20,22 +21,13 @@ onMounted(() => {
     profileStore.getProfile()
 })
 
-watch(() => profile.value.description, (newValue, oldValue) => {
-    if (newValue)
-        nextTick(() => {
-            let element = document.getElementById('profile-description')
-            element.style.height = "1px"
-            element.style.height = (16 + element.scrollHeight) + "px"
-        })
-})
-
 const changePasswordVisibility = () => {
     passwordHidden.value = !passwordHidden.value;
     document.getElementById('profile-password').setAttribute('type', passwordHidden.value ? 'password' : 'text')
 }
 
-const onFileChange = async (e) => {
-    let files = e.target.files;
+const onFileChange = async (event) => {
+    let files = event.target.files;
     if (!files.length)
         return
     if (files[0] && files[0].type.includes('image')) {
@@ -46,15 +38,15 @@ const onFileChange = async (e) => {
     }
     else {
         sendNotify('Произошла ошибка! Файл не является изображением!', 'error')
-        e.target.value = ''
+        event.target.value = ''
     }
 }
 
-const openProfileImage = (e) => {
-    let el = e.target
+const openProfileImage = (event) => {
+    let el = event.target
     if (el.localName === 'button')
         el.previousElementSibling.click()
-    else if(el.localName === 'svg' || el.localName === 'path')
+    else if (el.localName === 'svg' || el.localName === 'path')
         el.closest('button').previousElementSibling.click()
 }
 </script>
@@ -80,7 +72,7 @@ const openProfileImage = (e) => {
                     <div class="accordion w-100 d-flex flex-column mt-5" id="accordionExample">
                         <div class="accordion-item">
                             <h2 class="accordion-header">
-                                <button class="accordion-button " type="button" data-bs-toggle="collapse"
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                         data-bs-target="#collapseOne" aria-expanded="true"
                                         aria-controls="collapseOne">
                                     Данные профиля
@@ -89,73 +81,42 @@ const openProfileImage = (e) => {
                             <div id="collapseOne" class="accordion-collapse collapse show"
                                  data-bs-parent="#accordionExample">
                                 <div class="accordion-body d-flex flex-column gap-3 align-items-center">
-                                    <form class="w-100 d-flex flex-column gap-3">
-                                        <div class="input-group">
-                                            <span class="input-group-text justify-content-center w-40px" id="basic-addon1">
-                                                <i class="fa-solid fa-user"></i>
-                                            </span>
-                                            <TextInput :errors="errors.hasOwnProperty('name') ? errors.name : []"
-                                                       placeholder="Ваше Ф.И.О"
-                                                       v-model="profile.name"
-                                                       input-class="w-auto" aria-describedby="basic-addon1"></TextInput>
-                                        </div>
-                                        <div class="input-group">
-                                            <span class="input-group-text justify-content-center w-40px" id="basic-addon2">
-                                                <i class="fa-solid fa-phone"></i>
-                                            </span>
-                                            <TextInput :errors="errors.hasOwnProperty('phone') ? errors.phone : []"
-                                                       placeholder="Номер телефона"
-                                                       v-model="profile.phone" mask="+7 (###) ###-##-##"
-                                                       input-class="w-auto" aria-describedby="basic-addon2"></TextInput>
-                                        </div>
-                                        <div class="input-group">
-                                             <span class="input-group-text justify-content-center w-40px" id="basic-addon3">
-                                                <i class="fa-solid fa-location-dot"></i>
-                                            </span>
-                                            <AddressesSelect v-model:formAddress="profile.address"
-                                                             :errors="errors.hasOwnProperty('addresses') ? errors.addresses : []"
-                                                             input-class="w-auto z-4-important" aria-describedby="basic-addon3"/>
-                                            <div v-if="'addresses' in errors && errors.addresses.length > 0"
-                                                 class="invalid-feedback" v-for="error in errors.addresses">{{ error }}
-                                            </div>
-                                        </div>
-                                        <div class="input-group" v-if="profile.isSpecialist">
-                                            <span class="input-group-text justify-content-center w-40px" id="basic-addon4">
-                                                <i class="fa-solid fa-comment"></i>
-                                            </span>
-                                            <textarea name="description" v-model="profile.description" class="form-control px-4 py-3 overflow-hidden"
-                                                      placeholder="Описание"
-                                                      :class="[
-                                                          errors.hasOwnProperty('description') && errors.description.length > 0 ? 'is-invalid' : '',
-                                                          (!errors.hasOwnProperty('description') || errors.description.length === 0) && profile.description !== '' ? 'is-valid' : ''
-                                                      ]"
-                                                      style="resize:none"
-                                                      aria-describedby="basic-addon4"
-                                                      id="profile-description">
-                                            </textarea>
-                                            <div v-if="errors.hasOwnProperty('description') && errors.description.length > 0"
-                                                 class="invalid-feedback" v-for="error in errors.description">{{ error }}
-                                            </div>
-                                        </div>
-                                        <div class="input-group password-control">
-                                            <span class="input-group-text justify-content-center w-40px" id="basic-addon5">
-                                                <i class="fa-solid fa-lock"></i>
-                                            </span>
-                                            <TextInput :errors="errors.hasOwnProperty('password') ? errors.password : []"
-                                                       placeholder="Пароль"
-                                                       v-model="profile.password"
-                                                       :type="passwordHidden ? 'password' : 'text'"
-                                                       input-id="profile-password"
-                                                       :error="false"
-                                                       input-class="w-auto" aria-describedby="basic-addon5"></TextInput>
-                                            <div class="input-group-text cursor-pointer" @click="changePasswordVisibility()">
-                                                <font-awesome-icon v-if="passwordHidden" icon="fa-solid fa-eye-slash fa-lg" />
-                                                <font-awesome-icon v-if="!passwordHidden" icon="fa-solid fa-eye fa-lg" />
-                                            </div>
-                                            <div v-if="errors.hasOwnProperty('password')"
-                                                 class="invalid-feedback" v-for="err in errors.password">{{ err }}</div>
-                                        </div>
-                                    </form>
+                                    <div class="w-100 d-flex flex-column gap-3">
+                                        <TextInput :errors="myHasOwnProperty.call(errors, 'name') ? errors.name : []"
+                                                   placeholder="Ваше Ф.И.О"
+                                                   v-model="profile.name"
+                                                   groupTextIconLeft="fa-solid fa-user"/>
+                                        <TextInput :errors="myHasOwnProperty.call(errors, 'phone') ? errors.phone : []"
+                                                   placeholder="Номер телефона"
+                                                   v-model="profile.phone"
+                                                   groupTextIconLeft="fa-solid fa-phone"
+                                                   mask="+7 (###) ###-##-##"/>
+                                        <AddressesSelect v-model:formAddress="profile.address"
+                                                         :errors="myHasOwnProperty.call(errors, 'addresses') ? errors.addresses : []"/>
+
+                                        <TextTextarea  v-if="profile.isSpecialist"
+                                                       :errors="myHasOwnProperty.call(errors, 'description') ? errors.description : []"
+                                                       placeholder="Описание"
+                                                       v-model="profile.description"
+                                                       textareaName="description"
+                                                       textareaId="profile-description"
+                                                       groupTextIconLeft="fa-solid fa-comment"/>
+
+                                        <TextInput :errors="myHasOwnProperty.call(errors, 'password') ? errors.password : []"
+                                                   placeholder="Пароль"
+                                                   v-model="profile.password"
+                                                   :type="passwordHidden ? 'password' : 'text'"
+                                                   input-id="profile-password"
+                                                   inputGroupClass="password-control"
+                                                   groupTextIconLeft="fa-solid fa-lock">
+                                            <template #groupTextIconRight>
+                                                <div class="input-group-text cursor-pointer" @click="changePasswordVisibility()">
+                                                    <font-awesome-icon v-if="passwordHidden" icon="fa-solid fa-eye-slash fa-lg"/>
+                                                    <font-awesome-icon v-if="!passwordHidden" icon="fa-solid fa-eye fa-lg"/>
+                                                </div>
+                                            </template>
+                                        </TextInput>
+                                    </div>
                                     <button class="btn btn-danger" type="button" @click="profileStore.updateProfile()">
                                         Сохранить
                                     </button>
@@ -164,7 +125,7 @@ const openProfileImage = (e) => {
                         </div>
                         <div class="accordion-item" v-if="profile.isSpecialist">
                             <h2 class="accordion-header">
-                                <button class="accordion-button " type="button" data-bs-toggle="collapse"
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                         data-bs-target="#collapseTwo" aria-expanded="false"
                                         aria-controls="collapseTwo">
                                     Ваши меню
@@ -208,9 +169,7 @@ $accordion-button-active-icon:  url("data:image/svg+xml,%3csvg xmlns='http://www
     --bs-accordion-btn-active-icon: #{$accordion-button-active-icon};
 
 }
-.w-40px {
-    width: 40px;
-}
+
 .end-3rem {
     right: 3rem;
 }

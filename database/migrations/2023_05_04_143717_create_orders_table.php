@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('phone');
             $table->string('address');
-            $table->string('text');
+            $table->string('text')->nullable();
             $table->integer('status')->default(OrderStatusEnum::OrderAccepted->value);
             $table->integer('delivery_price')->default(0);
             $table->integer('summary_price')->default(0);

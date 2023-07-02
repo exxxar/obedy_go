@@ -3,7 +3,7 @@ import {vMaska} from "maska"
 
 const props = defineProps({
     modelValue: {
-        type: String,
+        //type: String,
         default: null,
     },
     placeholder: {
@@ -44,52 +44,70 @@ const props = defineProps({
         type: String,
         default: null
     },
-    ariaDescribedby: {
+    inputName: {
+        type: String,
+        default: null
+    },
+    inputGroupClass: {
+        type: String,
+        default: null
+    },
+    groupTextIconLeft: {
+        type: String,
+        default: null
+    },
+    groupTextIconRight: {
         type: String,
         default: null
     }
+
 })
 const emit = defineEmits(['update:modelValue'])
 
 const onMaska = (event) => {
-    if (props.mask !== null && !props.isMasked) {
+    if (props.mask !== null && !props.isMasked)
         emit('update:modelValue', '7' + event.detail.unmasked)
-    }
 }
 
-const onInput = (e) => {
-    if (props.mask === null || props.isMasked) {
-        emit('update:modelValue', e.target.value)
-    }
+const onInput = (event) => {
+    if (props.mask === null || props.isMasked)
+        emit('update:modelValue', event.target.value)
 }
 
-const onPress = (e) => {
+const onPress = (event) => {
     if (props.keyupOnlyNumber !== null)
-        emit('update:modelValue', e.target.value.replace(/[^0-9]/g, ""))
+        emit('update:modelValue', event.target.value.replace(/[^0-9]/g, ""))
 }
 </script>
 <template>
-    <input :type="type" class="form-control w-100 mt-2 mb-0 px-4 py-3 col-important" :placeholder="placeholder"
-           :value="modelValue" :id="inputId"
-           :class="[
-               errors.length > 0 ? 'is-invalid' : '',
-               (errors.length === 0 && modelValue !== '' && modelValue !== null) ? 'is-valid' : '',
-               inputClass
-           ]"
-           v-maska :data-maska="mask" @maska="onMaska"
-           @input="onInput"
-           @blur="blur"
-           @keyup="onPress"
-           :aria-describedby="ariaDescribedby"
-           autocomplete="off"
-           readonly onfocus="this.removeAttribute('readonly')">
-    <div v-if="errors.length > 0 && error" class="invalid-feedback" v-for="err in errors">{{ err }}</div>
+    <!-- class="form-control w-100 mt-2 mb-0 px-4 py-3 col-important" -->
+    <div class="input-group" :class="inputGroupClass">
+        <span class="input-group-text justify-content-center w-40px" v-if="groupTextIconLeft !== null">
+            <font-awesome-icon :icon="groupTextIconLeft"/>
+        </span>
+        <slot name="groupTextIconLeft"/>
+        <input :id="inputId"
+               :name="inputName"
+               :type="type"
+               class="form-control m-0 px-4 py-3"
+               :placeholder="placeholder"
+               :value="modelValue"
+               :class="[inputClass, errors.length > 0 ? 'is-invalid' : '',
+                    errors.length === 0 && modelValue !== '' && modelValue !== null ? 'is-valid' : '']"
+               v-maska :data-maska="mask" @maska="onMaska"
+               @input="onInput"
+               @blur="blur"
+               @keyup="onPress"
+               autocomplete="off" readonly onfocus="this.removeAttribute('readonly')">
+        <span class="input-group-text justify-content-center w-40px" v-if="groupTextIconRight !== null">
+            <font-awesome-icon :icon="groupTextIconRight"/>
+        </span>
+        <slot name="groupTextIconRight"/>
+        <div class="invalid-feedback"
+             v-if="errors.length > 0 && error"
+             v-for="err in errors">
+            {{ err }}
+        </div>
+        <slot name="invalidFeedback"/>
+    </div>
 </template>
-<style scoped>
-.m--0{
-    margin: 0 !important;
-}
-.col-important {
-    flex: 1 0 0% !important;
-}
-</style>

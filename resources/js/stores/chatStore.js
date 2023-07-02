@@ -66,8 +66,10 @@ export const useChatStore = defineStore('chat', () => {
                     let element = document.getElementById('current-chat-body-' + currentChat.data.id)
                     element.scrollTop = element.scrollHeight
                     let chatIndex = chats.value.findIndex(chat => chat.id === currentChatId.value)
-                    if (chatIndex !== -1)
+                    if (chatIndex !== -1) {
                         chats.value[chatIndex].unseenMessageCount = 0
+                        currentChat.data.unseenMessageCount = 0
+                    }
                 })
             }
             if (currentChat.data.messages.length > 0)
@@ -76,10 +78,8 @@ export const useChatStore = defineStore('chat', () => {
         }).catch(error => {
             if (error.response.status === 403)
                 sendNotify('Вы не имеете доступа к выбранному чату', 'error')
-
             if (error.response.status === 404)
                 sendNotify('Выбранный чат не найден', 'error')
-
         })
     }
 
@@ -157,18 +157,19 @@ export const useChatStore = defineStore('chat', () => {
                         if (!currentChat.data.messages[messageIndex].isSeen) {
                             let chatIndex = chats.value.findIndex(chat => chat.id === currentChat.data.id)
                             if (chatIndex !== -1) {
-                                if (chats.value[chatIndex].unseenMessageCount > 1)
+                                if (chats.value[chatIndex].unseenMessageCount > 1) {
                                     chats.value[chatIndex].unseenMessageCount -= 1
-                                else
+                                    currentChat.data.unseenMessageCount -= 1
+                                } else {
                                     chats.value[chatIndex].unseenMessageCount = 0
-
+                                    currentChat.data.unseenMessageCount = 0
+                                }
                             }
                             axios.put(route('seen.message', {id: messageId}))
                                 .then((resp) => {
                                     currentChat.data.messages[messageIndex].isSeen = true
                                 })
                         }
-
                         observer.unobserve(target)
                     }
                 })

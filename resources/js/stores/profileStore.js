@@ -1,8 +1,8 @@
 import { defineStore } from "pinia"
-import {nextTick, reactive, ref, watch} from "vue"
+import {ref, watch} from "vue"
 import axios from "axios"
 import {useUserStore} from "@/stores/userStore"
-import {sendNotify} from "@/app";
+import {sendNotify} from "@/app"
 
 export const useProfileStore = defineStore('profileStore', () => {
     const errors = ref({})

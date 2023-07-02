@@ -80,7 +80,7 @@ const clickAddToCart = (product) => {
                         data-bs-trigger="hover" data-bs-toggle="popover" data-bs-placement="bottom"
                         data-bs-content="Убрать весь продукт из корзины"
                         @click="clickRemoveProduct(product.id)">
-                    <span><i class="fas fa-trash"></i></span>
+                    <span><font-awesome-icon icon="fa-solid fa-trash"/></span>
                 </button>
                 <button class="btn btn-danger btn-coutner" :name="'btn-popover-' + product.id"
                         @click="clickDecQuantity(product.id)" data-bs-trigger="hover"
@@ -94,7 +94,7 @@ const clickAddToCart = (product) => {
                     data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Добавить еще порцию в корзину">
                 <span>+</span>
             </button>
-            <div class="btn btn-success sub-btn z-1" @click="openCart()" v-if="show_addition_btn">Оформить</div>
+            <div class="btn btn-success sub-btn z-1" @click="openCart()" v-if="product.addition !== 1 && show_addition_btn">Оформить</div>
         </div>
         <button class="btn btn-danger w-100 text-uppercase mt-2 p-3"
                 :name="'btn-popover-' + product.id"
