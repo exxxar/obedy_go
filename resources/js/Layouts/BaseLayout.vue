@@ -1,5 +1,5 @@
 <script setup>
-import {nextTick, onMounted, provide, ref, watch} from 'vue'
+import {nextTick, onBeforeMount, onMounted, onUnmounted, onUpdated, provide, ref, watch} from 'vue'
 import TopMenu from "@/Components/Layout/TopMenu.vue"
 import CartModal from "@/Components/Cart/CartModal.vue"
 import { useMainStore } from '@/stores/mainStore.js'
@@ -55,15 +55,22 @@ onMounted(() => {
     })
 })
 
-const chatListen = () => {
+onUnmounted(() => {
+    chatListen(false)
+})
+
+const chatListen = (listen = true) => {
     if (user.value.isAuthorized) {
-        Echo.private('chat.' + user.value.id)
-            .listen('MessageSentEvent', data => {
-                if(route().current('chats'))
-                    chatStore.newMessage(data.chat)
-                else
-                    sendNotify('У Вас новое сообщение!')
-            });
+        if (listen)
+            Echo.private(`chat.${user.value.id}`)
+                .listen('MessageSentEvent', data => {
+                    if(route().current('chats'))
+                        chatStore.newMessage(data.chat)
+                    else
+                        sendNotify('У Вас новое сообщение!')
+                })
+        else
+            Echo.leave(`chat.${user.value.id}`)
     }
 }
 

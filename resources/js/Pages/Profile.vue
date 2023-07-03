@@ -49,6 +49,11 @@ const openProfileImage = (event) => {
     else if (el.localName === 'svg' || el.localName === 'path')
         el.closest('button').previousElementSibling.click()
 }
+
+const deleteMenu = (id) => {
+    let index = menus.value.findIndex(menu =>menu.id === id)
+    menus.value.splice(index, 1)
+}
 </script>
 
 <template>
@@ -139,7 +144,7 @@ const openProfileImage = (event) => {
                                  data-bs-parent="#accordionExample">
                                 <div class="accordion-body d-flex gap-3 align-items-center">
                                     <div class="col-sm-6 col-md-6 col-lg-4 col-12" v-if="menus.length > 0" v-for="menu in menus">
-                                        <MenuCard v-model:special-id="selectSpecialId" :menu="menu"></MenuCard>
+                                        <MenuCard v-model:special-id="selectSpecialId" :menu="menu" @deleteMenu="deleteMenu"></MenuCard>
                                     </div>
                                     <p v-else>У Вас пока нет добавленных меню</p>
                                 </div>
@@ -154,7 +159,9 @@ const openProfileImage = (event) => {
     <Modal v-if="selectSpecialId !== null" id="specialModal">
         <template #body>
             <MenuCard :in-modal="true" v-model:special-id="selectSpecialId"
-                      :menu="menus[menus.map((o) => o.id).indexOf(selectSpecialId)]"></MenuCard>
+                      :menu="menus[menus.map((o) => o.id).indexOf(selectSpecialId)]"
+                      @deleteMenu="deleteMenu"
+            ></MenuCard>
         </template>
     </Modal>
 </template>

@@ -19,6 +19,8 @@ import PerfectScrollbar from 'vue3-perfect-scrollbar'
 import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css'
 import vSelect from "vue-select"
 import 'vue-select/dist/vue-select.css'
+import VueSweetalert2 from 'vue-sweetalert2'
+import 'sweetalert2/dist/sweetalert2.min.css'
 
 /* ----------------- font-awesome 6 ---------------------- */
 import { library } from "@fortawesome/fontawesome-svg-core"
@@ -75,12 +77,9 @@ const VueLazyLoadOptions = {
 
 createInertiaApp({
     title: () => `${appName}`,
-    resolve: (name) => {
-        const page = resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue'))
-        page.then((module) => {
-            if (module.default.layout === undefined)
-                module.default.layout = BaseLayout
-        })
+    resolve: async (name) => {
+        const page = (await resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue'))).default
+        page.layout = page.layout || BaseLayout
         return page
     },
     setup({ el, App, props, plugin }) {
@@ -91,6 +90,7 @@ createInertiaApp({
             .use(VueLazyload, VueLazyLoadOptions)
             .use(Notifications)
             .use(PerfectScrollbar)
+            .use(VueSweetalert2)
             .component("v-select", vSelect)
             .component('font-awesome-icon', FontAwesomeIcon)
             .mount(el)

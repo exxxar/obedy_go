@@ -35,6 +35,12 @@ const unpaidMenus = computed(() => { return props.menus.filter(menu => menu.isUs
     <PageTitle title="Рецепты"/>
     <div class="container tab-content pb-3">
         <div class="row justify-content-center gap-4">
+            <div class="d-flex justify-content-center position-absolute-custom"
+                 v-if="purchasedMenus.length === 0 && unpaidMenus.length === 0">
+                <h1 class="text-uppercase text-white">
+                    В данный момент этот раздел недоступен!
+                </h1>
+            </div>
             <div class="d-flex flex-column gap-4" v-if="purchasedMenus.length > 0">
                 <h3 class="text-uppercase text-white">Специально для вас</h3>
                 <div class="row">
@@ -72,3 +78,15 @@ const unpaidMenus = computed(() => { return props.menus.filter(menu => menu.isUs
     </Modal>
 </template>
 
+<style scoped>
+.position-absolute-custom {
+    margin: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+    text-align: center;
+}
+</style>

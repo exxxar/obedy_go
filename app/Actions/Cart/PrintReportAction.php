@@ -16,6 +16,7 @@ class PrintReportAction
         $report = '';
         $arr = ["Без категории", "Стандарт", "Экспрес", "Премиум", "Собери сам"];
         $products = $user->products;
+        $productIndex =1;
         foreach ($products as $index => $product) {
             $tmp_titles = $product->title;
 
@@ -35,13 +36,14 @@ class PrintReportAction
             $food_part_id = $product->food_part_id;
             foreach (json_decode($product->pivot->users, true) as $userIndex => $user){
                 $report .= sprintf("<tr><td>#%s</td> <td>%s</td><td>%s руб.</td> <td> %s ед.</td><td>%s</td><td>%s</td></tr>",
-                    ($index + $userIndex + 1),
+                    $productIndex,
                     ("<strong>" . ($arr[$food_part_id] ?? "Дополнительно") . "</strong>: " . $tmp_titles),
                     $product->price * $user['quantity'],
                     $user['quantity'],
                     $user['name'],
                     $user['phone']
                 );
+                $productIndex++;
             }
         }
 

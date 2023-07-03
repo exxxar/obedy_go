@@ -194,6 +194,8 @@ export const useCartStore = defineStore('cart', () => {
             saveCart(cartItem, 'dec')
         } else if(cartItem.users[index].quantity === 1 && cartItem.users.length > 1){
             items.value.find(item => item.product.id === id).users.splice(index, 1)
+            sendNotify('Лишний товар убран из корзины!')
+            saveCart(cartItem, 'dec')
         }
         else
             removeProduct(id, index)

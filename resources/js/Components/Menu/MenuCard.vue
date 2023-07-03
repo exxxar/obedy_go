@@ -1,6 +1,6 @@
 <script setup>
-import {computed, nextTick, ref, watch} from "vue"
-import { modals } from "@/app"
+import {computed, inject, nextTick} from "vue"
+import {modals, sendNotify} from "@/app"
 import { router } from '@inertiajs/vue3'
 
 const props = defineProps({
@@ -22,7 +22,9 @@ const props = defineProps({
     }
 })
 
-const emit = defineEmits(['update:specialId', "update:specialistId"])
+const emit = defineEmits(['update:specialId', "update:specialistId", "deleteMenu"])
+
+const swal = inject('$swal')
 
 const isProfile = computed(() => {
     return route().current('profile')
@@ -70,6 +72,36 @@ const getMenuProducts = () => {
     closeSpecialModal()
     router.get(route('special.menu', props.menu.slug))
 }
+
+const deleteSpecial = async (id) => {
+    swalWithBootstrapButtons.fire({
+        title: 'Вы уверены что хотите удалить меню?',
+        text: "Действие отменить невозможно!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Да, удалить!',
+        cancelButtonText: 'Нет, отменить!',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            axios.delete(route('menu.destroy', id)).then(response => {
+                sendNotify('Меню успешно удалено!')
+                if(props.inModal)
+                    closeSpecialModal()
+                emit('deleteMenu', id)
+            })
+        }
+    })
+}
+
+const swalWithBootstrapButtons = swal.mixin({
+    customClass: {
+        actions: 'gap-3',
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger'
+    },
+    buttonsStyling: false
+})
 </script>
 
 <template>
@@ -79,7 +111,7 @@ const getMenuProducts = () => {
             <button class="btn btn-success" @click="editSpecial(menu.id)">
                 <font-awesome-icon icon="fa-solid fa-pen"/>
             </button>
-            <button class="btn btn-danger" @click="">
+            <button class="btn btn-danger" @click="deleteSpecial(menu.id)">
                 <font-awesome-icon icon="fa-solid fa-trash"/>
             </button>
         </div>

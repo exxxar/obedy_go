@@ -7,6 +7,7 @@ use App\Http\Requests\Menu\StoreUpdateMenuRequest;
 use App\Http\Resources\MenuResource;
 use App\Models\Menu;
 use App\Models\Product;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -36,6 +37,8 @@ class MenuController extends Controller
                 'slug' => Str::slug($request->title)
             ]);
         if ($request->hasFile('image')) {
+            if(!is_null($menu->image))
+                Storage::disk('public')->delete(stristr($menu->image, 'menus'));
             $menu->image = $imageStoreAction($request->file('image'), 'menus', "menu-$menu->id");
             $menu->save();
         }
@@ -56,6 +59,8 @@ class MenuController extends Controller
                     'day_index' => $index + 1
                 ]);
             if ($request->hasFile("products.$index.image")) {
+                if(!is_null($product->image))
+                    Storage::disk('public')->delete(stristr($product->image, 'products'));
                 $product->image = $imageStoreAction($request->file("products.$index.image"), 'products', "product-$product->id");
                 $product->save();
             }
@@ -105,6 +110,13 @@ class MenuController extends Controller
         $menu = Menu::where(['id' => $id, 'user_id' => auth()->id()])->first();
         if (!$menu)
             abort(404);
+        if(!is_null($menu->image))
+            Storage::disk('public')->delete(stristr($menu->image, 'menus'));
+        foreach ($menu->products as $product){
+            if(!is_null($product->image))
+                Storage::disk('public')->delete(stristr($product->image, 'products'));
+            $product->delete();
+        }
         $menu->delete();
         return response(null, 200);
     }
