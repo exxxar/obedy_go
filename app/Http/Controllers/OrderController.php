@@ -22,7 +22,10 @@ class OrderController extends Controller
     public function getDeliveryRange(DeliveryRangeRequest $request, CalculateDeliveryDistanceContract $calculateDeliveryDistanceAction, YandexService $yandexService)
     {
         $coords = $yandexService->getCoordsByAddress($request->address);
-        $range = $calculateDeliveryDistanceAction($coords);
+        if($coords['latitude'] == 0 && $coords['longitude'] == 0)
+            $range = 0;
+        else
+            $range = $calculateDeliveryDistanceAction($coords);
 
         $price = $range <= 3 ?
             config('delivery.baseDeliveryPrice') :
