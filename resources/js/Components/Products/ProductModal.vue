@@ -29,7 +29,9 @@ provide('inModal', true)
                     <li v-for="pos in product.positions" class="col-md-6 mt-2">
                         <div class="row">
                             <div class="col-md-6">
-                                <img :src="pos.image" class="img-fluid" alt="">
+                                <div class="ratio ratio-1x1">
+                                    <img :src="pos.image" class="object-fit-cover" alt="">
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <p><span class="badge bg-danger me-1">{{ pos.weight }} гр.</span>{{ pos.title }}</p>

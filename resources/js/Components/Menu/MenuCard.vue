@@ -115,10 +115,9 @@ const swalWithBootstrapButtons = swal.mixin({
                 <font-awesome-icon icon="fa-solid fa-trash"/>
             </button>
         </div>
-
-        <img v-lazy="menu.image"
-             class="card-img-top fixed-height-300px object-fit-cover"
-             alt="..." @click="selectSpecial(menu.id)">
+        <div class="ratio ratio-1x1">
+            <img v-lazy="menu.image" class="object-fit-cover" alt="..." @click="selectSpecial(menu.id)">
+        </div>
         <div class="card-body d-flex flex-column justify-content-between gap-3"
              :class="inModal ? '' : 'p-0'">
             <div class="d-flex flex-column gap-2" @click="selectSpecial(menu.id)" v-if="inModal">

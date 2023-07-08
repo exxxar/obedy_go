@@ -41,7 +41,10 @@ const openProductModal = async (id) => {
 <template>
     <div class="day-item" :class="week ? 'week-product' : ''">
         <h3>{{ product.title }}</h3>
-        <img v-lazy="product.image" :alt="product.title" class="w-100" @click="openProductModal(product.id)">
+        <div class="ratio ratio-1x1">
+            <img v-lazy="product.image" :alt="product.title" class="object-fit-cover" @click="openProductModal(product.id)">
+        </div>
+
         <ProductControls :product="product"></ProductControls>
         <div class="week-label" v-if="product.is_week">Бесплатная доставка</div>
     </div>

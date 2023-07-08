@@ -52,7 +52,7 @@ class MenuController extends Controller
                 ],
                 [
                     'title' => $productItem['title'],
-                    'description' => $productItem['description'],
+                    'description' => array_key_exists('description', $productItem) ? $productItem['description'] : null,
                     'positions' => array_key_exists('positions', $productItem) ? $productItem['positions'] : [],
                     'price' => $productItem['price'],
                     'weight' => $productItem['weight'],

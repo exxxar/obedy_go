@@ -60,18 +60,28 @@ const closeSpecialistModal = async () => {
 </script>
 
 <template>
-    <div class="card text-center" :class="inModal ? 'border-0' : 'fixed-height-500px m-5px'">
-        <img :src="specialist.image" class="card-img-top fixed-height-250px object-fit-cover" alt="...">
-        <div class="card-body d-flex flex-column justify-content-between">
-            <div class="d-flex flex-column">
-                <h5 class="card-title text-truncate">{{ specialist.name }}</h5>
-                <p class="card-text" :class="inModal ? '' : 'cropped-text'">{{ specialist.description }}</p>
-                <p v-if="!inModal" class="link-primary cursor-pointer m-auto"
-                   @click="selectSpecialist(specialist.id)">подробнее</p>
+    <div class="card text-center border-0"
+         :class="inModal ? '' : 'p-5px bg-transparent text-white'">
+        <div class="ratio ratio-1x1">
+            <img :src="specialist.image" class="object-fit-cover" alt="..."
+                 @click="selectSpecialist(specialist.id)">
+        </div>
+
+        <div class="card-body d-flex flex-column justify-content-between"
+             :class="inModal ? 'gap-3' : 'p-0'">
+            <div class="d-flex flex-column gap-2"
+                 @click="selectSpecialist(specialist.id)">
+                <h5 class="card-title m-0" v-if="inModal">{{ specialist.name }}</h5>
+                <h2 class="card-title m-0 text-truncate" v-if="!inModal">{{ specialist.name }}</h2>
+                <p class="card-text" v-if="inModal">{{ specialist.description }}</p>
             </div>
-            <button class="btn btn-lg btn-danger" :class="inModal ? 'mt-3' : ''"
+            <button class="btn w-100 text-uppercase mt-2 p-3 btn-danger custom-btn-color-danger"
                     @click="chooseSpecialist(specialist.id)"
                     v-if="!specialist.isCurrentUser">Написать
+            </button>
+            <button class="btn w-100 text-uppercase mt-2 p-3 btn-success custom-btn-color-success"
+                    @click="router.get(route('profile'))"
+                    v-if="specialist.isCurrentUser">Профиль
             </button>
         </div>
     </div>

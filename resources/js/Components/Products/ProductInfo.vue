@@ -20,9 +20,11 @@ const imageSrc = computed(() => {
 </script>
 
 <template>
-    <div class="row w-100">
+    <div class="row">
         <div :class="!addMenu ? 'col-md-7 col-sm-6' : 'col-md-4 col-sm-3'">
-            <img v-if="product.image" :src="imageSrc" class="img-fluid w-100" alt="">
+            <div class="ratio ratio-1x1">
+                <img v-if="product.image" :src="imageSrc" class="object-fit-cover" alt="">
+            </div>
         </div>
         <div class="col">
             <div class="d-flex flex-column">
