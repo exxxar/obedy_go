@@ -1,56 +1,63 @@
 {
-  "_MenuCard-6f3717d9.js": {
-    "file": "assets/MenuCard-6f3717d9.js",
+  "_MenuCard-032eaacf.js": {
+    "file": "assets/MenuCard-032eaacf.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_PageTitle-064da376.js": {
-    "file": "assets/PageTitle-064da376.js",
+  "_PageTitle-5c0dafb3.js": {
+    "file": "assets/PageTitle-5c0dafb3.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_SpecialistCard-c97f7b2f.js": {
-    "file": "assets/SpecialistCard-c97f7b2f.js",
+  "_SpecialistCard-61520043.js": {
+    "file": "assets/SpecialistCard-61520043.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
   "resources/images/12.jpg": {
-    "file": "assets/12-f74ba8a5.jpg",
+    "file": "assets/12-7a7da188.jpg",
     "src": "resources/images/12.jpg"
   },
   "resources/js/Pages/Chats.vue": {
-    "file": "assets/Chats-fdba9be2.js",
+    "file": "assets/Chats-0c7c2680.js",
     "imports": [
       "resources/js/app.js",
-      "_PageTitle-064da376.js"
+      "_PageTitle-5c0dafb3.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Chats.vue"
   },
   "resources/js/Pages/Error.css": {
-    "file": "assets/Error-01b79d67.css",
+    "file": "assets/Error-1112a83d.css",
     "src": "resources/js/Pages/Error.css"
   },
   "resources/js/Pages/Error.vue": {
     "css": [
-      "assets/Error-01b79d67.css"
+      "assets/Error-1112a83d.css"
     ],
-    "file": "assets/Error-adc3bcd7.js",
+    "file": "assets/Error-9067f7c4.js",
     "imports": [
-      "_PageTitle-064da376.js",
+      "_PageTitle-5c0dafb3.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Error.vue"
   },
+  "resources/js/Pages/Main.css": {
+    "file": "assets/Main-d4e21011.css",
+    "src": "resources/js/Pages/Main.css"
+  },
   "resources/js/Pages/Main.vue": {
-    "file": "assets/Main-9872a114.js",
+    "css": [
+      "assets/Main-d4e21011.css"
+    ],
+    "file": "assets/Main-ecd8c1fc.js",
     "imports": [
       "resources/js/app.js",
-      "_PageTitle-064da376.js"
+      "_PageTitle-5c0dafb3.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Main.vue"
@@ -63,19 +70,19 @@
     "css": [
       "assets/Menu-1a377924.css"
     ],
-    "file": "assets/Menu-e28f0384.js",
+    "file": "assets/Menu-31c019bd.js",
     "imports": [
       "resources/js/app.js",
-      "_PageTitle-064da376.js"
+      "_PageTitle-5c0dafb3.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Menu.vue"
   },
   "resources/js/Pages/Products.vue": {
-    "file": "assets/Products-40b33647.js",
+    "file": "assets/Products-d677a376.js",
     "imports": [
       "resources/js/app.js",
-      "_PageTitle-064da376.js"
+      "_PageTitle-5c0dafb3.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Products.vue"
@@ -88,20 +95,20 @@
     "css": [
       "assets/Profile-7bd05113.css"
     ],
-    "file": "assets/Profile-9b800d4f.js",
+    "file": "assets/Profile-1e6d3e52.js",
     "imports": [
-      "_PageTitle-064da376.js",
+      "_PageTitle-5c0dafb3.js",
       "resources/js/app.js",
-      "_MenuCard-6f3717d9.js"
+      "_MenuCard-032eaacf.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Profile.vue"
   },
   "resources/js/Pages/Self.vue": {
-    "file": "assets/Self-6a8321aa.js",
+    "file": "assets/Self-b0530a98.js",
     "imports": [
       "resources/js/app.js",
-      "_PageTitle-064da376.js"
+      "_PageTitle-5c0dafb3.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Self.vue"
@@ -114,36 +121,36 @@
     "css": [
       "assets/Special-bd3a03dd.css"
     ],
-    "file": "assets/Special-59b1bc81.js",
+    "file": "assets/Special-94704e22.js",
     "imports": [
-      "_MenuCard-6f3717d9.js",
+      "_MenuCard-032eaacf.js",
       "resources/js/app.js",
-      "_PageTitle-064da376.js",
-      "_SpecialistCard-c97f7b2f.js"
+      "_PageTitle-5c0dafb3.js",
+      "_SpecialistCard-61520043.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Special.vue"
   },
   "resources/js/Pages/Specialists.vue": {
-    "file": "assets/Specialists-25856c13.js",
+    "file": "assets/Specialists-a8e9469e.js",
     "imports": [
-      "_SpecialistCard-c97f7b2f.js",
+      "_SpecialistCard-61520043.js",
       "resources/js/app.js",
-      "_PageTitle-064da376.js"
+      "_PageTitle-5c0dafb3.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Specialists.vue"
   },
   "resources/js/app.css": {
-    "file": "assets/app-6eaec680.css",
+    "file": "assets/app-e4e3521d.css",
     "src": "resources/js/app.css"
   },
   "resources/js/app.js": {
     "assets": [
-      "assets/12-f74ba8a5.jpg"
+      "assets/12-7a7da188.jpg"
     ],
     "css": [
-      "assets/app-6eaec680.css"
+      "assets/app-e4e3521d.css"
     ],
     "dynamicImports": [
       "resources/js/Pages/Chats.vue",
@@ -165,7 +172,7 @@
       "resources/js/Pages/Special.vue",
       "resources/js/Pages/Specialists.vue"
     ],
-    "file": "assets/app-3c122e9b.js",
+    "file": "assets/app-5d7ca779.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }

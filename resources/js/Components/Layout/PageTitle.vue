@@ -13,6 +13,14 @@ const props = defineProps({
     title: {
         type: String,
         default: null
+    },
+    description: {
+        type: String,
+        default: null
+    },
+    error: {
+        type: Boolean,
+        default: false
     }
 })
 /* ------------------------------------------------------------ */
@@ -29,6 +37,7 @@ const props = defineProps({
         <h1 class="mt-2" v-if="part !== null && part !== 0">
             {{ foodParts.find(foodPart => foodPart.partId === part).title }}
         </h1>
-        <h1 class="mt-2" v-if="part === null && title !== null">{{ title }}</h1>
+        <h1 class="mt-2" v-if="(part === null && title !== null) || error">{{ title }}</h1>
+        <h3 class="text-white text-center" v-if="error && description !== null">{{ description }}</h3>
     </div>
 </template>

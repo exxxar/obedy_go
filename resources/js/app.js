@@ -5,7 +5,7 @@ import axios from 'axios'
 import Echo from 'laravel-echo'
 import Pusher from 'pusher-js'
 
-import { createApp, h } from 'vue'
+import {createApp, h, nextTick} from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
 import { InertiaProgress } from '@inertiajs/progress'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
@@ -73,6 +73,17 @@ const VueLazyLoadOptions = {
     error: '/images/logo_obed_go.jpg',
     loading: '/images/logo_obed_go.jpg',
     attempt: 1
+}
+
+export const deleteAllUnclosedElements = async () => {
+    await nextTick(() => {
+        let elements = document.querySelectorAll('[id*="popover"]')
+        if (elements.length > 0)
+            [...elements].forEach(element => element.remove())
+        elements = document.querySelectorAll('[class*="modal-backdrop"]')
+        if (elements.length > 0)
+            [...elements].forEach(element => element.remove())
+    })
 }
 
 createInertiaApp({

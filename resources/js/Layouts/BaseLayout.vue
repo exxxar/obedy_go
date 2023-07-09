@@ -6,7 +6,7 @@ import { useMainStore } from '@/stores/mainStore.js'
 import { useCartStore } from '@/stores/cartStore.js'
 import { storeToRefs } from "pinia"
 import { useLotteryStore } from "@/stores/lotteryStore.js"
-import {modals, offcanvas, sendNotify} from "@/app"
+import {deleteAllUnclosedElements, modals, offcanvas, sendNotify} from "@/app"
 import { useUserStore } from "@/stores/userStore"
 import UserCartModal from "@/Components/Cart/UserCartModal.vue"
 import LoginModal from "@/Components/Modals/LoginModal.vue"
@@ -84,7 +84,9 @@ const listenerNavigate = () => {
             part.value = foodParts.value.find(foodPart => foodPart.slug === route().current()).partId
         else
             part.value = null
-        offcanvas.getOrCreateInstance(document.getElementById('obedyNavbarMenu')).hide()
+        let obedyNavbarMenu = document.getElementById('obedyNavbarMenu')
+        if (obedyNavbarMenu)
+            offcanvas.getOrCreateInstance(obedyNavbarMenu).hide()
     })
 }
 
@@ -92,12 +94,15 @@ const switchKeyUp = event => {
     switch (event.keyCode) {
         case 27: // ESC
             part.value = 0
+            deleteAllUnclosedElements()
             break
         case 37: // Arrow right
             main.changePosition(false)
+            deleteAllUnclosedElements()
             break
         case 39: // Arrow left
             main.changePosition()
+            deleteAllUnclosedElements()
             break
     }
 }

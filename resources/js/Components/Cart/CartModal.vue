@@ -34,7 +34,7 @@ const hasMainProductInCart = () => {
             <div class="custom-modal-header" :class="hasOtherUserCart ? 'justify-content-between' : ''">
                 <button v-if="hasOtherUserCart" class="btn btn-link fs-5 py-0"
                         data-bs-toggle="modal" data-bs-target="#changeUserCart">
-                    <font-awesome-icon class="text-danger" icon="fa-solid fa-circle-info"/>
+                    <font-awesome-icon class="text-danger" icon="fa-solid fa-circle-info" beat-fade/>
                 </button>
                 <button class="btn btn-link" @click="is_cart_open = false">Закрыть</button>
             </div>

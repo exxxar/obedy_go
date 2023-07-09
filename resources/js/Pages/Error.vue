@@ -25,11 +25,11 @@ const description = computed(() => {
 
 <template>
     <div class="row justify-content-center w-100 absolute-center">
-        <PageTitle :title="title"/>
-        <h3 class="text-white text-center">{{ description }}</h3>
+        <PageTitle :title="title" :error="true" :description="description"/>
     </div>
-    <span class="errorPage__templeweed-container"><img src="https://i.ibb.co/mTg87G2/tembleweed.png"
-                                                       class="errorPage__tembleweed"></span>
+    <span class="errorPage__templeweed-container">
+        <img src="/images/tembleweed.png" class="errorPage__tembleweed">
+    </span>
     <div class="errorPage__terrain"></div>
 </template>
 
