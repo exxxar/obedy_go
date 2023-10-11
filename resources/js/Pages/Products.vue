@@ -21,18 +21,29 @@ const props = defineProps({
 
 const filteredText = ref('')
 const current_category_id = ref(1)
+const filteredCategory = ref('name')
 
 const filteredProducts = computed(() => {
-    return filteredText.value === '' ? props.products :
-        props.products.filter(item => item
-                .title
-                .toLowerCase()
-                .indexOf(filteredText.value.toLowerCase()) !== -1 ||
-            (item.description ? item
-                .description
-                .toLowerCase()
-                .indexOf(filteredText.value.toLowerCase()) !== -1 : false)
-        )
+    if(filteredText.value === '') {
+        return props.products
+    }else{
+        if(filteredCategory.value === 'name'){
+            return props.products.filter(item => item
+                    .title
+                    .toLowerCase()
+                    .indexOf(filteredText.value.toLowerCase()) !== -1 ||
+                (item.description ? item
+                    .description
+                    .toLowerCase()
+                    .indexOf(filteredText.value.toLowerCase()) !== -1 : false))
+        }else{
+            return props.products.filter(item =>
+                    item.positions
+                    .map(position => position.title).join(', ')
+                    .toLowerCase()
+                    .indexOf(filteredText.value.toLowerCase()) !== -1)
+        }
+    }
 })
 
 const productByCategory = computed(() => {
@@ -43,7 +54,7 @@ const productByCategory = computed(() => {
 <template>
     <PageTitle :title="title"/>
     <div class="container tab-content pb-3">
-        <Search v-model:filtered-text="filteredText"></Search>
+        <Search v-model:filtered-text="filteredText" v-model:filtered-category="filteredCategory"></Search>
         <div class="row">
             <div class="col-sm-6 col-md-6 col-lg-4 col-12" v-for="product in filteredProducts">
                 <ProductCard :product="product" :week="product.is_week"></ProductCard>

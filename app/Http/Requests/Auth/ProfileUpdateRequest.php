@@ -26,7 +26,7 @@ class ProfileUpdateRequest extends FormRequest
             'name'=>['required', 'string'],
             'phone'=>['required', 'string', 'min:11', 'max:11', 'unique:users,phone,'.auth()->id()],
             'addresses'=>[ 'array'],
-            'description'=>[new RequiredIf(auth()->user()->hasRole('specialist')), 'string'],
+            'description'=>['sometimes', 'nullable', new RequiredIf(auth()->user()->hasRole('specialist')), 'string'],
             'password'=>['nullable', 'min:8']
         ];
     }

@@ -15,6 +15,9 @@
     border-radius: 0px 5px 5px 0px;
     box-shadow: 1px 1px 2px 0px #000000;
 
+    flex-direction: column;
+    gap: 8px;
+
     .search-icon {
         img {
             width: 30px;
@@ -22,10 +25,42 @@
         }
     }
 
-    input {
-        width: 250px;
+    input[type=search] {
+        width: 300px;
     }
 
+    .search-check-group {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
+
+        & .form-check {
+            margin: 0;
+
+            &-input:checked {
+                background-color: #748f26;
+                border-color: #748f26;
+            }
+            &-input:focus {
+                border-color: #c2ee9a;
+                box-shadow: 0 0 0 0.25rem rgb(100 220 52 / 25%);
+            }
+        }
+    }
+
+}
+
+@media (max-width: 768px) {
+    .search {
+        input[type=search] {
+            width: 250px;
+        }
+        .search-check-group {
+            flex-direction: column;
+            gap: 4px;
+        }
+    }
 }
 
 .search-input {
